@@ -1,7 +1,0 @@
-class flights
-{
-  void setup()
-  {
-    
-  }
-}
