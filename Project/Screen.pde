@@ -2,7 +2,7 @@
 
 import java.util.ArrayList; //import to include multiple widgets
 
-public class Screen { //declaration of screen class
+ class Screen { //declaration of screen class
     private ArrayList<Widget> widgets;
     private int WIDTH = 2000;
     private int HEIGHT = 1000;
@@ -11,7 +11,7 @@ public class Screen { //declaration of screen class
     private int DATA_SIZE_2K = 2000;
     private String FILE_PATH = "flights.csv";
 
-    public Screen() { //constructor for screen 
+    Screen() { //constructor for screen 
         widgets = new ArrayList<>(); //add widgets 
     }
 
