@@ -1,18 +1,11 @@
 //Hezamary Paul created Screen class to include drawing of widgets and all other constants on 14/03/2024 @ 10:07
 
-import java.util.ArrayList; //import to include multiple widgets
 
  class Screen { //declaration of screen class
     private ArrayList<Widget> widgets;
-    private int WIDTH = 2000;
-    private int HEIGHT = 1000;
-    private int DATA_SIZE_537K = 537000;
-    private int DATA_SIZE_10K = 10000;
-    private int DATA_SIZE_2K = 2000;
-    private String FILE_PATH = "flights.csv";
 
     Screen() { //constructor for screen 
-        widgets = new ArrayList<>(); //add widgets 
+        widgets = new ArrayList<Widget>(); //add widgets 
     }
 
     // Method to add a widget to the screen
@@ -25,4 +18,22 @@ import java.util.ArrayList; //import to include multiple widgets
     public void draw() {
         // Code to draw the screen (e.g., drawing widgets)
     }
+    
+    
+
+}
+
+
+class TableScreen extends Screen {
+  TableScreen() {
+    super();
+  }
+  
+  void draw() {
+    for(int i=0; i<20; i++){
+      textFont(font);
+      textSize(12);
+      text(data.getLine(i), 0, i*25+30);
+    }
+  }
 }
