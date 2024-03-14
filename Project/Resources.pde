@@ -16,5 +16,6 @@ void loadResources()
   font = loadFont("Verdana-Bold-48.vlw");
 
   bar = new NavigationBar();
+  mainscreen = new TableScreen();
 
 }
