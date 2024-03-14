@@ -5,13 +5,13 @@ class NavigationBar
   private color barColor;
   private ArrayList<Button> tabs;
   
-  NavigationBar(int x, int y, int barHeight, int barWidth, color barColor)
+  NavigationBar()
   {
-    this.x = x;
-    this.y = y;
-    this.barHeight = barHeight;
-    this.barWidth = barWidth;
-    this.barColor = barColor;
+    this.x = 0;
+    this.y = 0;
+    this.barHeight = BARHEIGHT;
+    this.barWidth = BARWIDTH;
+    this.barColor = BARCOLOR;
   }
   void drawBar()
   {
