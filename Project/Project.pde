@@ -1,3 +1,5 @@
+import interfascia.*;
+
 
 void settings()
 {
