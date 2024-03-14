@@ -2,6 +2,7 @@
 PFont font;
 Dataset data;
 NavigationBar bar;
+TableScreen mainscreen;
 
 //Variable constants
 final int BARHEIGHT = 50;
