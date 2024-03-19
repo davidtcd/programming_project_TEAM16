@@ -10,6 +10,9 @@ final String DATA_PATH = "flights_full";
 final int BARHEIGHT = 50;
 final int BARWIDTH = width;
 final int BARCOLOR = color(255, 255, 255);
+final boolean INVERTAXIS = true;
+final int BARCHARTWIDTH = 1000;
+final int BARCHARTHEIGHT = 950;
 
 
 void loadResources()
@@ -19,5 +22,4 @@ void loadResources()
 
   bar = new NavigationBar();
   mainscreen = new TableScreen();
-
 }

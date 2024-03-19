@@ -1,15 +1,18 @@
-class Button extends Widget {
-    // Lukas Maselsky, Created class, constructor, getters and setters, 5pm 13/03/2024
+class Checkbox extends Widget {
+    // Lukas Maselsky, Created class and methods 1pm 17/03/2024
     
     private int width;
     private int height;
+    private boolean selected;
     private Runnable onClick;
     
-    Button(int x, int y, int width, int height, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont, Runnable onClick) {
+    Checkbox(int x, int y, int width, int height, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont, Runnable onClick) {
         super(x, y, label, widgetColor, borderColor, labelColor, widgetFont);
         this.width = width; 
         this.height = height;
+        this.selected = false;
         this.onClick = onClick;
+        
     }
     
     public int getWidth() {
@@ -28,6 +31,14 @@ class Button extends Widget {
         this.height = height;
     }
     
+    public boolean getSelected() {
+        return this.selected;
+    }
+    
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+    
     public Runnable getOnClick() {
         return this.onClick;
     }
@@ -36,9 +47,9 @@ class Button extends Widget {
         this.onClick = onClick;
     }
     
-    
     public void isClicked(int mX, int mY) {  
         if (mX > this.getX() && mX < this.getX() + this.getWidth() && mY > this.getY() && mY < this.getY() + this.getHeight()) { 
+            this.setSelected(!this.getSelected());
             this.onClick.run();
         }
     }
@@ -56,7 +67,14 @@ class Button extends Widget {
         noStroke();
         fill(wc); 
         rect(cur_x, cur_y, w, h);
-        fill(lc);
-        text(l, cur_x + 10, cur_y + h - 10);
+        
+        if (this.getSelected()) {
+            
+            // draw checkmark
+            strokeWeight(2);
+            stroke(0); // black
+            line(cur_x + w / 10, cur_y + h / 2, cur_x + (w * 0.45), cur_y + (h * 0.85));
+            line(cur_x + (w * 0.45), cur_y + (h * 0.85), cur_x + (w * 0.9), cur_y + h / 10);
+        }
     }
-} 
+}
