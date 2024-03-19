@@ -1,5 +1,6 @@
 class Scrollbar extends Widget {
-    // Lukas Maselsky, Created class, constructor, getters and setters, and a few methods 7pm 14/03/2024
+    // Lukas Maselsky, Created class, constructor, getters and setters, and a few methods 5pm 14/03/2024
+    // Lukas Maselsky, Added variable scroll slider height 1pm 17/03/2024
     
     private int value;
     private int initialX; 
@@ -9,8 +10,10 @@ class Scrollbar extends Widget {
     private color sliderColor;
     private boolean selected;
     private int sliderHeight;
+    private double fraction;
     
-    Scrollbar(int x, int y, int width, int height, String label, color widgetColor, color sliderColor, PFont widgetFont, int event) 
+    
+    Scrollbar(int x, int y, int width, int height, String label, color widgetColor, color sliderColor, PFont widgetFont, int event, double fraction) 
     {
         super(x, y, label, widgetColor, color(0,0,0), color(0, 0, 0), widgetFont, event);
         
@@ -19,7 +22,11 @@ class Scrollbar extends Widget {
         this.height = height;
         this.initialX = x;
         this.initialY = y;
-        this.sliderHeight = height / 10;
+        this.sliderColor = sliderColor;
+        
+        
+        this.fraction = fraction;
+        this.sliderHeight = (int)(height * this.fraction);
     }
     
     public int getValue() {
@@ -90,7 +97,12 @@ class Scrollbar extends Widget {
         this.sliderHeight = sliderHeight;
     }
     
+    public double getFraction() {
+        return this.fraction;
+    }
+    
     void draw() {
+        noStroke();
         fill(this.getWidgetColor());
         rect(this.getInitialX(), this.getInitialY(), this.getWidth(), this.getHeight());
         
