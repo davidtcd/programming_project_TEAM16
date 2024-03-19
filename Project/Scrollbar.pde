@@ -13,9 +13,9 @@ class Scrollbar extends Widget {
     private double fraction;
     
     
-    Scrollbar(int x, int y, int width, int height, String label, color widgetColor, color sliderColor, PFont widgetFont, int event, double fraction) 
+    Scrollbar(int x, int y, int width, int height, String label, color widgetColor, color sliderColor, PFont widgetFont, double fraction) 
     {
-        super(x, y, label, widgetColor, color(0,0,0), color(0, 0, 0), widgetFont, event);
+        super(x, y, label, widgetColor, color(0,0,0), color(0, 0, 0), widgetFont);
         
         this.selected = false;
         this.width = width;
@@ -110,23 +110,23 @@ class Scrollbar extends Widget {
         rect(this.getX(), this.getY(), this.getWidth(), this.getSliderHeight()); 
     }
     
-    void toggleSelected() {
+    public void toggleSelected() {
         this.setSelected(!this.getSelected());
     }
     
-    void getClicked(int mX, int mY) {       
+    public void getClicked(int mX, int mY) {       
         if (mX > this.getX() && mX < this.getX() + this.getWidth() && mY > this.getY() && mY < this.getY() + this.getSliderHeight()) {
             toggleSelected();
         }
     }
     
-    void getReleased() {
+    public void getReleased() {
         if (this.getSelected()) {
             toggleSelected();
         }
     }
     
-    void getDragged(int mY, int pY) {
+    public void getDragged(int mY, int pY) {
         if (this.getSelected()) {
             int change = mY - pY;
             if (this.getY() + change > this.getInitialY() + this.getHeight() - this.getSliderHeight()) {
