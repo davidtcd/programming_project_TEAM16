@@ -31,6 +31,7 @@ final int TABGAP = 100;
 
 void loadResources()
 {
+  println("Loading resources...");
   data = new Dataset(DATA_PATH+".csv", DataType.flights);
   font = loadFont("Verdana-Bold-48.vlw");
   

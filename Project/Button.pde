@@ -57,6 +57,7 @@ class Button extends Widget {
         fill(wc); 
         rect(cur_x, cur_y, w, h);
         fill(lc);
-        text(l, cur_x + 10, cur_y + h - 10);
+        textAlign(CENTER, CENTER);
+        text(l, cur_x + w / 2, cur_y + h / 2);
     }
 } 
