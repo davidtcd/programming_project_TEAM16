@@ -51,31 +51,42 @@ class Dataset
     return table.getColumnCount();
   }
   
-  //For full set of data ~23min sort time and <30sec load time, near instant for 2k size (this may vary on different machines)
+  //For full set of data ~1.5hours sort time and ~30sec load time, near instant for 2k size (this may vary on different machines)
   private void sortData(){
     String sortedPath = dataPath(DATA_PATH+"_Sorted");
     File f = new File(sortedPath);
     if(!f.mkdir()){
-      println("loading data");
+      println("Loading data...");
       for(int i=0; i<table.getColumnCount(); i++){
         sortedKeys[i] = loadTable(sortedPath+"/"+table.getColumnTitle(i)+".csv", "header");
       }
       return;
     }
-    println("sorting data");
-    for(int i=0; i<table.getColumnCount(); i++){
-      Table sortedTable = table.copy();
-      sortedTable.addColumn("INDEX");
-      for(int j=0; j<sortedTable.getRowCount(); j++){
-        sortedTable.setInt(j, "INDEX", j);
-      }
+    println("Sorting data...");
+    Table sortedTable = table.copy();
+    sortedTable.addColumn("INDEX");
+    for(int j=0; j<sortedTable.getRowCount(); j++){
+      sortedTable.setInt(j, "INDEX", j);
+    }
+    for(int i=3; i<table.getColumnCount(); i++){
       sortedTable.sort(i);
-      int columns = sortedTable.getColumnCount()-1;
-      for(int j=0; j<columns; j++){
-        sortedTable.removeColumn(0);
+      Table savedTable = new Table();
+      savedTable.addColumn("INDEX");
+      savedTable.addColumn("UNIQUE_INDEX");
+      String prevValue = "";
+      int k = 0;
+      for(int j=0; j<sortedTable.getRowCount(); j++){
+        int indexValue = sortedTable.getInt(j, "INDEX");
+        savedTable.setInt(j, 0, indexValue);
+        String value = table.getString(indexValue, i);
+        if(!prevValue.equals(value)){
+          savedTable.setInt(k++, 1, j);
+          prevValue = value;
+        }
       }
-      saveTable(sortedTable, sortedPath+"/"+table.getColumnTitle(i)+".csv");
+      saveTable(savedTable, sortedPath+"/"+table.getColumnTitle(i)+".csv");
       sortedKeys[i] = sortedTable;
+      println("Column: "+i+" sorted.");
     }
   }
   
@@ -102,13 +113,12 @@ class Dataset
   }
   
   String getLine(int index){
-    return getLine(index, 0, false);
+    return join(table.getStringRow(index), ", ");
   }
   
-  String getLine(int index, int column, boolean isSorted){
+  String getLineSorted(int index, int column){
     try{
-      if(isSorted) return join(table.getStringRow(sortedKeys[column].getInt(index, 0)), ", ");
-      return join(table.getStringRow(index), ", ");
+      return join(table.getStringRow(sortedKeys[column].getInt(index, 0)), ", ");
     } 
     catch (Exception e){
       println(e);
@@ -125,6 +135,23 @@ class Dataset
       return rows; 
     }
     catch (Exception e){
+      println(e);
+      return null;
+    }
+  }
+  
+  Table getOccurrences(int value, int column){
+    try{
+      Table occurrences = new Table();
+      int min = sortedKeys[column].getInt(value, 1);
+      int max = sortedKeys[column].getInt(value+1, 1);
+      
+      for(int i=min; i<max; i++){
+        occurrences.addRow(table.getRow(sortedKeys[column].getInt(i, 0)));
+      }
+      return occurrences;
+    }
+    catch(Exception e){
       println(e);
       return null;
     }

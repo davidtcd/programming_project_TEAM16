@@ -7,7 +7,6 @@ void settings()
 void setup()
 {
   loadResources();
-  mainscreen.draw();
 }
 
 void draw()
