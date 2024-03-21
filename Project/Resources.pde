@@ -5,7 +5,7 @@ NavigationBar bar;
 TableScreen mainscreen;
 
 //Variable constants
-final String DATA_PATH = "flights_full";
+final String DATA_PATH = "flights2k";
 
 final int BARHEIGHT = 50;
 final int BARWIDTH = width;
@@ -17,6 +17,7 @@ final int BARCHARTHEIGHT = 950;
 
 void loadResources()
 {
+  println("Loading resources...");
   data = new Dataset(DATA_PATH+".csv", DataType.flights);
   font = loadFont("Verdana-Bold-48.vlw");
 
