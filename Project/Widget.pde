@@ -1,17 +1,16 @@
 class Widget {
     // Lukas Maselsky, Created class, constructor, getters and setters, 5pm 13/03/2024
+    // Lukas Maselsky, Removed event variable and added Runnable for easier event handling 3pm 19/03/2024
     
     private int x, y;
     private String label; 
-    private int event;
     private color widgetColor, labelColor, borderColor;
     private PFont widgetFont;
     
-    Widget(int x, int y, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont, int event) {
+    Widget(int x, int y, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont) {
         this.x = x; 
         this.y = y; 
         this.label = label; 
-        this.event = event; 
         this.widgetColor = widgetColor; 
         this.widgetFont = widgetFont;
         this.borderColor = borderColor;
@@ -40,14 +39,6 @@ class Widget {
     
     public void setLabel(String label) {
         this.label = label;
-    }
-    
-    public int getEvent() {
-        return this.event;
-    }
-    
-    public void setEvent(int event) {
-        this.event = event;
     }
     
     public color getWidgetColor() {

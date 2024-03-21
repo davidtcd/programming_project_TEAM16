@@ -4,12 +4,14 @@ class Checkbox extends Widget {
     private int width;
     private int height;
     private boolean selected;
+    private Runnable onClick;
     
-    Checkbox(int x, int y, int width, int height, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont, int event) {
-        super(x, y, label, widgetColor, borderColor, labelColor, widgetFont, event);
+    Checkbox(int x, int y, int width, int height, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont, Runnable onClick) {
+        super(x, y, label, widgetColor, borderColor, labelColor, widgetFont);
         this.width = width; 
         this.height = height;
         this.selected = false;
+        this.onClick = onClick;
         
     }
     
@@ -37,9 +39,18 @@ class Checkbox extends Widget {
         this.selected = selected;
     }
     
+    public Runnable getOnClick() {
+        return this.onClick;
+    }
+    
+    public void setOnClick(Runnable onClick) {
+        this.onClick = onClick;
+    }
+    
     public void isClicked(int mX, int mY) {  
         if (mX > this.getX() && mX < this.getX() + this.getWidth() && mY > this.getY() && mY < this.getY() + this.getHeight()) { 
             this.setSelected(!this.getSelected());
+            this.onClick.run();
         }
     }
     
@@ -58,13 +69,12 @@ class Checkbox extends Widget {
         rect(cur_x, cur_y, w, h);
         
         if (this.getSelected()) {
-            int h = this.getHeight();
-            int w = this.getWidth();
+            
             // draw checkmark
             strokeWeight(2);
             stroke(0); // black
-            line(cur_x + w / 10, cur_y + h / 2, cur_x + w / 2, cur_y + (h * 0.85));
-            line(cur_x + w / 2, cur_y + (h * 0.85), cur_x + (w * 0.9), cur_y + h / 10);
+            line(cur_x + w / 10, cur_y + h / 2, cur_x + (w * 0.45), cur_y + (h * 0.85));
+            line(cur_x + (w * 0.45), cur_y + (h * 0.85), cur_x + (w * 0.9), cur_y + h / 10);
         }
     }
 }

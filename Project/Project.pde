@@ -12,5 +12,15 @@ void setup()
 
 void draw()
 {
-
+  background(255);
+  bar.drawBar();
+  currentScreen.draw();
+}
+void mousePressed()
+{
+    mainTab.isClicked(mouseX, mouseY);
+    graphTab.isClicked(mouseX, mouseY);
+    changeToDates.isClicked(mouseX, mouseY);
+    changeToOrigin.isClicked(mouseX, mouseY);
+    changeToDest.isClicked(mouseX, mouseY);
 }

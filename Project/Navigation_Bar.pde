@@ -12,6 +12,7 @@ class NavigationBar
     this.barHeight = BARHEIGHT;
     this.barWidth = BARWIDTH;
     this.barColor = BARCOLOR;
+    tabs = new ArrayList<Button>();
   }
   void drawBar()
   {
@@ -25,5 +26,9 @@ class NavigationBar
   void addTab(Button button)
   {
     tabs.add(button);
+  }
+  void changeScreen(Screen screen)
+  {
+    currentScreen = screen;
   }
 }

@@ -14,8 +14,8 @@ class Dropdown extends Widget {
     private String[] visibleOptions;
     
     
-    Dropdown(int x, int y, int width, int height, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont, ArrayList<String> options, int event, int scrollbarEvent) {
-        super(x, y, label, widgetColor, borderColor, labelColor, widgetFont, event);
+    Dropdown(int x, int y, int width, int height, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont, ArrayList<String> options) {
+        super(x, y, label, widgetColor, borderColor, labelColor, widgetFont);
         this.width = width; 
         this.height = height;
         this.open = false;
@@ -37,7 +37,7 @@ class Dropdown extends Widget {
         int scrollbarY = y + height;
         
         double fraction = (double) OPTION_VISIBLE_COUNT / (double) options.size();
-        this.scrollbar = new Scrollbar(scrollbarX, scrollbarY, scrollbarWidth, scrollbarHeight, "", widgetColor, color(0, 0 , 0), widgetFont, scrollbarEvent, fraction);
+        this.scrollbar = new Scrollbar(scrollbarX, scrollbarY, scrollbarWidth, scrollbarHeight, "", widgetColor, color(0, 0 , 0), widgetFont, fraction);
     }
     
     public int getWidth() {
@@ -116,35 +116,22 @@ class Dropdown extends Widget {
         return this.scrollbar;
     }
     
-    public boolean isClicked(int mX, int mY) {  
+    public void isClicked(int mX, int mY) {  
         if (mX > this.getX() && mX < this.getX() + this.getWidth() && mY > this.getY() && mY < this.getY() + this.getHeight()) { 
-            return true;
+            this.setOpen(!(this.getOpen()));
         }
-        return false;
     }
     
     public void optionIsClicked(int index, int mX, int mY) {
         // prevent clicking scrollbar from being registered as selecting option
         if (this.getOpen()) {
-            int margin;
-            if (this.getOptions().size() > OPTION_VISIBLE_COUNT) {
-                // scrollbar open
-                margin = this.getScrollbar().getWidth();
-            } else {
-                margin = 0;
-            }
+            int margin = this.getOptions().size() > OPTION_VISIBLE_COUNT ? this.getScrollbar().getWidth() : 0;
             
             if (mX > this.getX() && mX < this.getX() + this.getWidth() - margin && mY > (this.getY() + (index + 1) * this.getHeight()) && mY < this.getY() + ((index + 2) * this.getHeight())) {
                 this.setSelected(index + this.getOffset());
                 // update label
                 this.setLabel(this.getVisibleOptions()[index]);
             }
-        }
-    }
-    
-    public void toggleDropdown(int mX, int mY) {
-        if (this.isClicked(mX, mY)) {
-            this.setOpen(!(this.getOpen()));
         }
     }
     
