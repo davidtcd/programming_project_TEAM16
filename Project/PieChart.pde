@@ -17,9 +17,11 @@ class pieChart
 
    void draw()
    {
+     background(255);
      float[] exampleFloatArray = {218,1782};
      String[] exampleStringArray = {"Cancelled", "Not Cancelled"};
-     pieChart(30, exampleFloatArray, exampleStringArray);
+     pieChart(800, exampleFloatArray, exampleStringArray);
+     noLoop(); 
    }
 
    float[] cancelledFlights(Table bigTable)
@@ -67,21 +69,23 @@ class pieChart
     }
   
     float lastAngle = 0;
-    for (int i = 0; i < sortedAngles.length; i++) {
-    //float red = map(i, 0, data.length, , 255);
-    //float green = map(i, 0, data.length, 255, 0);
-    //float blue = map(i, 0, data.length, 0 ,255);
-    float red = random(100,255);
-    float green = random(100,255);
-    float blue = random(100,255);
-    color myColor = color(red,blue,green);
-    fill(myColor);
-    float textPos = map(i+1,0, sortedAngles.length, 0, height-10);
-    textSize(32);
-    text(sortedHeadings[i] + ": " +round((sortedAngles[i]/360) * 100) + "%", width-diameter, textPos);
-    arc(diameter/2+5, height/2, diameter, diameter, lastAngle - radians(90), lastAngle+radians(sortedAngles[i]) - radians (90));
-    lastAngle += radians(sortedAngles[i]);
-  }
+    for (int i = 0; i < sortedAngles.length; i++) 
+    {
+      //float red = map(i, 0, data.length, , 255);
+      //float green = map(i, 0, data.length, 255, 0);
+      //float blue = map(i, 0, data.length, 0 ,255);
+      float red = random(100,255);
+      float green = random(100,255);
+      float blue = random(100,255);
+      color myColor = color(red,blue,green);
+      fill(myColor);
+      
+      float textPos = map(i+1,0, sortedAngles.length, 0, height-100);
+      textSize(32);
+      text(sortedHeadings[i] + ": " +round((sortedAngles[i]/360) * 100) + "%", width-diameter, textPos);
+      arc(diameter/2+100, height/2 + 75, diameter, diameter, lastAngle - radians(90), lastAngle+radians(sortedAngles[i]) - radians (90));
+      lastAngle += radians(sortedAngles[i]);
+    }
 }
 
 }

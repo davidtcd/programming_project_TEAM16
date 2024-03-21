@@ -17,6 +17,7 @@ void draw()
 }
 void mousePressed()
 {
+    pieTab.isClicked(mouseX, mouseY);
     mainTab.isClicked(mouseX, mouseY);
     graphTab.isClicked(mouseX, mouseY);
     changeToDates.isClicked(mouseX, mouseY);
