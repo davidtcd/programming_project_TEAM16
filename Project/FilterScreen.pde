@@ -27,9 +27,6 @@
    {
      text("Start Date: " + dateDisplay(startDay, startMonth, startYear), 2, 2);
      text("End Date" + dateDisplay(stopDay, stopMonth, stopYear),200,00);
-     
-     
-   
    }
    void dateInput()
    {
