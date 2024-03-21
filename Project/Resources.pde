@@ -11,8 +11,6 @@ Screen currentScreen;
 Screen graphScreen;
 Button graphTab, mainTab;
 Button changeToDates, changeToOrigin, changeToDest;
-Runnable toGraphScreen, toMainScreen;
-Runnable displayDateChart, displayOriginChart, displayDestChart;
 
 //Variable constants
 final String DATA_PATH = "flights2k";
@@ -48,16 +46,11 @@ void loadResources()
   mainscreen = new TableScreen();
   currentScreen = mainscreen;
   graphScreen = new GraphScreen(currentChart);
-  toGraphScreen = () -> bar.changeScreen(graphScreen);
-  toMainScreen = () -> bar.changeScreen(mainscreen);
-  displayDateChart = () -> graphScreen.changeChart(dateChart);
-  displayOriginChart = () -> graphScreen.changeChart(airOriginChart);
-  displayDestChart = () -> graphScreen.changeChart(airDestChart);
-  mainTab = new Button(50, BARHEIGHT/2 - TABHEIGHT/2, TABWIDTH, TABHEIGHT, "Graphs", color(255, 0, 0), color(0), color(255), font, toMainScreen);
-  graphTab = new Button(50 + TABGAP * 3, BARHEIGHT/2 - TABHEIGHT/2, TABWIDTH, TABHEIGHT, "Graphs", color(255, 0, 0), color(0), color(255), font, toGraphScreen);
-  changeToDates = new Button(width - 300, 300, 200, 50, "showDates", color(0, 0, 255), BLACK, WHITE, font, displayDateChart);
-  changeToOrigin = new Button(width - 600, 300, 200, 50, "showOriginAirports", color(0, 0, 255), BLACK, WHITE, font, displayOriginChart);
-  changeToDest = new Button(width - 300, 400, 200, 50, "showDestAirports", color(0, 0, 255), BLACK, WHITE, font, displayDestChart);
+  mainTab = new Button(50, BARHEIGHT/2 - TABHEIGHT/2, TABWIDTH, TABHEIGHT, "Main", color(255, 0, 0), color(0), color(255), font, () ->bar.changeScreen(mainscreen)) ;
+  graphTab = new Button(50 + TABGAP * 3, BARHEIGHT/2 - TABHEIGHT/2, TABWIDTH, TABHEIGHT, "Graphs", color(255, 0, 0), color(0), color(255), font, () -> bar.changeScreen(graphScreen));
+  changeToDates = new Button(width - 300, 300, 200, 50, "showDates", color(0, 0, 255), BLACK, WHITE, font, () ->graphScreen.changeChart(dateChart));
+  changeToOrigin = new Button(width - 600, 300, 200, 50, "showOriginAirports", color(0, 0, 255), BLACK, WHITE, font, () -> graphScreen.changeChart(airOriginChart));
+  changeToDest = new Button(width - 300, 400, 200, 50, "showDestAirports", color(0, 0, 255), BLACK, WHITE, font, () -> graphScreen.changeChart(airDestChart));
   graphScreen.addButton(changeToDates); graphScreen.addButton(changeToOrigin); graphScreen.addButton(changeToDest);
   bar.addTab(mainTab);  bar.addTab(graphTab);
 }
