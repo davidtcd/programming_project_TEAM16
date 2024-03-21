@@ -68,7 +68,7 @@ class Dataset
     for(int j=0; j<sortedTable.getRowCount(); j++){
       sortedTable.setInt(j, "INDEX", j);
     }
-    for(int i=3; i<table.getColumnCount(); i++){
+    for(int i=0; i<table.getColumnCount(); i++){
       sortedTable.sort(i);
       Table savedTable = new Table();
       savedTable.addColumn("INDEX");
@@ -84,6 +84,7 @@ class Dataset
           prevValue = value;
         }
       }
+      savedTable.setInt(k, 1, sortedTable.getRowCount()-1);
       saveTable(savedTable, sortedPath+"/"+table.getColumnTitle(i)+".csv");
       sortedKeys[i] = sortedTable;
       println("Column: "+i+" sorted.");
