@@ -175,7 +175,8 @@ class Dropdown extends Widget {
         fill(wc); 
         rect(cur_x, cur_y, w, h);
         fill(lc);
-        text(l, cur_x + 10, cur_y + h - 10);
+        textAlign(CENTER, CENTER);
+        text(l, cur_x + w / 2, cur_y + h / 2);
         
         // check if open
         if (this.getOpen()) {
@@ -198,7 +199,8 @@ class Dropdown extends Widget {
                 
                 rect(cur_x, cur_y + (h * (i + 1) + 1), w, h);
                 fill(lc);
-                text(this.getVisibleOptions()[i], cur_x + 10, cur_y + h - 10 + (h * (i + 1) + 1));
+                textAlign(CENTER, CENTER);
+                text(this.getVisibleOptions()[i], cur_x + w / 2, cur_y + (h / 2) + (h * (i + 1) + 1));
             }
             
             // draw scrollbar
