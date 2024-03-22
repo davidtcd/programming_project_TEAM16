@@ -18,8 +18,6 @@
     public void draw() {
         // Code to draw the screen (e.g., drawing widgets)
     }
-    void addButton(Button button){}
-    void changeChart(BarChart newChart){}
     
 
 }

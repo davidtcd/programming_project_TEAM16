@@ -1,3 +1,4 @@
+
 void settings()
 {
   size(2000,1000); //Esosa did this
@@ -14,12 +15,13 @@ void draw()
   background(255);
   bar.drawBar();
   currentScreen.draw();
+  barChartScreen.changeChart();
+  barChartScreen.changeBarColor();
 }
 void mousePressed()
 {
-    mainTab.isClicked(mouseX, mouseY);
-    graphTab.isClicked(mouseX, mouseY);
-    changeToDates.isClicked(mouseX, mouseY);
-    changeToOrigin.isClicked(mouseX, mouseY);
-    changeToDest.isClicked(mouseX, mouseY);
+  for(int i = 0; i < allButtons.size(); i++)
+  {
+    allButtons.get(i).isClicked(mouseX, mouseY);
+  }
 }

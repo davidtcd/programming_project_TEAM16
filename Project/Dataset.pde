@@ -26,7 +26,7 @@ class Dataset
         table.setColumnType(4, "string");
         table.setColumnType(5, "string");
         table.setColumnType(6, "string");
-        table.setColumnType(7, "int");
+        table.setColumnType(7, "string");
         table.setColumnType(8, "string");
         table.setColumnType(9, "string");
         table.setColumnType(10, "string");

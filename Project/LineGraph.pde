@@ -2,7 +2,7 @@ import java.util.Collections;
 String[] lines; // Array to store each line of the file
 HashMap<String, Integer> flightsPerDate = new HashMap<String, Integer>(); // Map to store flight counts for each date
 ArrayList<String> dates = new ArrayList<String>(); // List to store dates for sorting
-
+/*
 void setup() {
   size(800, 600);
   background(255);
@@ -31,6 +31,7 @@ void setup() {
   // Draw the line graph
   drawLineGraph();
 }
+*/
 
 void drawLineGraph() {
   // Determine the maximum number of flights
