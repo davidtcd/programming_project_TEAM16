@@ -17,11 +17,9 @@ class pieChart
 
    void draw()
    {
-     background(255);
      float[] exampleFloatArray = {218,1782};
      String[] exampleStringArray = {"Cancelled", "Not Cancelled"};
      pieChart(800, exampleFloatArray, exampleStringArray);
-     noLoop(); 
    }
 
    float[] cancelledFlights(Table bigTable)
