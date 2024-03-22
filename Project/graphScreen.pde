@@ -213,7 +213,7 @@ class BarChartScreen extends Screen
       total = categories14;
       break;
     case(15):
-      chart = cancelledChart;
+      chart = cancelChart;
       chartTitle = " CANCELLED FLIGHT INDICATOR (1 = YES";
       mean = mean15;
       median = median15;

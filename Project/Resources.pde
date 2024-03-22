@@ -19,17 +19,20 @@ ArrayList<BarChart> schDepTimeChart;
 ArrayList<BarChart> depTimeChart;
 ArrayList<BarChart> schArrTimeChart;
 ArrayList<BarChart> arrTimeChart;
-ArrayList<BarChart> cancelledChart;
+ArrayList<BarChart> cancelChart;
 ArrayList<BarChart> divertedChart;
 ArrayList<BarChart> distanceChart;
 ArrayList<Button> allButtons;
+pieChart cancelledChart;
 Screen currentScreen;
 BarChartScreen barChartScreen;
-Button mainTab, barChartTab;
 Button nextChart, prevChart;
 Button nextPage, prevPage;
 Button nextColor, prevColor;
 Button flipAxes;
+Screen graphScreen;
+Screen cancelledPieScreen;
+Button mainTab, barChartTab, pieTab;
 
 //Variable constants
 final String DATA_PATH = "flights2k";
@@ -93,21 +96,24 @@ void loadResources()
   mean13 = mean; median13 = median; medianName13 = medianName; mode13 = mode; modeName13 = modeName; categories13 = totalCategories;
   arrTimeChart = setChart(14);
   mean14 = mean; median14 = median; medianName14 = medianName; mode14 = mode; modeName14 = modeName; categories14 = totalCategories;
-  cancelledChart = setChart(15);
+  cancelChart = setChart(15);
   mean15 = mean; median15 = median; medianName15 = medianName; mode15 = mode; modeName15 = modeName; categories15 = totalCategories;
   divertedChart = setChart(16);
   mean16 = mean; median16 = median; medianName16 = medianName; mode16 = mode; modeName16 = modeName; categories16 = totalCategories;
   distanceChart = setChart(17);
   mean17 = mean; median17 = median; medianName17 = medianName; mode17 = mode; modeName17 = modeName; categories17 = totalCategories;
   currentChart = dateChart;
+  cancelledChart = new pieChart(); 
 
   allButtons = new ArrayList<Button>();
   bar = new NavigationBar();
   mainscreen = new TableScreen();
   currentScreen = mainscreen;
   barChartScreen = new BarChartScreen(currentChart);
+  cancelledPieScreen = new pieScreen(cancelledChart);
   mainTab = new Button(50, BARHEIGHT/2 - TABHEIGHT/2, TABWIDTH, TABHEIGHT, "Main", RED, BLACK, WHITE, font, () ->bar.changeScreen(mainscreen)) ;
   barChartTab = new Button(50 + TABGAP * 3, BARHEIGHT/2 - TABHEIGHT/2, TABWIDTH, TABHEIGHT, "BarCharts", RED, BLACK, WHITE, font, () -> bar.changeScreen(barChartScreen));
+  pieTab = new Button(50 + TABGAP * 6, BARHEIGHT /2 - TABHEIGHT / 2, TABWIDTH, TABHEIGHT, "Pie Chart", color(0,0,255), color(0), color(255), font, () ->bar.changeScreen(cancelledPieScreen));
   flipAxes = new Button(width - (BUTTON2_GAP - 150), 140, BUTTONWIDTH, BUTTONHEIGHT, "Flip Chart", BLUE, BLACK, WHITE, font, () -> barChartScreen.flipChart());
   nextChart = new Button(width - BUTTON1_GAP, 200, BUTTONWIDTH, BUTTONHEIGHT, "Next Chart", BLUE, BLACK, WHITE, font, () -> barChartScreen.nextChart());
   prevChart = new Button(width - BUTTON2_GAP, 200, BUTTONWIDTH, BUTTONHEIGHT, "Previous Chart", BLUE, BLACK, WHITE, font, () -> barChartScreen.prevChart());
@@ -116,6 +122,8 @@ void loadResources()
   nextColor = new Button(width- BUTTON1_GAP,400, BUTTONWIDTH, BUTTONHEIGHT, "Next Colour", BLUE, BLACK, WHITE, font, () -> barChartScreen.nextColor());
   prevColor = new Button(width - BUTTON2_GAP, 400, BUTTONWIDTH, BUTTONHEIGHT, "Previous Colour", BLUE, BLACK, WHITE, font, () -> barChartScreen.prevColor());
   barChartScreen.addButton(nextChart); barChartScreen.addButton(prevChart); barChartScreen.addButton(nextPage); barChartScreen.addButton(prevPage); barChartScreen.addButton(nextColor); barChartScreen.addButton(prevColor); barChartScreen.addButton(flipAxes);
-  bar.addTab(mainTab);  bar.addTab(barChartTab);
+  bar.addTab(mainTab);  bar.addTab(barChartTab); bar.addTab(pieTab);
   allButtons.add(mainTab); allButtons.add(barChartTab); allButtons.add(nextChart); allButtons.add(prevChart); allButtons.add(nextPage); allButtons.add(prevPage); allButtons.add(nextColor); allButtons.add(prevColor); allButtons.add(flipAxes);
+  allButtons.add(pieTab);
+  currentScreen = mainscreen ;
 }
