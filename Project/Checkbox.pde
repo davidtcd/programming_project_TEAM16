@@ -1,5 +1,6 @@
 class Checkbox extends Widget {
     // Lukas Maselsky, Created class and methods 1pm 17/03/2024
+    // Lukas Maselsky, fixed label centering and position 1pm 22/03/2024
     
     private int width;
     private int height;
@@ -67,6 +68,9 @@ class Checkbox extends Widget {
         noStroke();
         fill(wc); 
         rect(cur_x, cur_y, w, h);
+        fill(lc);
+        textAlign(LEFT, CENTER);
+        text(l, cur_x + w + (w / 5), cur_y + h / 2);
         
         if (this.getSelected()) {
             

@@ -1,6 +1,7 @@
 class Dropdown extends Widget {
     // Lukas Maselsky, Created class, constructor, getters and setters, and a few methods 5pm 14/03/2024
     // Lukas Maselsky, Created more methods for openening and selecting options 1pm 17/03/2024
+    // Lukas Maselsky, created methods to decrease option color lightness based on widget color 1pm 22/03/2024
     
     // each option is same height as dropdown button
     private int width;
@@ -34,7 +35,7 @@ class Dropdown extends Widget {
         int scrollbarWidth = width / 10; //! not concrete 
         int scrollbarHeight = height * (OPTION_VISIBLE_COUNT); 
         int scrollbarX = x + width - scrollbarWidth;
-        int scrollbarY = y + height;
+        int scrollbarY = y + height + 1; // + 1 for border bottom
         
         double fraction = (double) OPTION_VISIBLE_COUNT / (double) options.size();
         this.scrollbar = new Scrollbar(scrollbarX, scrollbarY, scrollbarWidth, scrollbarHeight, "", widgetColor, color(0, 0 , 0), widgetFont, fraction);
@@ -143,6 +144,109 @@ class Dropdown extends Widget {
         this.offset = offset;
     }
     
+    public color getLighterColor(color c, float increase) {
+        // increase lightness of colour, 0 < increase < 100
+        float[] rgb = extractRGB(c);
+        float[] hsv = rgbTohsv(rgb[0], rgb[1], rgb[2]);
+        float s = hsv[1];
+        float v = hsv[2];
+        v = v * (float) 100;
+        s = s * (float) 100;
+        
+        // first increase lightness, then saturation if maxed
+        float newV;
+        float newS = s;
+        if (v + increase < 100) {
+            newV = v + increase;
+        } else {
+            newV = 100;
+            float diff = (float) 100 - v;
+            diff = increase - diff;
+            newS = s - diff > 0 ? s - diff : 0; 
+            newS = newS / (float) 100;
+        }
+        newV = newV / (float) 100;
+        
+        float[] newrgb = hsvTorgb(hsv[0], newS, newV);
+        color rgbCol = color(Math.round(newrgb[0]), Math.round(newrgb[1]), Math.round(newrgb[2]));
+        return rgbCol;
+    }
+    
+    public float[] extractRGB(color c) {
+        int r = (c >> 16) & 0xFF;
+        int g = (c >> 8) & 0xFF;
+        int b = c & 0xFF;
+        
+        return new float[] {r, g, b};
+    }
+    
+    public float[] rgbTohsv(float r, float g, float b) {
+        float rDash = (float) r / (float) 255;
+        float gDash = (float) g / (float) 255;
+        float bDash = (float) b / (float) 255;
+        float Cmax = bDash > (rDash > gDash ? rDash : gDash) ? bDash : ((rDash > gDash) ? rDash : gDash);
+        float Cmin = bDash < (rDash < gDash ? rDash : gDash) ? bDash : ((rDash < gDash) ? rDash : gDash);
+        float delta = Cmax - Cmin;
+        
+        float h;
+        
+        if (delta == 0) {
+            h = 0;  
+        } else {
+            if (Cmax == rDash) {
+                h = 60 * (((gDash - bDash) / delta) % 6);  
+            } else if (Cmax == gDash) {
+                h = 60 * (((bDash - rDash) / delta) + 2);                
+            } else {
+                h = 60 * (((rDash - gDash) / delta) + 4); 
+            }
+        }
+        
+        float s = Cmax == 0.0 ? 0 : (delta / Cmax);
+        float v = Cmax;
+        
+        return new float[] {h, s, v};
+    }
+    
+    public float[] hsvTorgb(float h, float s, float v) {
+        float c = v * s;
+        float x = c * (1 - Math.abs(((h / 60.0) % 2) - 1));
+        float m = v - c;
+        
+        float rDash, gDash, bDash;
+        if (h >= 0 && h < 60) {
+            rDash = c;
+            gDash = x;
+            bDash = 0;
+        } else if (h >= 60 && h < 120) {
+            rDash = x;
+            gDash = c;
+            bDash = 0;
+        } else if (h >= 120 && h < 180) {
+            rDash = 0;
+            gDash = c;
+            bDash = x;
+        } else if (h >= 180 && h < 240) {
+            rDash = 0;
+            gDash = x;
+            bDash = c; 
+        } else if (h >= 240 && h < 300) {
+            rDash = x;
+            gDash = 0;
+            bDash = c;
+        } else {
+            rDash = c;
+            gDash = 0;
+            bDash = x;
+        }  
+        
+        float r = (rDash + m) * (float) 255;
+        float g = (gDash + m) * (float) 255;
+        float b = (bDash + m) * (float) 255;
+        
+        return new float[] {r, g, b};  
+    }  
+    
     public void updateVisibleOptions() {
         int value = this.getScrollbar().getValue();
         int diff = this.getOptions().size() - OPTION_VISIBLE_COUNT; // will be >= 1
@@ -190,9 +294,9 @@ class Dropdown extends Widget {
             for (int i = 0; i < limit; i++) {
                 // draw each visible option
                 
-                // draw stroke if selected
+                // draw lighter color if selected
                 if (this.getSelected() == i + this.getOffset()) {
-                    fill(color(245));
+                    fill(this.getLighterColor(wc, 40));
                 } else {
                     fill(wc);
                 }
