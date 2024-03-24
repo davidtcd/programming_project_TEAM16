@@ -1,6 +1,7 @@
 import squarify.library.*;
 
 public class TreeMapScreen extends Screen {
+    // Lukas Maselsky, Created class, constructor, getters and setters, and a few methods 5pm 24/03/2024
     
     private int tmX, tmY;
     private int tmW, tmH;
@@ -14,16 +15,16 @@ public class TreeMapScreen extends Screen {
     
     TreeMapScreen(ArrayList<Button> allButtons) {
         super();
-        this.tmW = (int) (SCREENWIDTH * (0.75));
-        this.tmH = (int) (SCREENHEIGHT * (0.75));
-        this.tmX = (int) (SCREENWIDTH * 0.01);
+        this.tmW = (int)(SCREENWIDTH * (0.75));
+        this.tmH = (int)(SCREENHEIGHT * (0.75));
+        this.tmX = (int)(SCREENWIDTH * 0.01);
         this.tmY = (SCREENHEIGHT / 2) - (this.tmH / 2);
         
         this.currentColumn = 0;
         this.colCount = data.getNumberOfColumns();
         createTreeMap(this.currentColumn);
-        Button nextButton = new Button(this.tmW + this.tmX + 25, BARHEIGHT + 25, 100, 50, "Next", BLACK, BLACK, WHITE, font, () -> nextClick());
-        Button prevButton = new Button(this.tmW + this.tmX + 25, BARHEIGHT + 95, 100, 50, "Prev", BLACK, BLACK, WHITE, font, () -> prevClick());
+        Button nextButton = new Button(this.tmW + this.tmX + 25, BARHEIGHT + 25, 100, 50, "Next", BLACK, BLACK, WHITE, font,() -> nextClick());
+        Button prevButton = new Button(this.tmW + this.tmX + 25, BARHEIGHT + 95, 100, 50, "Prev", BLACK, BLACK, WHITE, font,() -> prevClick());
         allButtons.add(nextButton);
         allButtons.add(prevButton);
         this.addWidget(nextButton);
@@ -130,7 +131,7 @@ public class TreeMapScreen extends Screen {
     public void createTreeMap(int columnNumber) {
         // set col name
         this.setColName(data.table.getColumnTitle(columnNumber));
-      
+        
         this.setIsCreating(true);
         String[] labels = sort(data.getUniqueValues(columnNumber));
         this.labels = labels;
@@ -141,10 +142,10 @@ public class TreeMapScreen extends Screen {
             Table occurrenceAmount = data.getOccurrences(i, columnNumber);
             Integer amount = occurrenceAmount.getRowCount();
             values.add(amount.floatValue());
-            bgColors[i] = color((int) random(0, 255), (int) random(0, 255), (int) random(0, 255));
+            bgColors[i] = color((int) random(0, 255),(int) random(0, 255),(int) random(0, 255));
         }
         this.bgColors = bgColors;
-  
+        
         Squarify square = new Squarify(values, this.tmX, this.tmY, this.tmW, this.tmH);
         this.rects = square.getRects();
         this.setIsCreating(false);
@@ -162,7 +163,7 @@ public class TreeMapScreen extends Screen {
         text(this.getColName(), this.tmW + this.tmX + 25, BARHEIGHT + 200);
         textSize(12);
         textAlign(CENTER);
-      
+        
         // draw treemap
         stroke(0);
         
