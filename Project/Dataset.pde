@@ -26,11 +26,12 @@ class Dataset
         table.setColumnType(4, "string");
         table.setColumnType(5, "string");
         table.setColumnType(6, "string");
+        table.setColumnType(6, "int");
         table.setColumnType(7, "string");
         table.setColumnType(8, "string");
         table.setColumnType(9, "string");
-        table.setColumnType(10, "string");
-        table.setColumnType(11, "string");
+        table.setColumnType(10, "int");
+        table.setColumnType(11, "int");
         table.setColumnType(12, "int");
         table.setColumnType(13, "int");
         table.setColumnType(14, "int");
@@ -86,7 +87,7 @@ class Dataset
       }
       savedTable.setInt(k, 1, sortedTable.getRowCount()-1);
       saveTable(savedTable, sortedPath+"/"+table.getColumnTitle(i)+".csv");
-      sortedKeys[i] = sortedTable;
+      sortedKeys[i] = savedTable;
       println("Column: "+i+" sorted.");
     }
   }
@@ -105,7 +106,7 @@ class Dataset
   //println(join(sort(data.getUniqueValues(0)), "\n")); //Can be used to print all unique values in a column
   String[] getUniqueValues(int column){
     try{
-      return table.getUnique(column);
+      return sort(table.getUnique(column));
     }
     catch (Exception e){
       println(e);
