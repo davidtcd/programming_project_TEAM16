@@ -2,7 +2,7 @@
 
 
  class Screen { //declaration of screen class
-    private ArrayList<Widget> widgets;
+    ArrayList<Widget> widgets;
 
     Screen() { //constructor for screen 
         widgets = new ArrayList<Widget>(); //add widgets 
