@@ -8,13 +8,16 @@ void settings()
 void setup()
 {
   loadResources();
+  LineGraph linegraph = new LineGraph();
+  linegraph.setupLineGraph();
 }
 
 void draw()
 {
-  background(255);
+ background(255);
   bar.drawBar();
   currentScreen.draw();
+<<<<<<< Updated upstream
   barChartScreen.changeChart();
   barChartScreen.changeBarColor();
 }
@@ -24,4 +27,18 @@ void mousePressed()
   {
     allButtons.get(i).isClicked(mouseX, mouseY);
   }
+=======
+  
+  
+}
+void mousePressed()
+{
+    mainTab.isClicked(mouseX, mouseY);
+    graphTab.isClicked(mouseX, mouseY);
+    lineGraphTab.isClicked(mouseX, mouseY);
+    changeToDates.isClicked(mouseX, mouseY);
+    changeToOrigin.isClicked(mouseX, mouseY);
+    changeToDest.isClicked(mouseX, mouseY);
+    
+>>>>>>> Stashed changes
 }
