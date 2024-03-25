@@ -62,12 +62,15 @@ final int BUTTONWIDTH = 200;
 final int BUTTONHEIGHT = 50;
 final int SCREENWIDTH = 2000;
 final int SCREENHEIGHT = 1000;
+final int TEXT_COLOUR = color(0, 0, 0);
+final int HEADER_SIZE = 16;
+final int TEXT_SIZE = 14;
 
 void loadResources()
 {
   println("Loading resources...");
   data = new Dataset(DATA_PATH+".csv", DataType.flights);
-  font = loadFont("Verdana-Bold-48.vlw");
+  font = loadFont("Georgia-14.vlw");
   
   dateChart = setChart(0);
    median0 = median;  medianName0 = medianName;  mode0 = mode;  modeName0 = modeName;  categories0 = totalCategories;  mean0 = mean;
