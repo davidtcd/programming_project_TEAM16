@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
 class BarChartScreen extends Screen
-=======
- class GraphScreen extends Screen
->>>>>>> Stashed changes
 {
   PFont title = createFont("Arial", 20);
   color barColor;
