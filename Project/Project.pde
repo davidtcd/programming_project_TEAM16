@@ -25,3 +25,8 @@ void mousePressed()
     allButtons.get(i).isClicked(mouseX, mouseY);
   }
 }
+
+void mouseMoved() {
+  treeMapScreen.isHovering(mouseX, mouseY);  
+  
+}
