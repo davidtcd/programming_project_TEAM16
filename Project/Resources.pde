@@ -53,9 +53,8 @@ void loadResources()
   println("Loading resources...");
   data = new Dataset(DATA_PATH+".csv", DataType.flights);
   font = loadFont("Verdana-Bold-48.vlw");
- 
-  cancelledChart = new pieChart();
   font = loadFont("Georgia-14.vlw");
+  
   cancelledChart = new pieChart(); 
 
   allButtons = new ArrayList<Button>();

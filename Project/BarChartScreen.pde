@@ -5,8 +5,10 @@ class BarChartScreen extends Screen
   PFont title = createFont("Arial", 20);
   color barColor;
   ArrayList<BarChart> currentChart= new ArrayList<BarChart>();
+  ArrayList<ArrayList<BarChart>> fullCharts = new ArrayList<ArrayList<BarChart>>();
   BarChart chart;
   ArrayList<Button> buttons;
+  String[] categories;
   int pageNum = 0;
   int chartNum = 0;
   int currentColor = 0;
@@ -19,6 +21,13 @@ class BarChartScreen extends Screen
   String medianName;
   int mode;
   String modeName;
+  ArrayList<Integer> allMeans = new ArrayList<Integer>();
+  ArrayList<Integer> allTotals = new ArrayList<Integer>();
+  ArrayList<Integer> allMedians = new ArrayList<Integer>();
+  ArrayList<Integer> allModes = new ArrayList<Integer>();
+  ArrayList<String> allMedianNames = new ArrayList<String>();
+  ArrayList<String> allModeNames = new ArrayList<String>();
+  ArrayList<String> allTitles = new ArrayList<String>();
   boolean invertAxis = true;
   PApplet parent;
   
@@ -32,16 +41,21 @@ class BarChartScreen extends Screen
   }
   void drawTitle()
   {
+    textFont(title);
+    textSize(24);
     stroke(BLACK);
-    rect(1450, 500, 400, 400);
+    rect(1400, 500, 500, 400);
     fill(BLACK);
-    text(chartTitle, 700, 140);
+    text(allTitles.get(currentCol), 700, 140);
     text(pageNum, 80, 950);
     textAlign(CENTER);
-    text("MEAN: " + mean, 1650, 600);
-    text("MODE: " + modeName + ", AMOUNT: " + mode, 1650, 650);
-    text("MEDIAN: " + medianName + ", AMOUNT: " + median, 1650, 700);
-    text("TOTAL CATEGORIES: " + totalCategories, 1650, 750);
+    textSize(20);
+    text("MEAN: " + allMeans.get(currentCol), 1650, 600);
+    text("MODE: " + allModeNames.get(currentCol) + ", AMOUNT: " + allModes.get(currentCol), 1650, 650);
+    text("MEDIAN: " + allMedianNames.get(currentCol) + ", AMOUNT: " + allMedians.get(currentCol), 1650, 700);
+    text("TOTAL CATEGORIES: " + allTotals.get(currentCol), 1650, 750);
+    textFont(font);
+    textSize(12);
   }
   void draw()
   {
@@ -72,7 +86,7 @@ class BarChartScreen extends Screen
     int maxBars = 50;
     int modeIndex = 0;
     ArrayList<BarChart> allCharts = new ArrayList<BarChart>();
-    String[] categories = data.getUniqueValues(columnNumber);
+    categories = data.getUniqueValues(columnNumber);
     totalCategories = categories.length;
     int numOfPages = ceil(categories.length / maxBars);
     if(maxBars > categories.length)
@@ -83,8 +97,7 @@ class BarChartScreen extends Screen
    float[] values = new float[categories.length];
    for(int i = 0; i < values.length; i++) 
    {
-    Table occurrenceAmount = data.getOccurrences(i, columnNumber);
-    float amount = occurrenceAmount.getRowCount();
+    float amount = data.getOccurrenceAmount(i, columnNumber);
      values[i] = amount;
    }
    mean = data.table.getRowCount() / categories.length;
@@ -174,6 +187,7 @@ class BarChartScreen extends Screen
       }
     }
     chartTitle = data.table.getColumnTitle(columnNumber);
+    allMeans.add(mean); allModes.add(mode); allMedians.add(median); allMedianNames.add(medianName); allModeNames.add(modeName); allTotals.add(totalCategories); allTitles.add(chartTitle);
     return allCharts;
 }
   void pageInc()
@@ -198,12 +212,25 @@ class BarChartScreen extends Screen
     if(currentCol < colCount - 1)
     {
       currentCol++;
+      if(currentCol >= fullCharts.size())
+      {
       currentChart = setChart(currentCol);
+      fullCharts.add(currentChart);
+      }
+      else
+      {
+      currentChart = fullCharts.get(currentCol);
+      }
     }
     else if(currentCol >= colCount - 1)
     {
       currentCol = colCount - 1;
-      currentChart = setChart(currentCol);
+      if(currentCol >= fullCharts.size())
+      {
+        currentChart = setChart(currentCol);
+        fullCharts.add(currentChart);
+      }
+      currentChart = fullCharts.get(currentCol);
     }
   }
   void prevChart()
@@ -212,12 +239,12 @@ class BarChartScreen extends Screen
     if(currentCol > 0)
     {
       currentCol--;
-      currentChart = setChart(currentCol);
+      currentChart = fullCharts.get(currentCol);
     }
     else
     {
       currentCol = 0;
-      currentChart = setChart(currentCol);
+      currentChart = fullCharts.get(currentCol);
     }
   }
   void changeBarColor()
@@ -266,19 +293,15 @@ class BarChartScreen extends Screen
       barColor = 0;
     }
   }
-  boolean flipChart()
+  void flipChart()
   {
-    boolean flip = true;
     if(invertAxis == true)
     {
       invertAxis = false;
-      return false;
     }
-    if(invertAxis == false)
+    else
     {
       invertAxis = true;
-      return false;
     }
-    return flip;
   }
 }
