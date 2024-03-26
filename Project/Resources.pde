@@ -18,7 +18,7 @@ TreeMapScreen treeMapScreen;
 PApplet parent = this;
 
 //Variable constants
-final String DATA_PATH = "flights_full";
+final String DATA_PATH = "flights2k";
 
 final int BARHEIGHT = 100;
 final int BARWIDTH = 2000;
@@ -44,6 +44,9 @@ final int BUTTONWIDTH = 200;
 final int BUTTONHEIGHT = 50;
 final int SCREENWIDTH = 2000;
 final int SCREENHEIGHT = 1000;
+final int TEXT_COLOUR = color(0, 0, 0);
+final int HEADER_SIZE = 16;
+final int TEXT_SIZE = 14;
 
 void loadResources()
 {
@@ -52,6 +55,8 @@ void loadResources()
   font = loadFont("Verdana-Bold-48.vlw");
  
   cancelledChart = new pieChart();
+  font = loadFont("Georgia-14.vlw");
+  cancelledChart = new pieChart(); 
 
   allButtons = new ArrayList<Button>();
   bar = new NavigationBar();
@@ -76,5 +81,5 @@ void loadResources()
   allButtons.add(mainTab); allButtons.add(barChartTab); allButtons.add(nextChart); allButtons.add(prevChart); allButtons.add(nextPage); allButtons.add(prevPage); allButtons.add(nextColor); allButtons.add(prevColor); allButtons.add(flipAxes);
   allButtons.add(pieTab);
   allButtons.add(treemapTab);
-  currentScreen = mainscreen ;
+  currentScreen = mainscreen;
 }

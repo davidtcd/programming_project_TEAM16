@@ -1,4 +1,3 @@
-
 void settings()
 {
   size(SCREENWIDTH,SCREENHEIGHT); //Esosa did this
@@ -13,14 +12,18 @@ void setup()
 void draw()
 {
   background(255);
-  bar.drawBar();
   currentScreen.draw();
+  bar.drawBar();
   barChartScreen.changeBarColor();
 }
+
 void mousePressed()
 {
-  for(int i = 0; i < allButtons.size(); i++)
+  for (int i = 0; i < allButtons.size(); i++)
   {
     allButtons.get(i).isClicked(mouseX, mouseY);
   }
+}
+void mouseMoved() {
+  treeMapScreen.isHovering(mouseX, mouseY);
 }

@@ -5,13 +5,15 @@ public class TreeMapScreen extends Screen {
     
     private int tmX, tmY;
     private int tmW, tmH;
-    String[] labels;
-    ArrayList<SquarifyRect> rects;
-    color[] bgColors;
-    boolean isCreating;
-    int currentColumn;
-    int colCount;
-    String colName;
+    private String[] labels;
+    private ArrayList<SquarifyRect> rects;
+    private color[] bgColors;
+    private boolean isCreating;
+    private int currentColumn;
+    private int colCount;
+    private String colName;
+    private Dialog dialog;
+    private int hovering; 
     
     TreeMapScreen(ArrayList<Button> allButtons) {
         super();
@@ -29,6 +31,9 @@ public class TreeMapScreen extends Screen {
         allButtons.add(prevButton);
         this.addWidget(nextButton);
         this.addWidget(prevButton);
+        this.hovering = -1;
+        
+        this.dialog = new Dialog(0, 0, SCREENHEIGHT / 4, SCREENHEIGHT / 4, "", WHITE, BLACK, BLACK, font);
     }
     
     public void nextClick() {
@@ -120,6 +125,18 @@ public class TreeMapScreen extends Screen {
         this.colName = colName;
     }
     
+    public Dialog getDialog() {
+        return this.dialog;
+    }
+    
+    public int getHovering() {
+        return this.hovering;
+    }
+    
+    public void setHovering(int hovering) {
+        this.hovering = hovering;
+    }
+    
     public float[] extractRGB(color c) {
         int r = (c >> 16) & 0xFF;
         int g = (c >> 8) & 0xFF;
@@ -151,6 +168,25 @@ public class TreeMapScreen extends Screen {
         this.setIsCreating(false);
     }
     
+    public void isHovering(int mX, int mY) {
+        if (!this.getIsCreating()) {
+            for (int i = 0; i < rects.size(); i++) {
+                SquarifyRect r = rects.get(i);
+                float rx = r.getX();
+                float ry = r.getY();
+                float rw = r.getDx();
+                float rh = r.getDy();
+                if (mX > rx && mX < rx + rw && mY > ry && mY < ry + rh) { 
+                    // is hovering on this rect
+                    this.setHovering(i);
+                    return;
+                }
+            }
+            // no rect being hovered
+            this.setHovering( -1);
+        }
+    }
+    
     void draw() {
         // draw widgets
         for (int i = 0; i < this.widgets.size(); i++) {
@@ -163,6 +199,7 @@ public class TreeMapScreen extends Screen {
         text(this.getColName(), this.tmW + this.tmX + 25, BARHEIGHT + 200);
         textSize(12);
         textAlign(CENTER);
+        
         
         // draw treemap
         stroke(0);
@@ -186,6 +223,19 @@ public class TreeMapScreen extends Screen {
                     text(this.getLabels()[r.getId()] + ": " + round(r.getValue()), r.getX() + r.getDx() / 2, r.getY() + r.getDy() / 2);
                 }
             }
+        }
+        
+        // hovering
+        
+        int hoveringRectIndex = this.getHovering();
+        println(hoveringRectIndex);
+        if (hoveringRectIndex >= 0) {
+            Dialog d = this.getDialog();
+            SquarifyRect rect = rects.get(hoveringRectIndex);
+            d.setX((int)(mouseX - (d.getWidth() / 2)));
+            d.setY((int)(mouseY - d.getHeight()));
+            d.setLabel("" + this.getLabels()[rect.getId()] + ": " + round(rect.getValue()));
+            d.draw();
         }
     }
 }

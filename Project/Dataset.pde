@@ -10,11 +10,15 @@ class Dataset
 {
   private Table table;
   private Table[] sortedKeys;
+  private int rowCount;
+  private int columnCount;
   DataType dataType;
   
   Dataset(String path, DataType dataType){
     table = loadTable(path, "header");
     sortedKeys = new Table[table.getColumnCount()];
+    rowCount = table.getRowCount();
+    columnCount = table.getColumnCount();
     this.dataType = dataType;
     
     switch (dataType){
@@ -45,11 +49,11 @@ class Dataset
   }
   
   int getNumberOfRows(){
-    return table.getRowCount();
+    return rowCount;
   }
   
   int getNumberOfColumns(){
-    return table.getColumnCount();
+    return columnCount;
   }
   
   //For full set of data ~1.5hours sort time and ~30sec load time, near instant for 2k size (this may vary on different machines)
@@ -106,7 +110,20 @@ class Dataset
   //println(join(sort(data.getUniqueValues(0)), "\n")); //Can be used to print all unique values in a column
   String[] getUniqueValues(int column){
     try{
-      return sort(table.getUnique(column));
+      ArrayList<String> values = new ArrayList<String>();
+    String value = table.getString(sortedKeys[column].getInt(sortedKeys[column].getInt(0, 1), 0), column);
+    int uniqueIndex = sortedKeys[column].getInt(0, 1);
+    values.add(value);
+    uniqueIndex = sortedKeys[column].getInt(1, 1);
+    int i=1;
+      while(uniqueIndex != 0){
+        value = table.getString(sortedKeys[column].getInt(uniqueIndex, 0), column);
+        values.add(value);
+        i++;
+        uniqueIndex = sortedKeys[column].getInt(i, 1);
+      }
+      values.remove(values.size()-1);
+      return values.toArray(new String[0]);
     }
     catch (Exception e){
       println(e);
@@ -139,6 +156,18 @@ class Dataset
     catch (Exception e){
       println(e);
       return null;
+    }
+  }
+  
+  int getOccurrenceAmount(int value, int column){
+    try{
+      int min = sortedKeys[column].getInt(value, 1);
+      int max = sortedKeys[column].getInt(value+1, 1);
+      return max-min;
+    }
+    catch(Exception e){
+      println(e);
+      return 0;
     }
   }
   
