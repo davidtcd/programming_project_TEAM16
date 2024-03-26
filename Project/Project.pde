@@ -15,7 +15,6 @@ void draw()
   background(255);
   bar.drawBar();
   currentScreen.draw();
-  barChartScreen.changeChart();
   barChartScreen.changeBarColor();
 }
 void mousePressed()
