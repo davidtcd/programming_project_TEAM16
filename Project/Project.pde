@@ -25,3 +25,7 @@ void mousePressed()
 }
 }
 
+void mouseMoved() {
+  treeMapScreen.isHovering(mouseX, mouseY);  
+  
+}
