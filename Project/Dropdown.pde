@@ -1,9 +1,16 @@
+import java.util.function.Consumer;
+
 class Dropdown extends Widget {
     // Lukas Maselsky, Created class, constructor, getters and setters, and a few methods 5pm 14/03/2024
     // Lukas Maselsky, Created more methods for openening and selecting options 1pm 17/03/2024
-    // Lukas Maselsky, created methods to decrease option color lightness based on widget color 1pm 22/03/2024
+    // Lukas Maselsky, Created consumer 12pm 26/03/2024
     
-    // each option is same height as dropdown button
+    // HOW TO OPERATE: you pass in a function int this format when constructing a dropdown: 
+    // new Dropdown(x, y, whatever...., index -> myFunc(index));
+    // myFunc is a function that take an Integer like this:
+    // void myFunc(Integer index) {}, so when you click an option the function is called with the option index, so option 1 is 0, option 2 is 1 and so on
+    // the function then does whatever you want based on the index
+    
     private int width;
     private int height;
     private boolean open;
@@ -13,9 +20,10 @@ class Dropdown extends Widget {
     final int OPTION_VISIBLE_COUNT = 3;
     private int offset; 
     private String[] visibleOptions;
+    Consumer<Integer> optionClick;
     
     
-    Dropdown(int x, int y, int width, int height, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont, ArrayList<String> options) {
+    Dropdown(int x, int y, int width, int height, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont, ArrayList<String> options, Consumer<Integer> optionClick) {
         super(x, y, label, widgetColor, borderColor, labelColor, widgetFont);
         this.width = width; 
         this.height = height;
@@ -23,6 +31,7 @@ class Dropdown extends Widget {
         this.selected = 0;
         this.offset = 0;
         this.options = options;
+        this.optionClick = optionClick;
         // initialise label as first option
         this.setLabel(options.get(0));
         
@@ -132,6 +141,8 @@ class Dropdown extends Widget {
                 this.setSelected(index + this.getOffset());
                 // update label
                 this.setLabel(this.getVisibleOptions()[index]);
+                // call consumer function
+                optionClick.accept(index + this.getOffset());
             }
         }
     }
@@ -159,6 +170,7 @@ class Dropdown extends Widget {
         if (v + increase < 100) {
             newV = v + increase;
         } else {
+
             newV = 100;
             float diff = (float) 100 - v;
             diff = increase - diff;
@@ -294,9 +306,9 @@ class Dropdown extends Widget {
             for (int i = 0; i < limit; i++) {
                 // draw each visible option
                 
-                // draw lighter color if selected
+                // draw stroke if selected
                 if (this.getSelected() == i + this.getOffset()) {
-                    fill(this.getLighterColor(wc, 40));
+                    fill(getLighterColor(wc, 40));
                 } else {
                     fill(wc);
                 }
