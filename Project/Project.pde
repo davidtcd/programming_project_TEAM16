@@ -1,4 +1,3 @@
-
 void settings()
 {
   size(SCREENWIDTH,SCREENHEIGHT); //Esosa did this
@@ -13,8 +12,8 @@ void setup()
 void draw()
 {
   background(255);
-  bar.drawBar();
   currentScreen.draw();
+  bar.drawBar();
   barChartScreen.changeChart();
   barChartScreen.changeBarColor();
 }
