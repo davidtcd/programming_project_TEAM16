@@ -54,8 +54,9 @@ void loadResources()
   data = new Dataset(DATA_PATH+".csv", DataType.flights);
   font = loadFont("Verdana-Bold-48.vlw");
   font = loadFont("Georgia-14.vlw");
-  
-  cancelledChart = new pieChart(); 
+  float[] sampleData = {218,1782};
+  String[] sampleHeadings = {"cancelled", "not cancelled"};
+  cancelledChart = new pieChart(sampleData, sampleHeadings); 
 
   allButtons = new ArrayList<Button>();
   bar = new NavigationBar();

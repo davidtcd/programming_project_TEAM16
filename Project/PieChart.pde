@@ -2,6 +2,11 @@
 
 class pieChart
 {
+  private float[] data;
+  private String[] headings;
+  private float[] red;
+  private float[] green;
+  private float[] blue;
   /*
   pieChart(float size, float[] array, String[] descriptions)
   {
@@ -14,6 +19,45 @@ class pieChart
     return diameter;
   }
   */
+  pieChart(float[] data, String[] headings)
+  {
+    this.data = data;
+    this.headings = headings;
+    //float red = map(i, 0, data.length, , 255);
+    //float green = map(i, 0, data.length, 255, 0);
+    //float blue = map(i, 0, data.length, 0 ,255);
+    this.red = new float[data.length];
+    this.green = new float[data.length];
+    this.blue = new float[data.length];
+    for (int i = 0; i < data.length; i++)
+    {
+      red[i] = random(100,255);
+      green[i] =  random(100,255);
+      blue[i] = random(100,255);
+    }
+    
+    
+  }
+  float[] getRed()
+  {
+    return this.red;
+  }
+  float[] getGreen()
+  {
+    return this.green;
+  }
+  float[] getBlue()
+  {
+    return this.blue;
+  }
+  float[] getData()
+  {
+    return this.data;
+  }
+  String[] getHeadings()
+  {
+    return this.headings;
+  }
 
    void draw()
    {
@@ -69,13 +113,7 @@ class pieChart
     float lastAngle = 0;
     for (int i = 0; i < sortedAngles.length; i++) 
     {
-      //float red = map(i, 0, data.length, , 255);
-      //float green = map(i, 0, data.length, 255, 0);
-      //float blue = map(i, 0, data.length, 0 ,255);
-      float red = random(100,255);
-      float green = random(100,255);
-      float blue = random(100,255);
-      color myColor = color(red,blue,green);
+      color myColor = color(getRed()[i],getGreen()[i],getBlue()[i]);
       fill(myColor);
       
       float textPos = map(i+1,0, sortedAngles.length, 0, height-100);
