@@ -1,5 +1,5 @@
 // Joseph Reidy created the PieChart class and it's methods - which creates and labels a pie chart displaying an array of data from first principles
-
+// it converts a float array of data to a corresponding array of angles which are representative of that data
 class pieChart
 {
   private float[] data;
