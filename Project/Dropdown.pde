@@ -142,9 +142,17 @@ class Dropdown extends Widget {
                 // update label
                 this.setLabel(this.getVisibleOptions()[index]);
                 // call consumer function
-                optionClick.accept(index + this.getOffset());
+                this.optionClick.accept(index + this.getOffset());
             }
         }
+    }
+    
+    public void setClicked(Integer index) {
+        this.setSelected(index + this.getOffset());
+        // update label
+        this.setLabel(this.getOptions().get(index));
+        // call consumer function
+        this.optionClick.accept(index);
     }
     
     public int getOffset() {
@@ -170,7 +178,7 @@ class Dropdown extends Widget {
         if (v + increase < 100) {
             newV = v + increase;
         } else {
-
+            
             newV = 100;
             float diff = (float) 100 - v;
             diff = increase - diff;
