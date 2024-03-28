@@ -8,7 +8,6 @@ class BarChartScreen extends Screen
   ArrayList<ArrayList<BarChart>> fullCharts = new ArrayList<ArrayList<BarChart>>();
   BarChart chart;
   ArrayList<Button> buttons;
-  String[] categories;
   int pageNum = 0;
   int chartNum = 0;
   int currentColor = 0;
@@ -55,7 +54,7 @@ class BarChartScreen extends Screen
     text("MEDIAN: " + allMedianNames.get(currentCol) + ", AMOUNT: " + allMedians.get(currentCol), 1650, 700);
     text("TOTAL CATEGORIES: " + allTotals.get(currentCol), 1650, 750);
     textFont(font);
-    textSize(12);
+    textSize(14);
   }
   void draw()
   {
@@ -86,7 +85,7 @@ class BarChartScreen extends Screen
     int maxBars = 50;
     int modeIndex = 0;
     ArrayList<BarChart> allCharts = new ArrayList<BarChart>();
-    categories = data.getUniqueValues(columnNumber);
+    String[] categories = data.getUniqueValues(columnNumber);
     totalCategories = categories.length;
     int numOfPages = ceil(categories.length / maxBars);
     if(maxBars > categories.length)
