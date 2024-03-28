@@ -14,6 +14,10 @@ import java.util.Arrays;
     public void addWidget(Widget widget) {
         widgets.add(widget);
     }
+    
+    public ArrayList<Widget> getWidgets() {
+        return this.widgets;  
+    }
 
 
     // Method to draw the screen
