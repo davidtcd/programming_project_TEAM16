@@ -16,8 +16,9 @@ Button nextColor, prevColor;
 Button flipAxes;
 Screen graphScreen;
 pieScreen currentPieScreen;
-Button mainTab, barChartTab, pieTab, treemapTab;
+Button mainTab, barChartTab, pieTab, treemapTab, lineGraphTab;
 TreeMapScreen treeMapScreen;
+LineGraphScreen lineGraphScreen;
 PApplet parent = this;
 Table carrierTable;
 
@@ -41,7 +42,7 @@ final color BARCOLOR = WHITE;
 final int BARCHARTWIDTH = 1200;
 final int BARCHARTHEIGHT = 800;
 final int CHARTGAP = 150;
-final int NUMOFTABS = 4;
+final int NUMOFTABS = 5;
 final int TABWIDTH = (int)(BARWIDTH / NUMOFTABS) - NUMOFTABS;
 final int TABHEIGHT = BARHEIGHT;
 final int TABGAP = 200;
@@ -72,7 +73,7 @@ void loadResources()
   String[] cancelledHeadings = {"cancelled", "not cancelled"};
   cancelledChart = new pieChart(cancelledData, cancelledHeadings); 
   carrierChart = new pieChart(carrierData, carrierHeadings);
-  
+
   allButtons = new ArrayList<Button>();
   bar = new NavigationBar();
   mainscreen = new TableScreen();
@@ -80,10 +81,12 @@ void loadResources()
   barChartScreen = new BarChartScreen(parent);
   currentPieScreen = new pieScreen(cancelledChart);
   treeMapScreen = new TreeMapScreen(allButtons);
+  lineGraphScreen = new LineGraphScreen();
   mainTab = new Button(0, 0, TABWIDTH, TABHEIGHT, "Main", BLUE, BLACK, WHITE, font,() -> bar.changeScreen(mainscreen));
   barChartTab = new Button(0 + TABWIDTH + 1, 0, TABWIDTH, TABHEIGHT, "BarCharts", BLUE, BLACK, WHITE, font,() -> bar.changeScreen(barChartScreen));
   pieTab = new Button(0 + TABWIDTH * 2 + 2, 0, TABWIDTH, TABHEIGHT, "Pie Chart", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(currentPieScreen));
   treemapTab = new Button(0 + TABWIDTH * 3 + 3, 0, TABWIDTH, TABHEIGHT, "Treemap", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(treeMapScreen));
+  lineGraphTab = new Button(0 + TABWIDTH * 4 + 4, 0, TABWIDTH, TABHEIGHT, "Line graph", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(lineGraphScreen)); 
   cancelledButton = new Button(width - (BUTTON2_GAP - 150), 140, BUTTONWIDTH, BUTTONHEIGHT, "Cancelled Flights", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(cancelledChart));
   carrierButton = new Button(width - (BUTTON2_GAP -150), 140 + (BUTTONHEIGHT*2), BUTTONWIDTH, BUTTONHEIGHT, "Airline Carriers", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(carrierChart));
   flipAxes = new Button(width - (BUTTON2_GAP - 150), 140, BUTTONWIDTH, BUTTONHEIGHT, "Flip Chart", BLUE, BLACK, WHITE, font,() -> barChartScreen.flipChart());
@@ -94,11 +97,12 @@ void loadResources()
   nextColor = new Button(width - BUTTON1_GAP,400, BUTTONWIDTH, BUTTONHEIGHT, "Next Colour", BLUE, BLACK, WHITE, font,() -> barChartScreen.nextColor());
   prevColor = new Button(width - BUTTON2_GAP, 400, BUTTONWIDTH, BUTTONHEIGHT, "Previous Colour", BLUE, BLACK, WHITE, font,() -> barChartScreen.prevColor());
   barChartScreen.addButton(nextChart); barChartScreen.addButton(prevChart); barChartScreen.addButton(nextPage); barChartScreen.addButton(prevPage); barChartScreen.addButton(nextColor); barChartScreen.addButton(prevColor); barChartScreen.addButton(flipAxes);
-  bar.addTab(mainTab);  bar.addTab(barChartTab); bar.addTab(pieTab);bar.addTab(treemapTab);
+  bar.addTab(mainTab);  bar.addTab(barChartTab); bar.addTab(pieTab);bar.addTab(treemapTab); bar.addTab(lineGraphTab);
   currentPieScreen.addButton(cancelledButton);
   currentPieScreen.addButton(carrierButton);
   allButtons.add(mainTab); allButtons.add(barChartTab); allButtons.add(nextChart); allButtons.add(prevChart); allButtons.add(nextPage); allButtons.add(prevPage); allButtons.add(nextColor); allButtons.add(prevColor); allButtons.add(flipAxes);
   allButtons.add(pieTab);
+  allButtons.add(lineGraphTab);
   allButtons.add(treemapTab);
   allButtons.add(cancelledButton);
   allButtons.add(carrierButton);
