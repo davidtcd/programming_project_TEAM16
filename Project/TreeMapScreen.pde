@@ -51,10 +51,12 @@ public class TreeMapScreen extends Screen {
         if (col < this.getColCount() - 1) {
             this.setCurrentColumn(col + 1);
             this.createTreeMap(col + 1);
+            this.getDropdown().setClicked(col + 1);
         } else {
             // wrap to col 0
             this.setCurrentColumn(0);
             this.createTreeMap(0);
+            this.getDropdown().setClicked(0);
         }
     }
     
@@ -63,11 +65,13 @@ public class TreeMapScreen extends Screen {
         if (col > 0) {
             this.setCurrentColumn(col - 1);
             this.createTreeMap(col - 1);
+            this.getDropdown().setClicked(col - 1);
         } else {
             // wrap to last col
             int cols = this.getColCount() - 1;
             this.setCurrentColumn(cols);
             this.createTreeMap(cols);
+            this.getDropdown().setClicked(cols);
         }  
     }
     
@@ -150,6 +154,14 @@ public class TreeMapScreen extends Screen {
     
     public void setHovering(int hovering) {
         this.hovering = hovering;
+    }
+    
+    public Dropdown getDropdown() {
+        return this.dropdown;
+    }
+    
+    public void setDropdown(Dropdown dropdown) {
+        this.dropdown = dropdown;
     }
     
     public float[] extractRGB(color c) {
