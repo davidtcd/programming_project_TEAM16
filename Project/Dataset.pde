@@ -13,6 +13,7 @@ class Dataset
   private int rowCount;
   private int columnCount;
   DataType dataType;
+  private String sortedPath;
   
   Dataset(String path, DataType dataType){
     table = loadTable(path, "header");
@@ -20,6 +21,7 @@ class Dataset
     rowCount = table.getRowCount();
     columnCount = table.getColumnCount();
     this.dataType = dataType;
+    sortedPath = dataPath(DATA_PATH+"_Sorted");
     
     switch (dataType){
       case flights:
@@ -57,13 +59,13 @@ class Dataset
   
   //For full set of data ~1.5hours sort time and ~30sec load time, near instant for 2k size (this may vary on different machines)
   private void sortData(){
-    String sortedPath = dataPath(DATA_PATH+"_Sorted");
     File f = new File(sortedPath);
     if(!f.mkdir()){
       println("Loading data...");
-      for(int i=0; i<table.getColumnCount(); i++){
+      for(int i=0; i<columnCount; i++){
         sortedKeys[i] = loadTable(sortedPath+"/"+table.getColumnTitle(i)+".csv", "header");
       }
+      println("Data loaded!");
       return;
     }
     println("Sorting data...");
@@ -72,27 +74,32 @@ class Dataset
     for(int j=0; j<sortedTable.getRowCount(); j++){
       sortedTable.setInt(j, "INDEX", j);
     }
-    for(int i=0; i<table.getColumnCount(); i++){
-      sortedTable.sort(i);
-      Table savedTable = new Table();
-      savedTable.addColumn("INDEX");
-      savedTable.addColumn("UNIQUE_INDEX");
-      String prevValue = "";
-      int k = 0;
-      for(int j=0; j<sortedTable.getRowCount(); j++){
-        int indexValue = sortedTable.getInt(j, "INDEX");
-        savedTable.setInt(j, 0, indexValue);
-        String value = table.getString(indexValue, i);
-        if(!prevValue.equals(value)){
-          savedTable.setInt(k++, 1, j);
-          prevValue = value;
-        }
-      }
-      savedTable.setInt(k, 1, sortedTable.getRowCount()-1);
-      saveTable(savedTable, sortedPath+"/"+table.getColumnTitle(i)+".csv");
-      sortedKeys[i] = savedTable;
-      println("Column: "+i+" sorted.");
+    ThreadGroup dataTG = new ThreadGroup("dtg");
+    for(int i=0; i<columnCount; i++){
+      new Thread(dataTG, new DataSortThread(i, this, sortedTable), ""+i).start();
+
+      //sortedTable.sort(i);
+      //Table savedTable = new Table();
+      //savedTable.addColumn("INDEX");
+      //savedTable.addColumn("UNIQUE_INDEX");
+      //String prevValue = "";
+      //int k = 0;
+      //for(int j=0; j<sortedTable.getRowCount(); j++){
+      //  int indexValue = sortedTable.getInt(j, "INDEX");
+      //  savedTable.setInt(j, 0, indexValue);
+      //  String value = table.getString(indexValue, i);
+      //  if(!prevValue.equals(value)){
+      //    savedTable.setInt(k++, 1, j);
+      //    prevValue = value;
+      //  }
+      //}
+      //savedTable.setInt(k, 1, sortedTable.getRowCount()-1);
+      //saveTable(savedTable, sortedPath+"/"+table.getColumnTitle(i)+".csv");
+      //sortedKeys[i] = savedTable;
+      //println("Column: "+i+" sorted.");
     }
+    while(dataTG.activeCount() != 0){}
+    println("Data sorted!");
   }
   
   String getValue(int index, int column, boolean isSorted){
@@ -106,7 +113,7 @@ class Dataset
     }
   }
   
-  //println(join(sort(data.getUniqueValues(0)), "\n")); //Can be used to print all unique values in a column
+  //println(join(data.getUniqueValues(0), "\n")); //Can be used to print all unique values in a column
   String[] getUniqueValues(int column){
     try{
       ArrayList<String> values = new ArrayList<String>();
@@ -201,5 +208,43 @@ class Dataset
       println(e);
       return null;
     }
+  }
+  
+  void setKey(int i, Table table){
+    sortedKeys[i] = table;
+  }
+}
+
+class DataSortThread extends Thread{
+  int i;
+  Dataset data;
+  Table sortedTable;
+  DataSortThread(int i, Dataset data, Table sortedTable){
+    this.i = i;
+    this.data = data;
+    this.sortedTable = sortedTable.copy();
+    println("Thread created: "+i);
+  }
+  
+  public void run(){
+    sortedTable.sort(i);
+    Table savedTable = new Table();
+    savedTable.addColumn("INDEX");
+    savedTable.addColumn("UNIQUE_INDEX");
+    String prevValue = "";
+    int k = 0;
+    for(int j=0; j<data.rowCount; j++){
+      int indexValue = sortedTable.getInt(j, "INDEX");
+      savedTable.setInt(j, 0, indexValue);
+      String value = data.table.getString(indexValue, i);
+      if(!prevValue.equals(value)){
+        savedTable.setInt(k++, 1, j);
+        prevValue = value;
+      }
+    }
+    savedTable.setInt(k, 1, data.rowCount-1);
+    saveTable(savedTable, data.sortedPath+"/"+data.table.getColumnTitle(i)+".csv");
+    data.sortedKeys[i] = savedTable;
+    println("Column: "+i+" sorted.");
   }
 }
