@@ -14,19 +14,20 @@ public class TreeMapScreen extends Screen {
     private String colName;
     private Dialog dialog;
     private int hovering; 
+    Dropdown dropdown;
     
-    TreeMapScreen(ArrayList<Button> allButtons) {
+    TreeMapScreen(ArrayList<Button> allButtons, ArrayList<Dropdown> allDropdowns) {
         super();
         this.tmW = (int)(SCREENWIDTH * (0.75));
         this.tmH = (int)(SCREENHEIGHT * (0.75));
         this.tmX = (int)(SCREENWIDTH * 0.01);
-        this.tmY = (SCREENHEIGHT / 2) - (this.tmH / 2);
+        this.tmY = BARHEIGHT + 25;
         
         this.currentColumn = 0;
         this.colCount = data.getNumberOfColumns();
         createTreeMap(this.currentColumn);
-        Button nextButton = new Button(this.tmW + this.tmX + 25, BARHEIGHT + 25, 100, 50, "Next", BLACK, BLACK, WHITE, font,() -> nextClick());
-        Button prevButton = new Button(this.tmW + this.tmX + 25, BARHEIGHT + 95, 100, 50, "Prev", BLACK, BLACK, WHITE, font,() -> prevClick());
+        Button nextButton = new Button(this.tmW + this.tmX + 25, BARHEIGHT + 25, 150, 50, "Next", BLACK, BLACK, WHITE, font,() -> nextClick());
+        Button prevButton = new Button(this.tmW + this.tmX + 25, BARHEIGHT + 95, 150, 50, "Prev", BLACK, BLACK, WHITE, font,() -> prevClick());
         allButtons.add(nextButton);
         allButtons.add(prevButton);
         this.addWidget(nextButton);
@@ -34,6 +35,15 @@ public class TreeMapScreen extends Screen {
         this.hovering = -1;
         
         this.dialog = new Dialog(0, 0, SCREENHEIGHT / 4, SCREENHEIGHT / 4, "", WHITE, BLACK, BLACK, font);
+        ArrayList<String> allLabels = new ArrayList<String>();
+        
+        for (int i = 0; i < this.colCount; i++) {
+            allLabels.add(data.table.getColumnTitle(i));
+        }
+        
+        this.dropdown = new Dropdown(this.tmW + this.tmX + 25, BARHEIGHT + 300, 250, 50, "", color(220), BLACK, BLACK, font, allLabels, index -> dropdownOptionChange(index));
+        this.addWidget(dropdown);
+        allDropdowns.add(this.dropdown);
     }
     
     public void nextClick() {
@@ -59,6 +69,10 @@ public class TreeMapScreen extends Screen {
             this.setCurrentColumn(cols);
             this.createTreeMap(cols);
         }  
+    }
+    
+    public void dropdownOptionChange(Integer index) {
+        
     }
     
     public int getTmX() {
@@ -189,9 +203,11 @@ public class TreeMapScreen extends Screen {
     
     void draw() {
         // draw widgets
+        textSize(16);
         for (int i = 0; i < this.getWidgets().size(); i++) {
             this.getWidgets().get(i).draw();  
         }
+        textSize(12);
         // column name
         fill(BLACK);
         textAlign(LEFT);
