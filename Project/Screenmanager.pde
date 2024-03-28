@@ -11,9 +11,5 @@ class Screenmanager {
         }
     }
 
-    void mouseClicked() {
-        if (currentScreen != null) {
-            currentScreen.mouseClicked();
-        }
-    }
+    
 }

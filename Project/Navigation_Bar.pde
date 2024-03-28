@@ -20,7 +20,9 @@ class NavigationBar
     rect(x, y, barWidth, barHeight);
     for(int i = 0; i < tabs.size(); i++)
     {
+      textSize(20);
       tabs.get(i).draw();
+      textSize(12);
     }
   }
   void addTab(Button button)
