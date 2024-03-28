@@ -189,8 +189,8 @@ public class TreeMapScreen extends Screen {
     
     void draw() {
         // draw widgets
-        for (int i = 0; i < this.widgets.size(); i++) {
-            widgets.get(i).draw();  
+        for (int i = 0; i < this.getWidgets().size(); i++) {
+            this.getWidgets().get(i).draw();  
         }
         // column name
         fill(BLACK);
