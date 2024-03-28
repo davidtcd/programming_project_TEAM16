@@ -2,26 +2,33 @@
 
 class pieScreen extends Screen
 {
-  pieChart cancelled;
+  public pieChart currentChart;
   ArrayList<Button> pieButtons;
   
-  pieScreen(pieChart cancelled)
+  pieScreen(pieChart currentChart)
   {
     super();
-    this.cancelled = cancelled;
+    this.currentChart = currentChart;
     pieButtons = new ArrayList<Button>();
+    println("exists");
   }
   void addButton(Button button)
   {
     pieButtons.add(button);
   }
+  void changeChart(pieChart newChart)
+  {
+    currentChart = newChart;
+  }
+  
   void draw()
   {
-    cancelled.draw();
+    currentChart.draw();
     for(int i = 0; i < pieButtons.size(); i++)
     {
       pieButtons.get(i).draw();
     }
   }
+  
   
 }

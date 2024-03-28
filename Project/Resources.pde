@@ -5,6 +5,9 @@ NavigationBar bar;
 TableScreen mainscreen;
 ArrayList<Button> allButtons;
 pieChart cancelledChart;
+pieChart carrierChart;
+Button cancelledButton;
+Button carrierButton;
 Screen currentScreen;
 BarChartScreen barChartScreen;
 Button nextChart, prevChart;
@@ -12,10 +15,11 @@ Button nextPage, prevPage;
 Button nextColor, prevColor;
 Button flipAxes;
 Screen graphScreen;
-Screen cancelledPieScreen;
+pieScreen currentPieScreen;
 Button mainTab, barChartTab, pieTab, treemapTab;
 TreeMapScreen treeMapScreen;
 PApplet parent = this;
+Table carrierTable;
 
 //Variable constants
 final String DATA_PATH = "flights2k";
@@ -47,6 +51,9 @@ final int SCREENHEIGHT = 1000;
 final int TEXT_COLOUR = color(0, 0, 0);
 final int HEADER_SIZE = 16;
 final int TEXT_SIZE = 14;
+final int MENU_WIDTH = 150;
+final int MENU_HEIGHT = 30;
+final int ITEM_HEIGHT = 30;
 
 void loadResources()
 {
@@ -54,21 +61,30 @@ void loadResources()
   data = new Dataset(DATA_PATH+".csv", DataType.flights);
   font = loadFont("Verdana-Bold-48.vlw");
   font = loadFont("Georgia-14.vlw");
-  float[] sampleData = {218,1782};
-  String[] sampleHeadings = {"cancelled", "not cancelled"};
-  cancelledChart = new pieChart(sampleData, sampleHeadings); 
+  String[] carrierHeadings = data.getUniqueValues(1);
+  float[] carrierData = new float[carrierHeadings.length];
+  for (int i = 0; i < carrierHeadings.length; i++)
+  {
+    carrierData[i] = data.getOccurrenceAmount(i,1);
+  }
+  float[] cancelledData = {data.getOccurrenceAmount(1,15),data.getOccurrenceAmount(0,15)};
+  String[] cancelledHeadings = {"cancelled", "not cancelled"};
+  cancelledChart = new pieChart(cancelledData, cancelledHeadings); 
+  carrierChart = new pieChart(carrierData, carrierHeadings);
 
   allButtons = new ArrayList<Button>();
   bar = new NavigationBar();
   mainscreen = new TableScreen();
   currentScreen = mainscreen;
   barChartScreen = new BarChartScreen(parent);
-  cancelledPieScreen = new pieScreen(cancelledChart);
+  currentPieScreen = new pieScreen(cancelledChart);
   treeMapScreen = new TreeMapScreen(allButtons);
   mainTab = new Button(50, BARHEIGHT/2 - TABHEIGHT/2, TABWIDTH, TABHEIGHT, "Main", RED, BLACK, WHITE, font, () ->bar.changeScreen(mainscreen)) ;
   barChartTab = new Button(50 + TABGAP * 2, BARHEIGHT/2 - TABHEIGHT/2, TABWIDTH, TABHEIGHT, "BarCharts", RED, BLACK, WHITE, font, () -> bar.changeScreen(barChartScreen));
-  pieTab = new Button(50 + TABGAP * 4, BARHEIGHT /2 - TABHEIGHT / 2, TABWIDTH, TABHEIGHT, "Pie Chart", color(0,0,255), color(0), color(255), font, () ->bar.changeScreen(cancelledPieScreen));
+  pieTab = new Button(50 + TABGAP * 4, BARHEIGHT /2 - TABHEIGHT / 2, TABWIDTH, TABHEIGHT, "Pie Chart", color(0,0,255), color(0), color(255), font, () ->bar.changeScreen(currentPieScreen));
   treemapTab = new Button(50 + TABGAP * 6, BARHEIGHT /2 - TABHEIGHT / 2, TABWIDTH, TABHEIGHT, "Treemap", color(0,0,255), color(0), color(255), font, () ->bar.changeScreen(treeMapScreen));
+  cancelledButton = new Button(width - (BUTTON2_GAP - 150), 140, BUTTONWIDTH, BUTTONHEIGHT, "Cancelled Flights", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(cancelledChart));
+  carrierButton = new Button(width - (BUTTON2_GAP -150), 140 + (BUTTONHEIGHT*2), BUTTONWIDTH, BUTTONHEIGHT, "Airline Carriers", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(carrierChart));
   flipAxes = new Button(width - (BUTTON2_GAP - 150), 140, BUTTONWIDTH, BUTTONHEIGHT, "Flip Chart", BLUE, BLACK, WHITE, font, () -> barChartScreen.flipChart());
   nextChart = new Button(width - BUTTON1_GAP, 200, BUTTONWIDTH, BUTTONHEIGHT, "Next Chart", BLUE, BLACK, WHITE, font, () -> barChartScreen.nextChart());
   prevChart = new Button(width - BUTTON2_GAP, 200, BUTTONWIDTH, BUTTONHEIGHT, "Previous Chart", BLUE, BLACK, WHITE, font, () -> barChartScreen.prevChart());
@@ -78,8 +94,12 @@ void loadResources()
   prevColor = new Button(width - BUTTON2_GAP, 400, BUTTONWIDTH, BUTTONHEIGHT, "Previous Colour", BLUE, BLACK, WHITE, font, () -> barChartScreen.prevColor());
   barChartScreen.addButton(nextChart); barChartScreen.addButton(prevChart); barChartScreen.addButton(nextPage); barChartScreen.addButton(prevPage); barChartScreen.addButton(nextColor); barChartScreen.addButton(prevColor); barChartScreen.addButton(flipAxes);
   bar.addTab(mainTab);  bar.addTab(barChartTab); bar.addTab(pieTab);bar.addTab(treemapTab);
+  currentPieScreen.addButton(cancelledButton);
+  currentPieScreen.addButton(carrierButton);
   allButtons.add(mainTab); allButtons.add(barChartTab); allButtons.add(nextChart); allButtons.add(prevChart); allButtons.add(nextPage); allButtons.add(prevPage); allButtons.add(nextColor); allButtons.add(prevColor); allButtons.add(flipAxes);
   allButtons.add(pieTab);
   allButtons.add(treemapTab);
+  allButtons.add(cancelledButton);
+  allButtons.add(carrierButton);
   currentScreen = mainscreen;
 }

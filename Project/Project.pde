@@ -1,7 +1,6 @@
 void settings()
 {
-  size(SCREENWIDTH,SCREENHEIGHT); //Esosa did this
-  
+  size(SCREENWIDTH, SCREENHEIGHT); //Esosa did this
 }
 
 void setup()
@@ -26,4 +25,9 @@ void mousePressed()
 }
 void mouseMoved() {
   treeMapScreen.isHovering(mouseX, mouseY);
+}
+
+void mouseClicked() {
+  // Handle mouse click events for the current active screen
+  currentScreen.mouseClicked();
 }
