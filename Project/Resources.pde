@@ -26,7 +26,7 @@ final String DATA_PATH = "flights2k";
 
 final int SCREENWIDTH = 2000;
 final int SCREENHEIGHT = 1000;
-final int BARHEIGHT = SCREENHEIGHT / 8;
+final int BARHEIGHT = SCREENHEIGHT / 15;
 final int BARWIDTH = SCREENWIDTH;
 final color WHITE =  color(255);
 final color BLACK = color(0);
