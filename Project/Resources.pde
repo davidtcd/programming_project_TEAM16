@@ -90,7 +90,7 @@ void loadResources()
   currentScreen = mainscreen;
   barChartScreen = new BarChartScreen(parent);
   currentPieScreen = new pieScreen(cancelledChart);
-  treeMapScreen = new TreeMapScreen(allButtons);
+  treeMapScreen = new TreeMapScreen(allButtons, allDropdowns);
   lineGraphScreen = new LineGraphScreen();
   treeMapScreen = new TreeMapScreen(allButtons, allDropdowns);
   mainTab = new Button(0, 0, TABWIDTH, TABHEIGHT, "Main", BLUE, BLACK, WHITE, font,() -> bar.changeScreen(mainscreen));
