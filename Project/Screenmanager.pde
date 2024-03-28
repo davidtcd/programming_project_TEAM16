@@ -10,10 +10,11 @@ class Screenmanager {
             currentScreen.draw();
         }
     }
-
+/*
     void mouseClicked() {
         if (currentScreen != null) {
             currentScreen.mouseClicked();
         }
     }
+*/
 }

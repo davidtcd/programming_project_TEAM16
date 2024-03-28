@@ -7,18 +7,8 @@ class pieChart
   private float[] red;
   private float[] green;
   private float[] blue;
-  /*
-  pieChart(float size, float[] array, String[] descriptions)
-  {
-     float diameter = size;
-     float[] data = array;
-     String[] headings = descriptions;
-  }
-  public float getDiameter()
-  {
-    return diameter;
-  }
-  */
+
+  //constructor
   pieChart(float[] data, String[] headings)
   {
     this.data = data;
@@ -31,12 +21,12 @@ class pieChart
     this.blue = new float[data.length];
     for (int i = 0; i < data.length; i++)
     {
-      red[i] = random(100,255);
-      green[i] =  random(100,255);
-      blue[i] = random(100,255);
+      red[i] = random(55,200);
+      green[i] =  random(55,200);
+      blue[i] = random(55,200);
     }
-    
-    
+  
+      
   }
   float[] getRed()
   {
@@ -61,9 +51,7 @@ class pieChart
 
    void draw()
    {
-     float[] exampleFloatArray = {218,1782};
-     String[] exampleStringArray = {"Cancelled", "Not Cancelled"};
-     pieChart(800, exampleFloatArray, exampleStringArray);
+     pieChart(800, getData(), getHeadings());
    }
 
    float[] cancelledFlights(Table bigTable)
@@ -116,11 +104,12 @@ class pieChart
       color myColor = color(getRed()[i],getGreen()[i],getBlue()[i]);
       fill(myColor);
       
-      float textPos = map(i+1,0, sortedAngles.length, 0, height-100);
+      float textPos = map(i+1,0, sortedAngles.length, BARHEIGHT, height-BARHEIGHT);
       textSize(32);
-      text(sortedHeadings[i] + ": " +round((sortedAngles[i]/360) * 100) + "%", width-diameter, textPos);
+      text(sortedHeadings[i] + ": " +round(((sortedAngles[i]/360) * 100)*100)*0.01 + "%", width-diameter, textPos);
       arc(diameter/2+100, height/2 + 75, diameter, diameter, lastAngle - radians(90), lastAngle+radians(sortedAngles[i]) - radians (90));
       lastAngle += radians(sortedAngles[i]);
+      textSize(14);
     }
 }
 
