@@ -41,7 +41,7 @@ public class TreeMapScreen extends Screen {
             allLabels.add(data.table.getColumnTitle(i));
         }
         
-        this.dropdown = new Dropdown(this.tmW + this.tmX + 25, BARHEIGHT + 300, 250, 50, "", color(220), BLACK, BLACK, font, allLabels, index -> dropdownOptionChange(index));
+        this.dropdown = new Dropdown(this.tmW + this.tmX + 25, BARHEIGHT + 165, 250, 50, "", color(220), BLACK, BLACK, font, allLabels, index -> dropdownOptionChange(index));
         this.addWidget(dropdown);
         allDropdowns.add(this.dropdown);
     }
@@ -72,7 +72,8 @@ public class TreeMapScreen extends Screen {
     }
     
     public void dropdownOptionChange(Integer index) {
-        
+        this.setCurrentColumn(index);
+        this.createTreeMap(index);
     }
     
     public int getTmX() {
@@ -202,20 +203,20 @@ public class TreeMapScreen extends Screen {
     }
     
     void draw() {
+        // column name
+        fill(BLACK);
+        textAlign(LEFT);
+        textSize(20);
+        text(this.getColName(), this.tmW + this.tmX + 25, BARHEIGHT + 250);
+        textSize(12);
+        textAlign(CENTER);
+        
         // draw widgets
         textSize(16);
         for (int i = 0; i < this.getWidgets().size(); i++) {
             this.getWidgets().get(i).draw();  
         }
         textSize(12);
-        // column name
-        fill(BLACK);
-        textAlign(LEFT);
-        textSize(20);
-        text(this.getColName(), this.tmW + this.tmX + 25, BARHEIGHT + 200);
-        textSize(12);
-        textAlign(CENTER);
-        
         
         // draw treemap
         stroke(0);
@@ -244,7 +245,7 @@ public class TreeMapScreen extends Screen {
         // hovering
         
         int hoveringRectIndex = this.getHovering();
-        println(hoveringRectIndex);
+        
         if (hoveringRectIndex >= 0) {
             Dialog d = this.getDialog();
             SquarifyRect rect = rects.get(hoveringRectIndex);
