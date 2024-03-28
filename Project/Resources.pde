@@ -51,6 +51,9 @@ final int SCREENHEIGHT = 1000;
 final int TEXT_COLOUR = color(0, 0, 0);
 final int HEADER_SIZE = 16;
 final int TEXT_SIZE = 14;
+final int MENU_WIDTH = 150;
+final int MENU_HEIGHT = 30;
+final int ITEM_HEIGHT = 30;
 
 void loadResources()
 {
