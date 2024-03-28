@@ -4,6 +4,7 @@ Dataset data;
 NavigationBar bar;
 TableScreen mainscreen;
 ArrayList<Button> allButtons;
+ArrayList<Dropdown> allDropdowns;
 pieChart cancelledChart;
 pieChart carrierChart;
 Button cancelledButton;
@@ -74,12 +75,13 @@ void loadResources()
   carrierChart = new pieChart(carrierData, carrierHeadings);
   
   allButtons = new ArrayList<Button>();
+  allDropdowns = new ArrayList<Dropdown>();
   bar = new NavigationBar();
   mainscreen = new TableScreen();
   currentScreen = mainscreen;
   barChartScreen = new BarChartScreen(parent);
   currentPieScreen = new pieScreen(cancelledChart);
-  treeMapScreen = new TreeMapScreen(allButtons);
+  treeMapScreen = new TreeMapScreen(allButtons, allDropdowns);
   mainTab = new Button(0, 0, TABWIDTH, TABHEIGHT, "Main", BLUE, BLACK, WHITE, font,() -> bar.changeScreen(mainscreen));
   barChartTab = new Button(0 + TABWIDTH + 1, 0, TABWIDTH, TABHEIGHT, "BarCharts", BLUE, BLACK, WHITE, font,() -> bar.changeScreen(barChartScreen));
   pieTab = new Button(0 + TABWIDTH * 2 + 2, 0, TABWIDTH, TABHEIGHT, "Pie Chart", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(currentPieScreen));
