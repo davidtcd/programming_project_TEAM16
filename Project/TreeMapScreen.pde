@@ -1,4 +1,6 @@
 import squarify.library.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TreeMapScreen extends Screen {
     // Lukas Maselsky, Created class, constructor, getters and setters, and a few methods 5pm 24/03/2024
@@ -177,22 +179,33 @@ public class TreeMapScreen extends Screen {
         this.setColName(data.table.getColumnTitle(columnNumber));
         
         this.setIsCreating(true);
-        String[] labels = sort(data.getUniqueValues(columnNumber));
-        this.labels = labels;
+   
+        String[] labels = data.table.getStringColumn(columnNumber);
+       
+        HashMap<String, Integer> freq = new HashMap<String, Integer>();
+        for (String label : labels) {
+          freq.compute(label, (k, v) -> (v == null) ? 1 : v + 1);
+        }
+        
+        // get unique labels
+        Set<String> keys = freq.keySet();
+        this.labels = keys.toArray(new String[keys.size()]);
         
         ArrayList<Float> values = new ArrayList<Float>();
         color[] bgColors = new color[labels.length];
-        for (int i = 0; i < labels.length; i++) {
-            Table occurrenceAmount = data.getOccurrences(i, columnNumber);
-            Integer amount = occurrenceAmount.getRowCount();
-            values.add(amount.floatValue());
-            bgColors[i] = color((int) random(0, 255),(int) random(0, 255),(int) random(0, 255));
+        int i = 0;
+        for (Integer value : freq.values()) {
+          float floatValue = value.floatValue(); // Convert Integer to float
+          values.add(floatValue);
+          bgColors[i] = color((int) random(0, 255),(int) random(0, 255),(int) random(0, 255));
+          i++;
         }
         this.bgColors = bgColors;
         
         Squarify square = new Squarify(values, this.tmX, this.tmY, this.tmW, this.tmH);
         this.rects = square.getRects();
         this.setIsCreating(false);
+        
     }
     
     public void isHovering(int mX, int mY) {
