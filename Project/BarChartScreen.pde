@@ -326,9 +326,15 @@ class BarChartScreen extends Screen
   void SortLowToHigh()
   {
     int maxBars = 50;
-    String[] currentC = allCategories.get(currentCol);
+    String[] current = allCategories.get(currentCol);
+    ArrayList<String> currentC = new ArrayList<String>();
+    for(int i = 0; i < current.length; i++)
+    {
+      String currentTitle = current[i];
+      currentC.add(currentTitle);
+    }
     ArrayList<Float> currentValues = new ArrayList<Float>(fullValues.get(currentCol));
-    String[] sortedC = new String[currentC.length];
+    String[] sortedC = new String[currentC.size()];
     float[] sortedValues = new float[currentValues.size()];
     ArrayList<BarChart> sortedCharts = new ArrayList<BarChart>();
     BarChart sortedChart;
@@ -345,9 +351,10 @@ class BarChartScreen extends Screen
           index = in;
         }
       }
-      sortedC[i] = currentC[index];
+      sortedC[i] = currentC.get(index);
       sortedValues[i] = currentValues.get(index);
       currentValues.remove(index);
+      currentC.remove(index);
     }
         int numOfPages = ceil(sortedC.length / maxBars);
     for(int i = 0; i <= numOfPages; i++)
@@ -420,9 +427,15 @@ class BarChartScreen extends Screen
     void SortHighToLow()
   {
     int maxBars = 50;
-    String[] currentC = allCategories.get(currentCol);
+    String[] current = allCategories.get(currentCol);
+    ArrayList<String> currentC = new ArrayList<String>();
+    for(int i = 0; i < current.length; i++)
+    {
+      String currentTitle = current[i];
+      currentC.add(currentTitle);
+    }
     ArrayList<Float> currentValues = new ArrayList<Float>(fullValues.get(currentCol));
-    String[] sortedC = new String[currentC.length];
+    String[] sortedC = new String[currentC.size()];
     float[] sortedValues = new float[currentValues.size()];
     ArrayList<BarChart> sortedCharts = new ArrayList<BarChart>();
     BarChart sortedChart;
@@ -439,9 +452,10 @@ class BarChartScreen extends Screen
           index = in;
         }
       }
-      sortedC[i] = currentC[index];
+      sortedC[i] = currentC.get(index);
       sortedValues[i] = currentValues.get(index);
       currentValues.remove(index);
+      currentC.remove(index);
     }
         int numOfPages = ceil(sortedC.length / maxBars);
     for(int i = 0; i <= numOfPages; i++)
