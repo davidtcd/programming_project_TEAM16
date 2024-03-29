@@ -1,11 +1,15 @@
 import org.gicentre.utils.stat.*;
 
+
 class BarChartScreen extends Screen
 {
   PFont title = createFont("Arial", 20);
+  Dropdown sortBy;
   color barColor;
   ArrayList<BarChart> currentChart= new ArrayList<BarChart>();
   ArrayList<ArrayList<BarChart>> fullCharts = new ArrayList<ArrayList<BarChart>>();
+  ArrayList<String[]> allCategories = new ArrayList<String[]>();
+  ArrayList<ArrayList<Float>> fullValues = new ArrayList<ArrayList<Float>>();
   BarChart chart;
   ArrayList<Button> buttons;
   int pageNum = 0;
@@ -16,13 +20,13 @@ class BarChartScreen extends Screen
   String chartTitle;
   int totalCategories;
   int mean;
-  int median;
+  float median;
   String medianName;
   int mode;
   String modeName;
   ArrayList<Integer> allMeans = new ArrayList<Integer>();
   ArrayList<Integer> allTotals = new ArrayList<Integer>();
-  ArrayList<Integer> allMedians = new ArrayList<Integer>();
+  ArrayList<Float> allMedians = new ArrayList<Float>();
   ArrayList<Integer> allModes = new ArrayList<Integer>();
   ArrayList<String> allMedianNames = new ArrayList<String>();
   ArrayList<String> allModeNames = new ArrayList<String>();
@@ -37,6 +41,11 @@ class BarChartScreen extends Screen
     colCount = data.getNumberOfColumns();
     this.parent = parent;
     currentChart = setChart(currentCol);
+    fullCharts.add(currentChart);
+    ArrayList<String> options = new ArrayList<String>();
+    options.add("low->high"); options.add("high->low"); options.add("default");
+    sortBy = new Dropdown(0, TABHEIGHT, BUTTONWIDTH, BUTTONHEIGHT, "Sort By", color(220), BLACK, BLACK, font, options, index -> changeDropdownOption(index));
+    allDropdowns.add(sortBy);
   }
   void drawTitle()
   {
@@ -75,6 +84,15 @@ class BarChartScreen extends Screen
       buttons.get(i).draw();
     }
     drawTitle();
+    sortBy.draw();
+    noStroke();
+    fill(color(220));
+    rect(0, TABHEIGHT, BUTTONWIDTH, BUTTONHEIGHT);
+    fill(BLACK);
+    textAlign(CENTER);
+    textSize(20);
+    text("SORT BY", 0, TABHEIGHT + (BUTTONHEIGHT / 2), BUTTONWIDTH, BUTTONHEIGHT);
+    textSize(14);
   }
   void addButton(Button button)
   {
@@ -86,6 +104,7 @@ class BarChartScreen extends Screen
     int modeIndex = 0;
     ArrayList<BarChart> allCharts = new ArrayList<BarChart>();
     String[] categories = data.getUniqueValues(columnNumber);
+    allCategories.add(categories);
     totalCategories = categories.length;
     int numOfPages = ceil(categories.length / maxBars);
     if(maxBars > categories.length)
@@ -93,21 +112,22 @@ class BarChartScreen extends Screen
       maxBars = categories.length;
     }
    // loop to initialize values
-   float[] values = new float[categories.length];
-   for(int i = 0; i < values.length; i++) 
+   ArrayList<Float> values = new ArrayList<Float>();
+   for(int i = 0; i < categories.length; i++) 
    {
     float amount = data.getOccurrenceAmount(i, columnNumber);
-     values[i] = amount;
+     values.add(amount);
    }
+   fullValues.add(values);
    mean = data.table.getRowCount() / categories.length;
-   if(values.length % 2 == 0)
+   if(values.size() % 2 == 0)
    {
-   median = (int)values[values.length / 2];
+   median = values.get(values.size() / 2);
    medianName = categories[categories.length / 2];
    }
    else
    {
-     median = (int)(values[values.length / 2] + values[values.length / 2 + 1]) / 2;
+     median = (values.get(values.size() / 2) + values.get(values.size() / 2 + 1)) / 2;
      medianName = categories[categories.length / 2] + " + " + categories[categories.length / 2 + 1];
    }
     // loop to set each chart for each page
@@ -122,7 +142,7 @@ class BarChartScreen extends Screen
         for(int in = 0; in < realCategories.length; in++)
         {
           realCategories[in] = categories[barNum];
-          realValues[in] = values[barNum];
+          realValues[in] = values.get(barNum);
           barNum++;
         }
         float currentValue = realValues[0];
@@ -155,7 +175,7 @@ class BarChartScreen extends Screen
             barNum = categories.length - 1;
           }
           realCategories[in] = categories[barNum];
-          realValues[in] = values[barNum];
+          realValues[in] = values.get(barNum);
           barNum++;
         }
         float currentValue = realValues[0];
@@ -175,9 +195,9 @@ class BarChartScreen extends Screen
          chart.showValueAxis(true);
          allCharts.add(chart);
          mode = (int)currentValue;
-         for(int index = 0; index < values.length; index++)
+         for(int index = 0; index < values.size(); index++)
          {
-           if(currentValue == values[index])
+           if(currentValue == values.get(index))
            {
              modeIndex = index;
            }
@@ -302,5 +322,212 @@ class BarChartScreen extends Screen
     {
       invertAxis = true;
     }
+  }
+  void SortLowToHigh()
+  {
+    int maxBars = 50;
+    String[] currentC = allCategories.get(currentCol);
+    ArrayList<Float> currentValues = new ArrayList<Float>(fullValues.get(currentCol));
+    String[] sortedC = new String[currentC.length];
+    float[] sortedValues = new float[currentValues.size()];
+    ArrayList<BarChart> sortedCharts = new ArrayList<BarChart>();
+    BarChart sortedChart;
+    for(int i = 0; i < sortedC.length; i++)
+    {
+      int index = 0;
+      float currentValue = currentValues.get(0);
+      for(int in = 0; in < currentValues.size(); in++)
+      {
+        float newValue = currentValues.get(in);
+        if(newValue < currentValue)
+        {
+          currentValue = newValue;
+          index = in;
+        }
+      }
+      sortedC[i] = currentC[index];
+      sortedValues[i] = currentValues.get(index);
+      currentValues.remove(index);
+    }
+        int numOfPages = ceil(sortedC.length / maxBars);
+    for(int i = 0; i <= numOfPages; i++)
+    {
+      if(i < numOfPages)
+      {
+        sortedChart = new BarChart(parent);
+        int barNum = maxBars * i;
+        String[] realCategories = new String[maxBars];
+        float[] realValues = new float[maxBars];
+        for(int in = 0; in < realCategories.length; in++)
+        {
+          realCategories[in] = sortedC[barNum];
+          realValues[in] = sortedValues[barNum];
+          barNum++;
+        }
+        float currentValue = sortedValues[0];
+        for(int ind = 1; ind < realValues.length; ind++)
+         {
+           float newValue = realValues[ind];
+           if(newValue > currentValue)
+           {
+             currentValue = newValue;
+           }
+         }
+         sortedChart.setMaxValue(currentValue+20);
+         sortedChart.setMinValue(0);
+         sortedChart.setData(realValues);
+         sortedChart.setBarLabels(realCategories);
+         sortedChart.showCategoryAxis(true);
+         sortedChart.showValueAxis(true);
+         sortedCharts.add(sortedChart);
+      }
+      else
+      {
+        sortedChart = new BarChart(parent);
+        int barNum = maxBars * i;
+        String[] realCategories = new String[sortedC.length - barNum];
+        float[] realValues = new float[sortedC.length - barNum];
+        for(int in = 0; in < realCategories.length; in++)
+        {
+          if(barNum >= sortedC.length - 1)
+          {
+            barNum = sortedC.length - 1;
+          }
+          realCategories[in] = sortedC[barNum];
+          realValues[in] = sortedValues[barNum];
+          barNum++;
+        }
+        float currentValue = realValues[0];
+        for(int ind = 1; ind < realValues.length; ind++)
+         {
+           float newValue = realValues[ind];
+           if(newValue > currentValue)
+           {
+             currentValue = newValue;
+           }
+         }
+         sortedChart.setMaxValue(currentValue+20);
+         sortedChart.setMinValue(0);
+         sortedChart.setData(realValues);
+         sortedChart.setBarLabels(realCategories);
+         sortedChart.showCategoryAxis(true);
+         sortedChart.showValueAxis(true);
+         sortedCharts.add(sortedChart);
+      }
+   }
+   currentChart = sortedCharts;
+  }
+    void SortHighToLow()
+  {
+    int maxBars = 50;
+    String[] currentC = allCategories.get(currentCol);
+    ArrayList<Float> currentValues = new ArrayList<Float>(fullValues.get(currentCol));
+    String[] sortedC = new String[currentC.length];
+    float[] sortedValues = new float[currentValues.size()];
+    ArrayList<BarChart> sortedCharts = new ArrayList<BarChart>();
+    BarChart sortedChart;
+    for(int i = 0; i < sortedC.length; i++)
+    {
+      int index = 0;
+      float currentValue = currentValues.get(0);
+      for(int in = 0; in < currentValues.size(); in++)
+      {
+        float newValue = currentValues.get(in);
+        if(newValue > currentValue)
+        {
+          currentValue = newValue;
+          index = in;
+        }
+      }
+      sortedC[i] = currentC[index];
+      sortedValues[i] = currentValues.get(index);
+      currentValues.remove(index);
+    }
+        int numOfPages = ceil(sortedC.length / maxBars);
+    for(int i = 0; i <= numOfPages; i++)
+    {
+      if(i < numOfPages)
+      {
+        sortedChart = new BarChart(parent);
+        int barNum = maxBars * i;
+        String[] realCategories = new String[maxBars];
+        float[] realValues = new float[maxBars];
+        for(int in = 0; in < realCategories.length; in++)
+        {
+          realCategories[in] = sortedC[barNum];
+          realValues[in] = sortedValues[barNum];
+          barNum++;
+        }
+        float currentValue = sortedValues[0];
+        for(int ind = 1; ind < realValues.length; ind++)
+         {
+           float newValue = realValues[ind];
+           if(newValue > currentValue)
+           {
+             currentValue = newValue;
+           }
+         }
+         sortedChart.setMaxValue(currentValue+20);
+         sortedChart.setMinValue(0);
+         sortedChart.setData(realValues);
+         sortedChart.setBarLabels(realCategories);
+         sortedChart.showCategoryAxis(true);
+         sortedChart.showValueAxis(true);
+         sortedCharts.add(sortedChart);
+      }
+      else
+      {
+        sortedChart = new BarChart(parent);
+        int barNum = maxBars * i;
+        String[] realCategories = new String[sortedC.length - barNum];
+        float[] realValues = new float[sortedC.length - barNum];
+        for(int in = 0; in < realCategories.length; in++)
+        {
+          if(barNum >= sortedC.length - 1)
+          {
+            barNum = sortedC.length - 1;
+          }
+          realCategories[in] = sortedC[barNum];
+          realValues[in] = sortedValues[barNum];
+          barNum++;
+        }
+        float currentValue = realValues[0];
+        for(int ind = 1; ind < realValues.length; ind++)
+         {
+           float newValue = realValues[ind];
+           if(newValue > currentValue)
+           {
+             currentValue = newValue;
+           }
+         }
+         sortedChart.setMaxValue(currentValue+20);
+         sortedChart.setMinValue(0);
+         sortedChart.setData(realValues);
+         sortedChart.setBarLabels(realCategories);
+         sortedChart.showCategoryAxis(true);
+         sortedChart.showValueAxis(true);
+         sortedCharts.add(sortedChart);
+      }
+   }
+   currentChart = sortedCharts;
+  }
+  void changeDropdownOption(int index)
+  {
+    switch(index)
+    {
+      case(0):
+        SortLowToHigh();
+        break;
+      case(1):
+        SortHighToLow();
+        break;
+      case(2):
+        showDefault();
+        break;
+    }
+  }
+  void showDefault()
+  {
+    currentChart = fullCharts.get(currentCol);
   }
 }

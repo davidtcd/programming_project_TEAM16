@@ -26,7 +26,7 @@ PApplet parent = this;
 Table carrierTable;
 
 //Variable constants
-final String DATA_PATH = "flights2k";
+final String DATA_PATH = "flights100k";
 
 final int SCREENWIDTH = 2000;
 final int SCREENHEIGHT = 1000;
