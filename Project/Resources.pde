@@ -19,14 +19,15 @@ Button nextColor, prevColor;
 Button flipAxes;
 Screen graphScreen;
 pieScreen currentPieScreen;
-Button mainTab, barChartTab, pieTab, treemapTab, lineGraphTab;
+Button mainTab, barChartTab, pieTab, treemapTab, lineGraphTab, searchTab;
 TreeMapScreen treeMapScreen;
+SearchScreen searchScreen;
 LineGraphScreen lineGraphScreen;
 PApplet parent = this;
 Table carrierTable;
 
 //Variable constants
-final String DATA_PATH = "flights100k";
+final String DATA_PATH = "flights2k";
 
 final int SCREENWIDTH = 2000;
 final int SCREENHEIGHT = 1000;
@@ -45,7 +46,7 @@ final color BARCOLOR = WHITE;
 final int BARCHARTWIDTH = 1200;
 final int BARCHARTHEIGHT = 800;
 final int CHARTGAP = 150;
-final int NUMOFTABS = 5;
+final int NUMOFTABS = 6;
 final int TABWIDTH = (int)(BARWIDTH / NUMOFTABS) - NUMOFTABS;
 final int TABHEIGHT = BARHEIGHT;
 final int TABGAP = 200;
@@ -91,6 +92,7 @@ void loadResources()
   barChartScreen = new BarChartScreen(parent);
   currentPieScreen = new pieScreen(cancelledChart);
   treeMapScreen = new TreeMapScreen(allButtons, allDropdowns);
+  searchScreen = new SearchScreen(allDropdowns, allButtons, font, parent);
   lineGraphScreen = new LineGraphScreen();
   treeMapScreen = new TreeMapScreen(allButtons, allDropdowns);
   mainTab = new Button(0, 0, TABWIDTH, TABHEIGHT, "Main", BLUE, BLACK, WHITE, font,() -> bar.changeScreen(mainscreen));
@@ -98,6 +100,7 @@ void loadResources()
   pieTab = new Button(0 + TABWIDTH * 2 + 2, 0, TABWIDTH, TABHEIGHT, "Pie Chart", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(currentPieScreen));
   treemapTab = new Button(0 + TABWIDTH * 3 + 3, 0, TABWIDTH, TABHEIGHT, "Treemap", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(treeMapScreen));
   lineGraphTab = new Button(0 + TABWIDTH * 4 + 4, 0, TABWIDTH, TABHEIGHT, "Line graph", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(lineGraphScreen)); 
+  searchTab = new Button(0 + TABWIDTH * 5 + 5, 0, TABWIDTH, TABHEIGHT, "Search", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(searchScreen)); 
   cancelledButton = new Button(width - (BUTTON2_GAP - 150), 140, BUTTONWIDTH, BUTTONHEIGHT, "Cancelled Flights", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(cancelledChart));
   dateButton = new Button(width - (BUTTON2_GAP -150), 140 + (BUTTONHEIGHT*4), BUTTONWIDTH, BUTTONHEIGHT, "Flight Dates", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(dateChart));
   carrierButton = new Button(width - (BUTTON2_GAP -150), 140 + (BUTTONHEIGHT*2), BUTTONWIDTH, BUTTONHEIGHT, "Airline Carriers", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(carrierChart));
@@ -109,12 +112,13 @@ void loadResources()
   nextColor = new Button(width - BUTTON1_GAP,400, BUTTONWIDTH, BUTTONHEIGHT, "Next Colour", BLUE, BLACK, WHITE, font,() -> barChartScreen.nextColor());
   prevColor = new Button(width - BUTTON2_GAP, 400, BUTTONWIDTH, BUTTONHEIGHT, "Previous Colour", BLUE, BLACK, WHITE, font,() -> barChartScreen.prevColor());
   barChartScreen.addButton(nextChart); barChartScreen.addButton(prevChart); barChartScreen.addButton(nextPage); barChartScreen.addButton(prevPage); barChartScreen.addButton(nextColor); barChartScreen.addButton(prevColor); barChartScreen.addButton(flipAxes);
-  bar.addTab(mainTab);  bar.addTab(barChartTab); bar.addTab(pieTab);bar.addTab(treemapTab); bar.addTab(lineGraphTab);
+  bar.addTab(mainTab);  bar.addTab(barChartTab); bar.addTab(pieTab);bar.addTab(treemapTab); bar.addTab(lineGraphTab); bar.addTab(searchTab);
   currentPieScreen.addButton(cancelledButton);
   currentPieScreen.addButton(carrierButton);
   currentPieScreen.addButton(dateButton);
   allButtons.add(mainTab); allButtons.add(barChartTab); allButtons.add(nextChart); allButtons.add(prevChart); allButtons.add(nextPage); allButtons.add(prevPage); allButtons.add(nextColor); allButtons.add(prevColor); allButtons.add(flipAxes);
   allButtons.add(pieTab);
+  allButtons.add(searchTab);
   allButtons.add(lineGraphTab);
   allButtons.add(treemapTab);
   allButtons.add(cancelledButton);

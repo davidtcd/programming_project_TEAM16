@@ -32,9 +32,14 @@ void mousePressed()
         dropdown.optionIsClicked(j, mouseX, mouseY);
     }
   }
+  searchScreen.isClicked(mouseX, mouseY);
 }
 void mouseMoved() {
   treeMapScreen.isHovering(mouseX, mouseY);
+}
+
+void keyPressed() {
+  searchScreen.keyClick();
 }
 
 void mouseClicked() {
