@@ -9,6 +9,8 @@ pieChart cancelledChart;
 pieChart carrierChart;
 pieChart dateChart;
 Button cancelledButton;
+Button delayedButton;
+Button carrier, flights; // line graph
 Button carrierButton;
 Button dateButton;
 Screen currentScreen;
@@ -59,6 +61,7 @@ final int TEXT_SIZE = 14;
 final int MENU_WIDTH = 150;
 final int MENU_HEIGHT = 30;
 final int ITEM_HEIGHT = 30;
+final int CANCELLED = 13;
 
 void loadResources()
 {
@@ -91,7 +94,7 @@ void loadResources()
   barChartScreen = new BarChartScreen(parent);
   currentPieScreen = new pieScreen(cancelledChart);
   treeMapScreen = new TreeMapScreen(allButtons, allDropdowns);
-  lineGraphScreen = new LineGraphScreen();
+  lineGraphScreen = new LineGraphScreen(0);
   treeMapScreen = new TreeMapScreen(allButtons, allDropdowns);
   mainTab = new Button(0, 0, TABWIDTH, TABHEIGHT, "Main", BLUE, BLACK, WHITE, font,() -> bar.changeScreen(mainscreen));
   barChartTab = new Button(0 + TABWIDTH + 1, 0, TABWIDTH, TABHEIGHT, "BarCharts", BLUE, BLACK, WHITE, font,() -> bar.changeScreen(barChartScreen));
@@ -101,6 +104,8 @@ void loadResources()
   cancelledButton = new Button(width - (BUTTON2_GAP - 150), 140, BUTTONWIDTH, BUTTONHEIGHT, "Cancelled Flights", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(cancelledChart));
   dateButton = new Button(width - (BUTTON2_GAP -150), 140 + (BUTTONHEIGHT*4), BUTTONWIDTH, BUTTONHEIGHT, "Flight Dates", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(dateChart));
   carrierButton = new Button(width - (BUTTON2_GAP -150), 140 + (BUTTONHEIGHT*2), BUTTONWIDTH, BUTTONHEIGHT, "Airline Carriers", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(carrierChart));
+  carrier = new Button(width - (BUTTON2_GAP - 150), 140 + (BUTTONHEIGHT * 2), BUTTONWIDTH, BUTTONHEIGHT, "Origin", BLUE, BLACK, WHITE, font, () -> lineGraphScreen.changeGraph(5)); //lg
+  flights = new Button(width - (BUTTON2_GAP - 150), 140 + (BUTTONHEIGHT * 4), BUTTONWIDTH, BUTTONHEIGHT, "Flights", BLUE, BLACK, WHITE, font, () -> lineGraphScreen.changeGraph(0)); //lg
   flipAxes = new Button(width - (BUTTON2_GAP - 150), 140, BUTTONWIDTH, BUTTONHEIGHT, "Flip Chart", BLUE, BLACK, WHITE, font,() -> barChartScreen.flipChart());
   nextChart = new Button(width - BUTTON1_GAP, 200, BUTTONWIDTH, BUTTONHEIGHT, "Next Chart", BLUE, BLACK, WHITE, font,() -> barChartScreen.nextChart());
   prevChart = new Button(width - BUTTON2_GAP, 200, BUTTONWIDTH, BUTTONHEIGHT, "Previous Chart", BLUE, BLACK, WHITE, font,() -> barChartScreen.prevChart());
@@ -113,6 +118,8 @@ void loadResources()
   currentPieScreen.addButton(cancelledButton);
   currentPieScreen.addButton(carrierButton);
   currentPieScreen.addButton(dateButton);
+  lineGraphScreen.addButton(carrier);
+  lineGraphScreen.addButton(flights);
   allButtons.add(mainTab); allButtons.add(barChartTab); allButtons.add(nextChart); allButtons.add(prevChart); allButtons.add(nextPage); allButtons.add(prevPage); allButtons.add(nextColor); allButtons.add(prevColor); allButtons.add(flipAxes);
   allButtons.add(pieTab);
   allButtons.add(lineGraphTab);
@@ -120,5 +127,7 @@ void loadResources()
   allButtons.add(cancelledButton);
   allButtons.add(carrierButton);
   allButtons.add(dateButton);
+  allButtons.add(carrier);
+  allButtons.add(flights);
   currentScreen = mainscreen;
 }
