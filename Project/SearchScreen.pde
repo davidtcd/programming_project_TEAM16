@@ -3,7 +3,15 @@ import java.util.*;
 class SearchScreen extends Screen {
     // Lukas Maselsky, Created class, constructor, getters and setters, and a few methods 5pm 30/03/2024
     
-    private ArrayList<Dropdown> dropdowns;
+    /**
+    * Creates a screen with a text box for each column in the dataset
+    * On click of the search button, a query is run on the data and
+    * a result is returned of each row that matches the text inputs
+    * The results are then displayed, with buttons to toggle which
+    * slice of the results are being drawn to the screen
+    */
+    
+
     private ArrayList<HashSet<String>> uniques;
     private ArrayList<Textbox> textboxes;
     private int colCount;
@@ -24,22 +32,25 @@ class SearchScreen extends Screen {
         this.currentPage = 1;
         this.resultsCount = 0;
         
-        // textboxes
+        
+        
         ArrayList<String> allLabels = new ArrayList<String>();
         for (int i = 0; i < this.colCount; i++) {
             allLabels.add(data.table.getColumnTitle(i));
         }
         
+        // get unique values in each column
+        this.buildUniques(this.colCount);
+        
+        // textboxes
         for (int i = 0; i < this.colCount / 2; i++) {
-            this.textboxes.add(new Textbox(50 + i * 205, 150, 200, 50, allLabels.get(i), WHITE, BLACK, BLACK, font, parent));
+            this.textboxes.add(new Textbox(50 + i * 205, 150, 200, 50, allLabels.get(i), WHITE, BLACK, BLACK, font, parent, convertToArrayList(uniques.get(i)), allDropdowns));
         }
         int j = 0;
         for (int i = this.colCount / 2; i < this.colCount; i++) {    
-            this.textboxes.add(new Textbox(50 + j * 205, 250, 200, 50, allLabels.get(i),WHITE, BLACK, BLACK, font, parent));
+            this.textboxes.add(new Textbox(50 + j * 205, 250, 200, 50, allLabels.get(i),WHITE, BLACK, BLACK, font, parent, convertToArrayList(uniques.get(i)), allDropdowns));
             j++;
         }
-        // get unique values in each column
-        this.buildUniques();
         
         // buttons
         Button sb = new Button(45, 300, 200, 50, "Search", color(230), BLACK, BLACK, font,() -> this.searchClick());
@@ -53,6 +64,20 @@ class SearchScreen extends Screen {
         allButtons.add(next);
     }
     
+    ArrayList<String> convertToArrayList(HashSet<String> set) {
+        ArrayList<String> arr = new ArrayList<String>();
+        for (String str : set) {
+            arr.add(str);
+        }
+        return arr;
+    }
+    
+    /**
+    * Calls the buildTable function which returns a hashs set of all the indexes
+    * that match the search query
+    * The returns are iterated through and the row of the dataset that has each index 
+    * is added to the results arraylist
+    */
     void searchClick() {
         HashSet<Integer> indexes = buildTable(); 
         
@@ -67,6 +92,10 @@ class SearchScreen extends Screen {
         
     }
     
+    /**
+    * Increases the start index of the results, which is used to then 
+    * change which data is drawn on the screen
+    */
     void nextClick() {
         int i = this.startIndex;
         if (i < resultsCount - this.VISIBLE_ROWS) {
@@ -78,6 +107,10 @@ class SearchScreen extends Screen {
         }
     }
     
+    /**
+    * Decreases the start index of the results, which is used to then 
+    * change which data is drawn on the screen
+    */
     void prevClick() {
         int i = this.startIndex;
         if (i >= this.VISIBLE_ROWS) {
@@ -89,17 +122,29 @@ class SearchScreen extends Screen {
         }
     }
     
-    void buildUniques() {
-        for (int i = 0; i < this.getTextboxes().size(); i++) {
-            String[] labels = data.table.getStringColumn(i); 
+    /**
+    * Creates an arraylist of hashsets that contain each unique
+    * values in each column of the data, used in the query to check
+    * if a text input matches anything in the column
+    * @param labels    headers of each column
+    */
+    void buildUniques(int colCount) {
+        for (int i = 0; i < colCount; i++) {
+            String[] values = data.table.getStringColumn(i); 
             HashSet<String> unique = new HashSet<String>();
-            for (String label : labels) {
-                unique.add(label);
+            for (String value : values) {
+                unique.add(value);
             }
             this.uniques.add(unique);
         }
     }
     
+    
+    /**
+    * Fills the a hash set of every index in the dataset
+    *
+    * @return HashSet<Integer>     hash set of each index
+    */
     HashSet<Integer> fillSet() {
         HashSet<Integer> set = new HashSet<Integer>();
         for (int i = 0; i < data.getNumberOfRows(); i++) {
@@ -108,6 +153,14 @@ class SearchScreen extends Screen {
         return set;
     }
     
+    
+    /**
+    * Iterates through a hashset and checking if each value contains the substring
+    * 
+    * @param substring     string value
+    * @param set           hash set of strings
+    * @return              true if substring present in set           
+    */
     boolean isSubstringPresent(String substring, HashSet<String> set) {
         for (String str : set) {
             if (str.contains(substring)) {
@@ -117,6 +170,15 @@ class SearchScreen extends Screen {
         return false;
     }
     
+    /**
+    * Iterates through each column in the data
+    * for each column, builds a hash set that contains every index
+    * that matches the input for that column
+    * On each iteration, checks the previous set for overlapping index, 
+    * else it discards the index     
+    * 
+    * @return              hash set of indexes that match all inputs           
+    */
     HashSet<Integer> buildTable() {
         HashSet<Integer> rowIndexes = new HashSet<Integer>();
         for (int i = 0; i < this.colCount; i++) {
@@ -160,11 +222,27 @@ class SearchScreen extends Screen {
         return rowIndexes;
     }
     
+    /**
+    * Calls the keyClicked method on the textbox that is selected
+    * if a key is pressed          
+    */
     public void keyClick() {
-        
         if (this.getSelectedTextbox() >= 0) {
-            Textbox textbox = this.getTextboxes().get(this.getSelectedTextbox());
+            int index = this.getSelectedTextbox();
+            Textbox textbox = this.getTextboxes().get(index);
+            
             textbox.keyClicked();
+            if (textbox.getText().length() == 0) {
+                // hide options
+                textbox.hideOptions();
+            } else if (textbox.getText().length() == 1) {
+                // show options
+                textbox.showOptions();
+            } else {
+                // update options
+                textbox.updateOptions();
+            }
+            
         }
     }
     
@@ -184,6 +262,13 @@ class SearchScreen extends Screen {
         this.selectedTextbox = selectedTextbox;
     }
     
+    /**
+    * Checks if a text box has been clicked on each mouse click
+    * if true, sets the selected textbox integer to the textbox index   
+    * 
+    * @param mX     mouse x position
+    * @param mY     mouse y position  
+    */
     public void isClicked(int mX, int mY) {
         ArrayList<Textbox> textboxes = this.getTextboxes();
         for (int i = 0; i < textboxes.size(); i++) {

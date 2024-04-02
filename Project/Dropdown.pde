@@ -21,9 +21,13 @@ class Dropdown extends Widget {
     private int offset; 
     private String[] visibleOptions;
     Consumer<Integer> optionClick;
+    private boolean isNormal;
+    private int scrollbarWidth;
+    private int scrollbarHeight;
+    private int scrollbarX;
+    private int scrollbarY;
     
-    
-    Dropdown(int x, int y, int width, int height, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont, ArrayList<String> options, Consumer<Integer> optionClick) {
+    Dropdown(int x, int y, int width, int height, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont, ArrayList<String> options, Consumer<Integer> optionClick, boolean isNormal) {
         super(x, y, label, widgetColor, borderColor, labelColor, widgetFont);
         this.width = width; 
         this.height = height;
@@ -32,22 +36,27 @@ class Dropdown extends Widget {
         this.offset = 0;
         this.options = options;
         this.optionClick = optionClick;
+        this.isNormal = isNormal;
         // initialise label as first option
-        this.setLabel(options.get(0));
+        this.setLabel(options.size() > 0 ? options.get(0) : "");
         
         this.visibleOptions = new String[OPTION_VISIBLE_COUNT];
-        for (int i = 0; i < OPTION_VISIBLE_COUNT; i++) {
+        for (int i = 0; i < (this.isNormal ? OPTION_VISIBLE_COUNT : 0); i++) {
             this.visibleOptions[i] = options.get(i); 
         }
         
         // scrollbar
-        int scrollbarWidth = width / 10; //! not concrete 
-        int scrollbarHeight = height * (OPTION_VISIBLE_COUNT); 
-        int scrollbarX = x + width - scrollbarWidth;
-        int scrollbarY = y + height + 1; // + 1 for border bottom
+        this.scrollbarWidth = width / 10; //! not concrete 
+        this.scrollbarHeight = height * (OPTION_VISIBLE_COUNT); 
+        this.scrollbarX = x + width - scrollbarWidth;
+        this.scrollbarY = y + height + 1; // + 1 for border bottom
         
-        double fraction = (double) OPTION_VISIBLE_COUNT / (double) options.size();
-        this.scrollbar = new Scrollbar(scrollbarX, scrollbarY, scrollbarWidth, scrollbarHeight, "", widgetColor, color(0, 0 , 0), widgetFont, fraction);
+        this.setupScrollbar();
+    }
+    
+    void setupScrollbar() {
+        double fraction = (double) this.OPTION_VISIBLE_COUNT / (double) this.getOptions().size();
+        this.scrollbar = new Scrollbar(this.scrollbarX, this.scrollbarY, this.scrollbarWidth, this.scrollbarHeight, "", this.getWidgetColor(), color(0, 0 , 0), this.getWidgetFont(), fraction);
     }
     
     public int getWidth() {
@@ -74,6 +83,19 @@ class Dropdown extends Widget {
         this.open = open;
     }
     
+    public void toggleOpen(boolean open) {
+        // only needed for textbox class
+        this.visibleOptions = new String[OPTION_VISIBLE_COUNT];
+        if (this.getOptions().size() != 0) {
+            for (int i = 0; i < OPTION_VISIBLE_COUNT; i++) {
+                this.visibleOptions[i] = this.getOptions().get(i); 
+            }
+        }
+        
+        this.setupScrollbar();
+        this.setOpen(open);
+    }
+    
     public String[] getVisibleOptions() {
         return this.visibleOptions;
     }
@@ -92,6 +114,10 @@ class Dropdown extends Widget {
     
     public ArrayList<String> getOptions() {
         return this.options;
+    }
+    
+    public void setOptions(ArrayList<String> options) {
+        this.options = options;
     }
     
     public String getOption(String text) {
@@ -126,9 +152,19 @@ class Dropdown extends Widget {
         return this.scrollbar;
     }
     
-    public void isClicked(int mX, int mY) {  
-        if (mX > this.getX() && mX < this.getX() + this.getWidth() && mY > this.getY() && mY < this.getY() + this.getHeight()) { 
-            this.setOpen(!(this.getOpen()));
+    public boolean getIsNormal() {
+        return this.isNormal;
+    }
+    
+    public void setNormal(boolean isNormal) {
+        this.isNormal = isNormal;
+    }
+    
+    public void isClicked(int mX, int mY) { 
+        if (this.getIsNormal()) { 
+            if (mX > this.getX() && mX < this.getX() + this.getWidth() && mY > this.getY() && mY < this.getY() + this.getHeight()) { 
+                this.setOpen(!(this.getOpen()));
+            }
         }
     }
     
@@ -296,11 +332,13 @@ class Dropdown extends Widget {
         
         // main dropdown button
         noStroke();
-        fill(wc); 
-        rect(cur_x, cur_y, w, h);
-        fill(lc);
         textAlign(CENTER, CENTER);
-        text(l, cur_x + w / 2, cur_y + h / 2);
+        if (this.getIsNormal()) {
+            fill(wc); 
+            rect(cur_x, cur_y, w, h);
+            fill(lc);
+            text(l, cur_x + w / 2, cur_y + h / 2);
+        }
         
         // check if open
         if (this.getOpen()) {
