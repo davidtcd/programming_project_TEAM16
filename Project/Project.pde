@@ -42,10 +42,6 @@ void keyPressed() {
   searchScreen.keyClick();
 }
 
-void mouseClicked() {
-  // Handle mouse click events for the current active screen
-  currentScreen.mouseClicked();
-}
 
 void mouseReleased() {
   for (int i = 0; i < allDropdowns.size(); i++)

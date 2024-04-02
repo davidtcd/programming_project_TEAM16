@@ -1,6 +1,8 @@
 import org.gicentre.utils.stat.*;
 
-
+// class implemented by David Sietko
+// class to implement a BarChartScreen, this scren displays a BarChart of a certain column of the data along with the mean, mode and median. Screen also draws buttons so that user
+// can interact with the BarChart and change the data that is being displayed.
 class BarChartScreen extends Screen
 {
   PFont title = createFont("Arial", 20);
@@ -34,6 +36,9 @@ class BarChartScreen extends Screen
   boolean invertAxis = true;
   PApplet parent;
   
+  // the constructor for a BarChartScren
+  // @param a PApplet (given sketch), this is so we can initialize BarChart objects within the class as this is the parameter we need to pass 
+  //        to a BarChart constructor to create a BarChart object.
   BarChartScreen(PApplet parent)
   {
     super();
@@ -47,6 +52,7 @@ class BarChartScreen extends Screen
     sortBy = new Dropdown(0, TABHEIGHT, BUTTONWIDTH, BUTTONHEIGHT, "Sort By", color(220), BLACK, BLACK, font, options, index -> changeDropdownOption(index), true);
     allDropdowns.add(sortBy);
   }
+  // drawTitle() draws the title, mean, mode, median and page number for a BarChartScreen object
   void drawTitle()
   {
     textFont(title);
@@ -59,12 +65,15 @@ class BarChartScreen extends Screen
     textAlign(CENTER);
     textSize(20);
     text("MEAN: " + allMeans.get(currentCol), 1650, 600);
-    text("MODE: " + allModeNames.get(currentCol) + ", AMOUNT: " + allModes.get(currentCol), 1650, 650);
-    text("MEDIAN: " + allMedianNames.get(currentCol) + ", AMOUNT: " + allMedians.get(currentCol), 1650, 700);
-    text("TOTAL CATEGORIES: " + allTotals.get(currentCol), 1650, 750);
+    text("MODE: " + allModeNames.get(currentCol), 1650, 650);
+    text("AMOUNT: " + allModes.get(currentCol), 1650, 700);
+    text("MEDIAN: " + allMedianNames.get(currentCol), 1650, 750);
+    text("AMOUNT: " + allMedians.get(currentCol), 1650, 800);
+    text("TOTAL CATEGORIES: " + allTotals.get(currentCol), 1650, 850);
     textFont(font);
     textSize(14);
   }
+  // draws all of the objects that should be on a BarChartScreen
   void draw()
   {
     if(pageNum < currentChart.size())
@@ -98,6 +107,12 @@ class BarChartScreen extends Screen
   {
     buttons.add(button);
   }
+  // creates and returns an ArrayList of BarChart objects for a specified column, it returns an ArrayList instead of a single object
+  // as each index in the ArrayList corresponds to a page for the whole column of the data. On top of that, this method calculates
+  // the mean, mode and median for a given column and then adds all of these values to an arrayList for each of those values. e.g
+  // we calculate the mode and then add it to an ArrayList called allModes (can see all of the ArrayLists above the constructor).
+  // @param columnNumber the columnNumber that we want to create a BarChart of
+  // @return ArrayList<BarChart> returns an ArrayList of BarChart objects with each index corresponding to a page number
   ArrayList<BarChart> setChart(int columnNumber)
 {
     int maxBars = 50;
@@ -127,7 +142,7 @@ class BarChartScreen extends Screen
    }
    else
    {
-     median = (values.get(values.size() / 2) + values.get(values.size() / 2 + 1)) / 2;
+     median = (values.get(values.size() / 2) + values.get((values.size() / 2) + 1)) / 2;
      medianName = categories[categories.length / 2] + " + " + categories[categories.length / 2 + 1];
    }
     // loop to set each chart for each page
@@ -209,6 +224,7 @@ class BarChartScreen extends Screen
     allMeans.add(mean); allModes.add(mode); allMedians.add(median); allMedianNames.add(medianName); allModeNames.add(modeName); allTotals.add(totalCategories); allTitles.add(chartTitle);
     return allCharts;
 }
+  // method to increment the pageNumber, if the pageNumber is the last Page it stays as the last page
   void pageInc()
   {
     pageNum++;
@@ -217,6 +233,7 @@ class BarChartScreen extends Screen
       pageNum = currentChart.size() - 1;
     }
   }
+  // method to decrement pageNumber, if pageNumber is first page it stays as the first page
     void pageDec()
   {
     pageNum--;
@@ -225,6 +242,10 @@ class BarChartScreen extends Screen
       pageNum = 0;
     }
   }
+  // method to go to the next BarChart.Do this by incrementing the current column integer, if we are at the last Chart we stay at that chart, method resets pageNumber back to 0
+  // we also check to see if we have initialized a barChart for the current columnNumber, if we havent then we create it and if we have already created one before we just set the 
+  // currentChart to be that BarChart from an ArrayList made of ArrayLists of BarChart objects( as 1 ArrayList Of BarCharts = a single BarChart).
+  // method also sets the currentChart to the chart for the currentColumn that we want to display
   void nextChart()
   {
     pageNum = 0;
@@ -252,6 +273,7 @@ class BarChartScreen extends Screen
       currentChart = fullCharts.get(currentCol);
     }
   }
+  // same as nextChart except we do the reverse process, we go backwards, also sets the currentChart to the BarChart that we want to display.
   void prevChart()
   {
     pageNum = 0;
@@ -266,6 +288,7 @@ class BarChartScreen extends Screen
       currentChart = fullCharts.get(currentCol);
     }
   }
+  // use a switch statement to switch in between a variety of colours that we can set the bar as, each number corresponds to a certain colour, these colours defined as constans.
   void changeBarColor()
   {
     switch(currentColor)
@@ -296,6 +319,7 @@ class BarChartScreen extends Screen
         break;
     }
   }
+  // go to next colour, this method goes hand in hand with changeBarColor, nextColor increments the integer used in the switch statement to choose a barColor.
   void nextColor()
   {
     currentColor++;
@@ -304,6 +328,7 @@ class BarChartScreen extends Screen
       currentColor = 7;
     }
   }
+  // this method decrements the integer used in the changeBarColor method to change colours.
   void prevColor()
   {
     currentColor--;
@@ -312,6 +337,7 @@ class BarChartScreen extends Screen
       barColor = 0;
     }
   }
+  // switches a boolean value to determine whether the axes of the BarChart should be flipped, true = flipped, false = default(default means categories on x-axis and values on y-axis
   void flipChart()
   {
     if(invertAxis == true)
@@ -323,6 +349,7 @@ class BarChartScreen extends Screen
       invertAxis = true;
     }
   }
+  // sorts the currentChart that is being displayed from low to high and then sets the currentChart to be the sorted chart.
   void SortLowToHigh()
   {
     int maxBars = 50;
@@ -424,6 +451,7 @@ class BarChartScreen extends Screen
    }
    currentChart = sortedCharts;
   }
+  // sorts the currentChart thats being displayed from high to low and then sets the currentChart to be the sortedChart
     void SortHighToLow()
   {
     int maxBars = 50;
@@ -525,6 +553,7 @@ class BarChartScreen extends Screen
    }
    currentChart = sortedCharts;
   }
+  // used to decide which method is to be called when a user selects a dropDown option, ,the integer correspond to a certain method
   void changeDropdownOption(int index)
   {
     switch(index)
@@ -540,6 +569,7 @@ class BarChartScreen extends Screen
         break;
     }
   }
+  // changes the currentChart thats being displayed back to the original chart before any sorting was done.
   void showDefault()
   {
     currentChart = fullCharts.get(currentCol);

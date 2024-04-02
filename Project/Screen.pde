@@ -4,7 +4,15 @@
 //can access columns separately allowing different queries. 
 import java.util.Arrays;
  class Screen { //declaration of screen class
-    private ArrayList<Widget> widgets;
+
+
+
+
+     
+
+
+     ArrayList<Widget> widgets;
+
 
     Screen() { //constructor for screen 
         widgets = new ArrayList<Widget>(); //add widgets 
@@ -14,19 +22,24 @@ import java.util.Arrays;
     public void addWidget(Widget widget) {
         widgets.add(widget);
     }
+
+
+
     
     public ArrayList<Widget> getWidgets() {
         return this.widgets;  
     }
-
 
     // Method to draw the screen
     public void draw() {
         // Code to draw the screen (e.g., drawing widgets)
     }
     
-    public void mouseClicked(){
-    }
+
+   
+
+
+
 
 }
 
@@ -36,8 +49,16 @@ class TableScreen extends Screen {
     int startY = 200; // Y-coordinate where the table starts
     int rowHeight = 20; // Height of each row
     int padding = 10; // Padding for text within each cell
+
+    int HEADERSIZE = 12;
+    int TEXTSIZE = 10;
+
     boolean showOnlyTenRows = false; // Flag to toggle between showing 10 rows or all rows
-    String[] menuOptions = {"10 ROWS", "30 ROWS", "50 ROWS"};
+
+   
+
+    String[] menuOptions = {"10 ROWS", "20 ROWS", "30 ROWS"};
+
     String[] columnNames = {"FL_DATE", "MKT_CARRIER", "MKT_CARRIER_FL_NUM", 
                             "ORIGIN", "ORIGIN_CITY_NAME", "ORIGIN_STATE_ABR", 
                             "ORIGIN_WAC", "DEST", "DEST_CITY_NAME", "DEST_STATE_ABR", 
@@ -63,7 +84,11 @@ class TableScreen extends Screen {
   
       // Draw dropdown button label
       fill(0); // Set text color to black
+
       textSize(HEADER_SIZE); // Slightly larger text for headers
+
+      textSize(HEADERSIZE); // Slightly larger text for headers
+
       textAlign(LEFT, CENTER);
       text("SHOW DEFAULT",  20 + 10, 130 + MENU_HEIGHT / 2); // Position the text inside the dropdown button
       
@@ -74,7 +99,11 @@ class TableScreen extends Screen {
   
       // Draw dropdown button label
       fill(0); // Set text color to black
+
       textSize(HEADER_SIZE); // Slightly larger text for headers
+
+      textSize(HEADERSIZE); // Slightly larger text for headers
+
       textAlign(LEFT, CENTER);
       text("CHOOSE ROWS",  140 + 10, 130 + MENU_HEIGHT / 2); // Position the text inside the dropdown button
       
@@ -87,7 +116,11 @@ class TableScreen extends Screen {
   
               // Draw menu item label
               fill(0); // Set text color to black
+
               textSize(TEXT_SIZE); // Slightly larger text for headers
+
+              textSize(TEXTSIZE); // Slightly larger text for headers
+
               textAlign(LEFT, CENTER);
               text(menuOptions[i], 140 + 10, 130 + MENU_HEIGHT + i * ITEM_HEIGHT + ITEM_HEIGHT / 2); // Position the text inside the menu item
   
@@ -109,7 +142,11 @@ class TableScreen extends Screen {
   
       // Draw dropdown button label
       fill(0); // Set text color to black
+
       textSize(HEADER_SIZE); // Slightly larger text for headers
+
+      textSize(HEADERSIZE); // Slightly larger text for headers
+
       textAlign(LEFT, CENTER);
       text("CHOOSE COLUMNS",  260 + 6, 130 + MENU_HEIGHT / 2); // Position the text inside the dropdown button
       
@@ -122,7 +159,11 @@ class TableScreen extends Screen {
   
               // Draw menu item label
               fill(0); // Set text color to black
+
               textSize(TEXT_SIZE); // Slightly larger text for headers
+
+              textSize(TEXTSIZE); // Slightly larger text for headers
+
               textAlign(LEFT, CENTER);
               text(columnNames[i], 260 + 10, 130 + MENU_HEIGHT + i * ITEM_HEIGHT + ITEM_HEIGHT / 2); // Position the text inside the menu item
   
@@ -144,7 +185,11 @@ class TableScreen extends Screen {
   
       // Draw dropdown button label
       fill(0); // Set text color to black
+
       textSize(HEADER_SIZE); // Slightly larger text for headers
+
+      textSize(HEADERSIZE); // Slightly larger text for headers
+
       textAlign(LEFT, CENTER);
       text("SORT BY",  380 + 10, 130 + MENU_HEIGHT / 2); // Position the text inside the dropdown button
       
@@ -156,7 +201,11 @@ class TableScreen extends Screen {
   
               // Draw menu item label
               fill(0); // Set text color to black
+
               textSize(TEXT_SIZE); // Slightly larger text for headers
+
+              textSize(TEXTSIZE); // Slightly larger text for headers
+
               textAlign(LEFT, CENTER);
               text(columnNames[i], 380 + 10, 130 + MENU_HEIGHT + i * ITEM_HEIGHT + ITEM_HEIGHT / 2); // Position the text inside the menu item
   
@@ -308,7 +357,11 @@ void displayTable2() {
 
     // Style for headers
     textFont(font);
+
     textSize(HEADER_SIZE); // Slightly larger text for headers
+
+    textSize(HEADERSIZE); // Slightly larger text for headers
+
     fill(TEXT_COLOUR);  // Black
     
     // Draw column title at calculated position
@@ -316,7 +369,11 @@ void displayTable2() {
 
     // Style for data text
     textFont(font);
+
     textSize(TEXT_SIZE); // Slightly smaller text for data
+
+    textSize(TEXTSIZE); // Slightly smaller text for data
+
     fill(TEXT_COLOUR); // Black
 
     // Draw the data rows, aligning each cell with its header
@@ -359,7 +416,11 @@ void displayTable2() {
 
     // Style for headers
     textFont(font);
+
     textSize(HEADER_SIZE); // Slightly larger text for headers
+
+    textSize(HEADERSIZE); // Slightly larger text for headers
+
     fill(TEXT_COLOUR);  //black
     
     // Draw column titles at calculated positions
@@ -369,7 +430,11 @@ void displayTable2() {
 
     // Style for data text
     textFont(font);
+
     textSize(TEXT_SIZE); // Slightly smaller text for data
+
+    textSize(TEXTSIZE); // Slightly smaller text for data
+
     fill(TEXT_COLOUR); // black
 
     // Draw the data rows, aligning each cell with its header
@@ -417,8 +482,10 @@ void displayTable2() {
     rect(startX, startY - headerBackgroundHeight, totalHeaderWidth, headerBackgroundHeight); //drawing the header
 
     // Style for headers
-    textFont(font);
-    textSize(HEADER_SIZE); // Slightly larger text for headers
+
+
+    textSize(HEADERSIZE); // Slightly larger text for headers
+
     fill(TEXT_COLOUR);  //black
     
     // Draw column titles at calculated positions
@@ -428,7 +495,11 @@ void displayTable2() {
 
     // Style for data text
     textFont(font);
+
     textSize(TEXT_SIZE); // Slightly smaller text for data
+
+    textSize(TEXTSIZE); // Slightly smaller text for data
+
     fill(TEXT_COLOUR); // black
 
     // Draw the data rows, aligning each cell with its header
@@ -436,7 +507,9 @@ void displayTable2() {
 
     for (int i = 0; i < numRowsToDisplay; i++) {
         for (int j = 0; j < numColumns; j++) {
-            String value = data.getValue(i, j, true); // Get the value from the dataset
+
+            String value = data.getValue(i, j, false); // Get the value from the dataset
+
             if (value != null) {
                 // Use the stored x position for alignment
                 text(value, columnStartXPositions[j] + padding, startY + i * rowHeight + 15);

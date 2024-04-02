@@ -27,7 +27,7 @@ PApplet parent = this;
 Table carrierTable;
 
 //Variable constants
-final String DATA_PATH = "flights2k";
+final String DATA_PATH = "flights_full";
 
 final int SCREENWIDTH = 2000;
 final int SCREENHEIGHT = 1000;
@@ -94,7 +94,6 @@ void loadResources()
   treeMapScreen = new TreeMapScreen(allButtons, allDropdowns);
   searchScreen = new SearchScreen(allDropdowns, allButtons, font, parent);
   lineGraphScreen = new LineGraphScreen();
-  treeMapScreen = new TreeMapScreen(allButtons, allDropdowns);
   mainTab = new Button(0, 0, TABWIDTH, TABHEIGHT, "Main", BLUE, BLACK, WHITE, font,() -> bar.changeScreen(mainscreen));
   barChartTab = new Button(0 + TABWIDTH + 1, 0, TABWIDTH, TABHEIGHT, "BarCharts", BLUE, BLACK, WHITE, font,() -> bar.changeScreen(barChartScreen));
   pieTab = new Button(0 + TABWIDTH * 2 + 2, 0, TABWIDTH, TABHEIGHT, "Pie Chart", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(currentPieScreen));
