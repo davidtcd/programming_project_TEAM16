@@ -44,7 +44,7 @@ class BarChartScreen extends Screen
     fullCharts.add(currentChart);
     ArrayList<String> options = new ArrayList<String>();
     options.add("low->high"); options.add("high->low"); options.add("default");
-    sortBy = new Dropdown(0, TABHEIGHT, BUTTONWIDTH, BUTTONHEIGHT, "Sort By", color(220), BLACK, BLACK, font, options, index -> changeDropdownOption(index));
+    sortBy = new Dropdown(0, TABHEIGHT, BUTTONWIDTH, BUTTONHEIGHT, "Sort By", color(220), BLACK, BLACK, font, options, index -> changeDropdownOption(index), true);
     allDropdowns.add(sortBy);
   }
   void drawTitle()
