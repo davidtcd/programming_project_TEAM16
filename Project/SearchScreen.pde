@@ -11,7 +11,7 @@ class SearchScreen extends Screen {
     * slice of the results are being drawn to the screen
     */
     
-
+    
     private ArrayList<HashSet<String>> uniques;
     private ArrayList<Textbox> textboxes;
     private int colCount;
@@ -182,7 +182,7 @@ class SearchScreen extends Screen {
     HashSet<Integer> buildTable() {
         HashSet<Integer> rowIndexes = new HashSet<Integer>();
         for (int i = 0; i < this.colCount; i++) {
-            String textinput = this.getTextboxes().get(i).getText(); //<>//
+            String textinput = this.getTextboxes().get(i).getText(); //<>// //<>//
             if (textinput.equals("")) {
                 // if input string is empty
                 if (i == 0) {
@@ -274,18 +274,19 @@ class SearchScreen extends Screen {
         for (int i = 0; i < textboxes.size(); i++) {
             Textbox textbox = textboxes.get(i);
             if (textbox.isClicked(mX, mY)) {
-                this.setSelectedTextbox(i);
-                break;
+                if (this.getSelectedTextbox() == i) {
+                    textbox.dropdown.setOpen(false);
+                    this.setSelectedTextbox( -1);
+                } else {
+                    textbox.dropdown.setOpen(true);
+                    this.setSelectedTextbox(i);
+                }
+                return;
             }
         }
     }
     
     void draw() {
-        ArrayList<Textbox> textboxes = this.getTextboxes();
-        for (int i = 0; i < textboxes.size(); i++) {
-            Textbox textbox = textboxes.get(i);
-            textbox.draw(this.getSelectedTextbox() == i);
-        }
         textSize(16);
         for (int i = 0; i < this.getWidgets().size(); i++) {
             this.getWidgets().get(i).draw();  
@@ -307,6 +308,21 @@ class SearchScreen extends Screen {
             if (j >= this.VISIBLE_ROWS) break;
         }
         textAlign(CENTER, CENTER);
+        
+        textSize(12);
+        ArrayList<Textbox> textboxes = this.getTextboxes();
+        int selected = this.getSelectedTextbox();
+        for (int i = 0; i < textboxes.size(); i++) {
+            if (!(selected == i)) {
+                Textbox textbox = textboxes.get(i);
+                textbox.draw(false);
+            }
+        }
+        
+        // draw selected textbox last
+        if (selected != -1) {
+            Textbox textbox = textboxes.get(selected);
+            textbox.draw(true);
+        }
     }
-    
 }
