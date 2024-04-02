@@ -83,15 +83,18 @@ class Dropdown extends Widget {
         this.open = open;
     }
     
+    void setupVisibleOptions() {
+        int limit = this.getOptions().size() < OPTION_VISIBLE_COUNT ? this.getOptions().size() : OPTION_VISIBLE_COUNT;
+        
+        this.visibleOptions = new String[limit];
+        for (int i = 0; i < limit; i++) {
+            this.visibleOptions[i] = this.getOptions().get(i); 
+        }
+    }
+    
     public void toggleOpen(boolean open) {
         // only needed for textbox class
-        this.visibleOptions = new String[OPTION_VISIBLE_COUNT];
-        if (this.getOptions().size() != 0) {
-            for (int i = 0; i < OPTION_VISIBLE_COUNT; i++) {
-                this.visibleOptions[i] = this.getOptions().get(i); 
-            }
-        }
-        
+        this.setupVisibleOptions();
         this.setupScrollbar();
         this.setOpen(open);
     }
@@ -118,6 +121,7 @@ class Dropdown extends Widget {
     
     public void setOptions(ArrayList<String> options) {
         this.options = options;
+        this.setupVisibleOptions();
     }
     
     public String getOption(String text) {
