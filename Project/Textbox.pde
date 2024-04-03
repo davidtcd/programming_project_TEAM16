@@ -84,7 +84,6 @@ class Textbox extends Widget {
     }
     
     public void showOptions() {
-        println("here0");
         // update
         this.updateOptions();
         // then show
@@ -126,7 +125,7 @@ class Textbox extends Widget {
         noStroke();
         fill(lc);
         textAlign(LEFT);
-        text(l, cur_x, cur_y - h / 2);
+        text(l, cur_x, cur_y - h / 4);
         textAlign(CENTER, CENTER);
         this.input.draw(cur_x + 5, cur_y + h / 4);
         this.dropdown.draw();
