@@ -1,6 +1,7 @@
 //Resources with file paths
 PFont font;
 Dataset data;
+DatasetScreen datasetScreen;
 NavigationBar bar;
 TableScreen mainscreen;
 ArrayList<Button> allButtons;
@@ -27,8 +28,6 @@ PApplet parent = this;
 Table carrierTable;
 
 //Variable constants
-final String DATA_PATH = "flights2k";
-
 final int SCREENWIDTH = 2000;
 final int SCREENHEIGHT = 1000;
 final int BARHEIGHT = SCREENHEIGHT / 15;
@@ -64,7 +63,6 @@ final int ITEM_HEIGHT = 30;
 void loadResources()
 {
   println("Loading resources...");
-  data = new Dataset(DATA_PATH + ".csv", DataType.flights);
   font = loadFont("Verdana-Bold-48.vlw");
   font = loadFont("Georgia-14.vlw");
   String[] dateHeadings = data.getUniqueValues(0);

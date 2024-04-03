@@ -16,12 +16,12 @@ class Dataset
   private String sortedPath;
   
   Dataset(String path, DataType dataType){
-    table = loadTable(path, "header");
+    table = loadTable(path+".csv", "header");
     sortedKeys = new Table[table.getColumnCount()];
     rowCount = table.getRowCount();
     columnCount = table.getColumnCount();
     this.dataType = dataType;
-    sortedPath = dataPath(DATA_PATH+"_Sorted");
+    sortedPath = dataPath(path+"_Sorted");
     
     switch (dataType){
       case flights:
@@ -46,7 +46,9 @@ class Dataset
         break;
     }
     
-    sortData();
+    //thread("sortData");
+    Thread sortData = new DataMainThread(this, datasetScreen);
+    sortData.start();
   }
   
   int getNumberOfRows(){
@@ -99,6 +101,7 @@ class Dataset
       //println("Column: "+i+" sorted.");
     }
     while(dataTG.activeCount() != 0){}
+    datasetScreen.isLoading = false;
     println("Data sorted!");
   }
   
@@ -215,6 +218,44 @@ class Dataset
   }
 }
 
+class DataMainThread extends Thread{
+  Dataset data;
+  DatasetScreen screen;
+  
+  DataMainThread(Dataset data, DatasetScreen screen){
+    this.data = data;
+    this.screen = screen;
+  }
+  
+  void run(){
+  File f = new File(data.sortedPath);
+    if(!f.mkdir()){
+      println("Loading data...");
+      for(int i=0; i<data.getNumberOfColumns(); i++){
+        data.sortedKeys[i] = loadTable(data.sortedPath+"/"+data.table.getColumnTitle(i)+".csv", "header");
+      }
+      loadResources();
+      screen.datasetSelected = true;
+      println("Data loaded!");
+      return;
+    }
+    println("Sorting data...");
+    Table sortedTable = data.table.copy();
+    sortedTable.addColumn("INDEX");
+    for(int j=0; j<sortedTable.getRowCount(); j++){
+      sortedTable.setInt(j, "INDEX", j);
+    }
+    ThreadGroup dataTG = new ThreadGroup("dtg");
+    for(int i=0; i<data.getNumberOfColumns(); i++){
+      new Thread(dataTG, new DataSortThread(i, data, sortedTable), ""+i).start();
+    }
+    while(dataTG.activeCount() != 0){}
+    loadResources();
+    screen.datasetSelected = true;
+    println("Data sorted!");
+  }
+}
+
 class DataSortThread extends Thread{
   int i;
   Dataset data;
@@ -246,5 +287,78 @@ class DataSortThread extends Thread{
     saveTable(savedTable, data.sortedPath+"/"+data.table.getColumnTitle(i)+".csv");
     data.sortedKeys[i] = savedTable;
     println("Column: "+i+" sorted.");
+  }
+}
+
+class DatasetScreen extends Screen{
+  boolean datasetSelected = false;
+  boolean isLoading = false;
+  ArrayList<Button> allButtons;
+  
+  boolean isNeg = false;
+  float theta = 0;
+  float sinOffset = 0;
+  float sinAngle = 0;
+  int amplitude = 25;
+  int period = 200;
+  float dx = (TWO_PI / period) * 20;
+
+  DatasetScreen(){
+    allButtons = new ArrayList<Button>();
+    
+    Button slot1 = new Button(500, 350, 300, 600, "", color(#3478EA), BLACK, BLACK, font,() -> this.loadData("flights2k"));
+    getWidgets().add(slot1);
+    allButtons.add(slot1);
+    Button slot2 = new Button(850, 350, 300, 600, "", color(#3478EA), BLACK, BLACK, font,() -> this.loadData("flights100k"));
+    getWidgets().add(slot2);
+    allButtons.add(slot2);
+    Button slot3 = new Button(1200, 350, 300, 600, "", color(#3478EA), BLACK, BLACK, font,() -> this.loadData("flights_full"));
+    getWidgets().add(slot3);
+    allButtons.add(slot3);
+  }
+
+  //Override
+  public void draw(){
+    if(isLoading){
+      background(50);
+      textSize(150);
+      textAlign(CENTER, CENTER);
+      fill(255);
+      text("Loading", 1000, 450);
+      
+      ellipseMode(BOTTOM); //<>//
+      theta += 0.04;
+      sinAngle = theta;
+      sinOffset = constrain(sin(sinAngle)*amplitude, 0, Float.MAX_VALUE);
+      circle(1375, 480-sinOffset, 30);
+      sinAngle+=dx;
+      sinOffset = constrain(sin(sinAngle)*amplitude, 0, Float.MAX_VALUE);
+      circle(1325, 480-sinOffset, 30);
+      sinAngle+=dx;
+      sinOffset = constrain(sin(sinAngle)*amplitude, 0, Float.MAX_VALUE);
+      circle(1275, 480-sinOffset, 30);
+      if(theta>=period) theta = 0;
+      
+      return;
+    }
+    background(50);
+    textSize(150);
+    textAlign(CENTER, CENTER);
+    fill(255);
+    text("Select Dataset", 1000, 150);
+    for (int i = 0; i < this.getWidgets().size(); i++) {
+      this.getWidgets().get(i).draw();  
+    }
+    if(mousePressed){
+      for (int i = 0; i < allButtons.size(); i++) {
+        allButtons.get(i).isClicked(mouseX, mouseY);
+      }
+    }
+    
+  }
+
+  void loadData(String dataPath){
+    isLoading = true;
+    data = new Dataset(dataPath, DataType.flights);
   }
 }
