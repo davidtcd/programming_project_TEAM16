@@ -2,6 +2,7 @@ import java.util.*;
 
 class SearchScreen extends Screen {
     // Lukas Maselsky, Created class, constructor, getters and setters, and a few methods 5pm 30/03/2024
+    // Lukas Maselsky, Updated to use dropdowns on text inputs 4pm 03/04/2024
     
     /**
     * Creates a screen with a text box for each column in the dataset
@@ -282,6 +283,14 @@ class SearchScreen extends Screen {
                         // temp fix
                         textbox.dropdown.setOpen(true);
                         this.setSelectedTextbox(i);
+                    } else {
+                        // if other textbox open but its empty, allow switch to new clicked box
+                        Textbox currentBox = textboxes.get(this.getSelectedTextbox());
+                        if (currentBox.getText().equals("")) {
+                            currentBox.dropdown.setOpen(false); // close current and open new
+                            textbox.dropdown.setOpen(true);
+                            this.setSelectedTextbox(i);
+                        }
                     }
                 }
                 return;
