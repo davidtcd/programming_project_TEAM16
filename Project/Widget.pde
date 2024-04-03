@@ -2,6 +2,10 @@ class Widget {
     // Lukas Maselsky, Created class, constructor, getters and setters, 5pm 13/03/2024
     // Lukas Maselsky, Removed event variable and added Runnable for easier event handling 3pm 19/03/2024
     
+    /**
+    * Parent class for all types of widgets     
+    */
+    
     private int x, y;
     private String label; 
     private color widgetColor, labelColor, borderColor;

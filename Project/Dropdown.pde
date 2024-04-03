@@ -5,11 +5,14 @@ class Dropdown extends Widget {
     // Lukas Maselsky, Created more methods for openening and selecting options 1pm 17/03/2024
     // Lukas Maselsky, Created consumer 12pm 26/03/2024
     
-    // HOW TO OPERATE: you pass in a function int this format when constructing a dropdown: 
-    // new Dropdown(x, y, whatever...., index -> myFunc(index));
-    // myFunc is a function that take an Integer like this:
-    // void myFunc(Integer index) {}, so when you click an option the function is called with the option index, so option 1 is 0, option 2 is 1 and so on
-    // the function then does whatever you want based on the index
+    
+    /**
+    * HOW TO OPERATE: you pass in a function int this format when constructing a dropdown: 
+    * new Dropdown(x, y, whatever...., index -> myFunc(index));
+    * myFunc is a function that take an Integer like this:
+    * void myFunc(Integer index) {}, so when you click an option the function is called with the option index, so option 1 is 0, option 2 is 1 and so on
+    * the function then does whatever you want based on the index
+    */
     
     private int width;
     private int height;
@@ -54,6 +57,9 @@ class Dropdown extends Widget {
         this.setupScrollbar();
     }
     
+    /**
+    * Calculates and sets up a new scrollbar attached to the dropdown
+    */
     void setupScrollbar() {
         double fraction = (double) this.OPTION_VISIBLE_COUNT / (double) this.getOptions().size();
         this.scrollbar = new Scrollbar(this.scrollbarX, this.scrollbarY, this.scrollbarWidth, this.scrollbarHeight, "", this.getWidgetColor(), color(0, 0 , 0), this.getWidgetFont(), fraction);
@@ -83,6 +89,9 @@ class Dropdown extends Widget {
         this.open = open;
     }
     
+    /**
+    * Sets the visible options of the dropdown stored in an array
+    */
     void setupVisibleOptions() {
         int limit = this.getOptions().size() < OPTION_VISIBLE_COUNT ? this.getOptions().size() : OPTION_VISIBLE_COUNT;
         
@@ -92,6 +101,12 @@ class Dropdown extends Widget {
         }
     }
     
+    /**
+    * Sets up visible options and scrollbar and opens dropdown, triggered
+    * when key is pressed
+    * 
+    * @param open     t/f for if dropdown is open/closed
+    */
     public void toggleOpen(boolean open) {
         // only needed for textbox class
         this.setupVisibleOptions();
@@ -124,14 +139,7 @@ class Dropdown extends Widget {
         this.setupVisibleOptions();
     }
     
-    public String getOption(String text) {
-        for (String option : options) {
-            if (option.equals(text)) {
-                return option;
-            }
-        }
-        return "";
-    } 
+    
     
     public void addOption(String option) {
         this.options.add(option);
@@ -164,6 +172,13 @@ class Dropdown extends Widget {
         this.isNormal = isNormal;
     }
     
+    /**
+    * Checks if drodown has been clicked on each mouse click
+    * if true, toggles it open/closed
+    * 
+    * @param mX     mouse x position
+    * @param mY     mouse y position  
+    */
     public void isClicked(int mX, int mY) { 
         if (this.getIsNormal()) { 
             if (mX > this.getX() && mX < this.getX() + this.getWidth() && mY > this.getY() && mY < this.getY() + this.getHeight()) { 
@@ -172,6 +187,15 @@ class Dropdown extends Widget {
         }
     }
     
+    /**
+    * Checks if dropdown option has been clicked,
+    * if true, sets new selected option to the index
+    * and triggers event function
+    * 
+    * @param index  option index in list
+    * @param mX     mouse x position
+    * @param mY     mouse y position  
+    */
     public void optionIsClicked(int index, int mX, int mY) {
         // prevent clicking scrollbar from being registered as selecting option
         if (this.getOpen()) {
@@ -187,6 +211,11 @@ class Dropdown extends Widget {
         }
     }
     
+    /**
+    * Manually selects option to be clicked
+    * 
+    * @param index  option index in list
+    */
     public void setClicked(Integer index) {
         this.setSelected(index + this.getOffset());
         // update label
@@ -203,6 +232,13 @@ class Dropdown extends Widget {
         this.offset = offset;
     }
     
+    /**
+    * Increases lightness of a given color
+    * 
+    * @param c          color value
+    * @param increase   float increase in lightness 
+    * @return           lighter color
+    */
     public color getLighterColor(color c, float increase) {
         // increase lightness of colour, 0 < increase < 100
         float[] rgb = extractRGB(c);
@@ -232,6 +268,12 @@ class Dropdown extends Widget {
         return rgbCol;
     }
     
+    /**
+    * Extracts rgb components from color
+    * 
+    * @param c  color value
+    * @return   float array of rgb components
+    */
     public float[] extractRGB(color c) {
         int r = (c >> 16) & 0xFF;
         int g = (c >> 8) & 0xFF;
@@ -240,6 +282,12 @@ class Dropdown extends Widget {
         return new float[] {r, g, b};
     }
     
+    /**
+    * Converts rgb to hsv
+    * 
+    * @param r,g,b  r,g,b color components
+    * @return   float array of hsv components
+    */
     public float[] rgbTohsv(float r, float g, float b) {
         float rDash = (float) r / (float) 255;
         float gDash = (float) g / (float) 255;
@@ -268,6 +316,12 @@ class Dropdown extends Widget {
         return new float[] {h, s, v};
     }
     
+    /**
+    * Converts hsv to rgb
+    * 
+    * @param h,s,v  h,s,v color components
+    * @return   float array of rgb components
+    */
     public float[] hsvTorgb(float h, float s, float v) {
         float c = v * s;
         float x = c * (1 - Math.abs(((h / 60.0) % 2) - 1));
@@ -307,6 +361,9 @@ class Dropdown extends Widget {
         return new float[] {r, g, b};  
     }  
     
+    /**
+    * Updates which options are in view based on scrollbar movement change
+    */
     public void updateVisibleOptions() {
         int value = this.getScrollbar().getValue();
         int diff = this.getOptions().size() - OPTION_VISIBLE_COUNT; // will be >= 1

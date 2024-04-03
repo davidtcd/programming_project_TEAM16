@@ -1,4 +1,9 @@
 class Dialog extends Widget {
+    // Lukas Maselsky, Created class, constructor, getters and setters, and a few methods 5pm 24/03/2024
+    
+    /**
+    * Rectangle that displays text, used for showing info on hover
+    */
     private int width, height;
     
     Dialog(int x, int y, int width, int height, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont) {

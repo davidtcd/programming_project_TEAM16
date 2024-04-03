@@ -2,6 +2,10 @@ class Scrollbar extends Widget {
     // Lukas Maselsky, Created class, constructor, getters and setters, and a few methods 5pm 14/03/2024
     // Lukas Maselsky, Added variable scroll slider height 1pm 17/03/2024
     
+    /**
+    * Bar that can be dragged and tracks position relative to start
+    */
+    
     private int value;
     private int initialX; 
     private int initialY;
@@ -110,22 +114,41 @@ class Scrollbar extends Widget {
         rect(this.getX(), this.getY(), this.getWidth(), this.getSliderHeight()); 
     }
     
+    /**
+    * Toggles if bar is selected to opposite value
+    */
     public void toggleSelected() {
         this.setSelected(!this.getSelected());
     }
     
+    /**
+    * Toggles selection if bar is clicked
+    *
+    * @param mX     mouse x position
+    * @param mY     mouse y position  
+    */
     public void getClicked(int mX, int mY) {       
         if (mX > this.getX() && mX < this.getX() + this.getWidth() && mY > this.getY() && mY < this.getY() + this.getSliderHeight()) {
             toggleSelected();
         }
     }
     
+    /**
+    * Toggles selection if bar is released
+    *
+    */
     public void getReleased() {
         if (this.getSelected()) {
             toggleSelected();
         }
     }
     
+    /**
+    * Calculates position change of scrollbar on mouse drag and updates value
+    *
+    * @param mX     mouse x position
+    * @param mY     mouse y position  
+    */
     public void getDragged(int mY, int pY) {
         if (this.getSelected()) {
             int change = mY - pY;
