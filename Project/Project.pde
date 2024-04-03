@@ -6,7 +6,6 @@ void settings()
 void setup()
 {
   datasetScreen = new DatasetScreen();
-  //loadResources();
 }
 
 void draw()

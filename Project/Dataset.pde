@@ -79,26 +79,6 @@ class Dataset
     ThreadGroup dataTG = new ThreadGroup("dtg");
     for(int i=0; i<columnCount; i++){
       new Thread(dataTG, new DataSortThread(i, this, sortedTable), ""+i).start();
-
-      //sortedTable.sort(i);
-      //Table savedTable = new Table();
-      //savedTable.addColumn("INDEX");
-      //savedTable.addColumn("UNIQUE_INDEX");
-      //String prevValue = "";
-      //int k = 0;
-      //for(int j=0; j<sortedTable.getRowCount(); j++){
-      //  int indexValue = sortedTable.getInt(j, "INDEX");
-      //  savedTable.setInt(j, 0, indexValue);
-      //  String value = table.getString(indexValue, i);
-      //  if(!prevValue.equals(value)){
-      //    savedTable.setInt(k++, 1, j);
-      //    prevValue = value;
-      //  }
-      //}
-      //savedTable.setInt(k, 1, sortedTable.getRowCount()-1);
-      //saveTable(savedTable, sortedPath+"/"+table.getColumnTitle(i)+".csv");
-      //sortedKeys[i] = savedTable;
-      //println("Column: "+i+" sorted.");
     }
     while(dataTG.activeCount() != 0){}
     datasetScreen.isLoading = false;
@@ -306,15 +286,18 @@ class DatasetScreen extends Screen{
   DatasetScreen(){
     allButtons = new ArrayList<Button>();
     
-    Button slot1 = new Button(500, 350, 300, 600, "", color(#3478EA), BLACK, BLACK, font,() -> this.loadData("flights2k"));
+    Button slot1 = new Button(750, 300, 500, 100, "", color(0), BLACK, BLACK, font,() -> this.loadData("flights2k"));
     getWidgets().add(slot1);
     allButtons.add(slot1);
-    Button slot2 = new Button(850, 350, 300, 600, "", color(#3478EA), BLACK, BLACK, font,() -> this.loadData("flights100k"));
+    Button slot2 = new Button(750, 450, 500, 100, "", color(0), BLACK, BLACK, font,() -> this.loadData("flights10k"));
     getWidgets().add(slot2);
     allButtons.add(slot2);
-    Button slot3 = new Button(1200, 350, 300, 600, "", color(#3478EA), BLACK, BLACK, font,() -> this.loadData("flights_full"));
+    Button slot3 = new Button(750, 600, 500, 100, "", color(0), BLACK, BLACK, font,() -> this.loadData("flights100k"));
     getWidgets().add(slot3);
     allButtons.add(slot3);
+    Button slot4 = new Button(750, 750, 500, 100, "", color(0), BLACK, BLACK, font,() -> this.loadData("flights_full"));
+    getWidgets().add(slot4);
+    allButtons.add(slot4);
   }
 
   //Override
@@ -346,6 +329,7 @@ class DatasetScreen extends Screen{
     textAlign(CENTER, CENTER);
     fill(255);
     text("Select Dataset", 1000, 150);
+    
     for (int i = 0; i < this.getWidgets().size(); i++) {
       this.getWidgets().get(i).draw();  
     }
@@ -354,6 +338,19 @@ class DatasetScreen extends Screen{
         allButtons.get(i).isClicked(mouseX, mouseY);
       }
     }
+    
+    //Draw button appearance
+    textSize(50);
+    fill(255);
+    rect(760, 310, 480, 80);
+    rect(760, 460, 480, 80);
+    rect(760, 610, 480, 80);
+    rect(760, 760, 480, 80);
+    fill(0);
+    text("Flights 2K", 1000, 350);
+    text("Flights 10K", 1000, 500);
+    text("Flights 100K", 1000, 650);
+    text("Flights Full", 1000, 800);
     
   }
 
