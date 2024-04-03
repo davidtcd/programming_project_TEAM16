@@ -1,5 +1,8 @@
 import org.gicentre.utils.gui.TextInput;
 class Textbox extends Widget {
+    // Lukas Maselsky, Created class, constructor, getters and setters, and a few methods 5pm 30/03/2024
+    // Lukas Maselsky, Updated to use dropdowns on text inputs 4pm 03/04/2024
+    
     private TextInput input;
     private int width, height;
     private color selectedColor;
@@ -20,8 +23,12 @@ class Textbox extends Widget {
     }
     
     public void dropdownOptionChange(Integer index) {
+        
         if (this.dropdown.getOptions().size() > 0) {
-            this.setText(this.dropdown.getOptions().get(index));
+            String text = this.dropdown.getOptions().get(index);
+            if (!(text.equals("No matches"))) {
+                this.setText(text);
+            }
         }
     }
     
@@ -84,7 +91,6 @@ class Textbox extends Widget {
     }
     
     public void showOptions() {
-        println("here0");
         // update
         this.updateOptions();
         // then show
@@ -126,7 +132,7 @@ class Textbox extends Widget {
         noStroke();
         fill(lc);
         textAlign(LEFT);
-        text(l, cur_x, cur_y - h / 2);
+        text(l, cur_x, cur_y - h / 4);
         textAlign(CENTER, CENTER);
         this.input.draw(cur_x + 5, cur_y + h / 4);
         this.dropdown.draw();
