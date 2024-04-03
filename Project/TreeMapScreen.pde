@@ -5,6 +5,11 @@ import java.util.Set;
 public class TreeMapScreen extends Screen {
     // Lukas Maselsky, Created class, constructor, getters and setters, and a few methods 5pm 24/03/2024
     
+    /**
+    * Diagram that renders rectangles with sizes based on frequency of 
+    * of item in dataset
+    */
+    
     private int tmX, tmY;
     private int tmW, tmH;
     private String[] labels;
@@ -48,6 +53,9 @@ public class TreeMapScreen extends Screen {
         allDropdowns.add(this.dropdown);
     }
     
+    /**
+    * Switches data rendered to the next column
+    */
     public void nextClick() {
         int col = this.getCurrentColumn();
         if (col < this.getColCount() - 1) {
@@ -62,6 +70,9 @@ public class TreeMapScreen extends Screen {
         }
     }
     
+    /**
+    * Switches data rendered to the previous column
+    */
     public void prevClick() {
         int col = this.getCurrentColumn();
         if (col > 0) {
@@ -77,6 +88,12 @@ public class TreeMapScreen extends Screen {
         }  
     }
     
+    /**
+    * Function triggered when dropdown changes,
+    * recreates treemap with new data
+    * 
+    * @param index      index of option in dropdown
+    */
     public void dropdownOptionChange(Integer index) {
         this.setCurrentColumn(index);
         this.createTreeMap(index);
@@ -166,6 +183,12 @@ public class TreeMapScreen extends Screen {
         this.dropdown = dropdown;
     }
     
+    /**
+    * Extracts rgb from color
+    * 
+    * @param c      color value
+    * @return       float array of rgb values
+    */
     public float[] extractRGB(color c) {
         int r = (c >> 16) & 0xFF;
         int g = (c >> 8) & 0xFF;
@@ -174,6 +197,13 @@ public class TreeMapScreen extends Screen {
         return new float[] {r, g, b};
     }
     
+    
+    /**
+    * Creates a treemap using the Squarify library by,
+    * calculating data frequency values 
+    * 
+    * @param columnNumber      index of column in dataset
+    */
     public void createTreeMap(int columnNumber) {
         // set col name
         this.setColName(data.table.getColumnTitle(columnNumber));
@@ -208,6 +238,13 @@ public class TreeMapScreen extends Screen {
         
     }
     
+    /**
+    * Checks if mouse is over a rectangle in 
+    * treemap when mouse moves and displays dialog
+    * 
+    * @param mX     mouse x position
+    * @param mY     mouse y position  
+    */
     public void isHovering(int mX, int mY) {
         if (!this.getIsCreating()) {
             for (int i = 0; i < rects.size(); i++) {
