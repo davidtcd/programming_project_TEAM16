@@ -43,7 +43,7 @@ public class TreeMapScreen extends Screen {
             allLabels.add(data.table.getColumnTitle(i));
         }
         
-        this.dropdown = new Dropdown(this.tmW + this.tmX + 25, BARHEIGHT + 165, 250, 50, "", color(220), BLACK, BLACK, font, allLabels, index -> dropdownOptionChange(index));
+        this.dropdown = new Dropdown(this.tmW + this.tmX + 25, BARHEIGHT + 165, 250, 50, "", color(220), BLACK, BLACK, font, allLabels, index -> dropdownOptionChange(index), true);
         this.addWidget(dropdown);
         allDropdowns.add(this.dropdown);
     }
@@ -179,12 +179,12 @@ public class TreeMapScreen extends Screen {
         this.setColName(data.table.getColumnTitle(columnNumber));
         
         this.setIsCreating(true);
-   
+        
         String[] labels = data.table.getStringColumn(columnNumber);
-       
+        
         HashMap<String, Integer> freq = new HashMap<String, Integer>();
         for (String label : labels) {
-          freq.compute(label, (k, v) -> (v == null) ? 1 : v + 1);
+            freq.compute(label,(k, v) -> (v == null) ? 1 : v + 1);
         }
         
         // get unique labels
@@ -195,10 +195,10 @@ public class TreeMapScreen extends Screen {
         color[] bgColors = new color[labels.length];
         int i = 0;
         for (Integer value : freq.values()) {
-          float floatValue = value.floatValue(); // Convert Integer to float
-          values.add(floatValue);
-          bgColors[i] = color((int) random(0, 255),(int) random(0, 255),(int) random(0, 255));
-          i++;
+            float floatValue = value.floatValue(); // Convert Integer to float
+            values.add(floatValue);
+            bgColors[i] = color((int) random(0, 255),(int) random(0, 255),(int) random(0, 255));
+            i++;
         }
         this.bgColors = bgColors;
         
