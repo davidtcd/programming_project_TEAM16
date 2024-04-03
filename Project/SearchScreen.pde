@@ -2,6 +2,7 @@ import java.util.*;
 
 class SearchScreen extends Screen {
     // Lukas Maselsky, Created class, constructor, getters and setters, and a few methods 5pm 30/03/2024
+    // Lukas Maselsky, Updated to use dropdowns on text inputs 4pm 03/04/2024
     
     /**
     * Creates a screen with a text box for each column in the dataset
@@ -44,16 +45,16 @@ class SearchScreen extends Screen {
         
         // textboxes
         for (int i = 0; i < this.colCount / 2; i++) {
-            this.textboxes.add(new Textbox(50 + i * 205, 150, 200, 50, allLabels.get(i), WHITE, BLACK, BLACK, font, parent, convertToArrayList(uniques.get(i)), allDropdowns));
+            this.textboxes.add(new Textbox(50 + i * 205, BARHEIGHT + 50, 200, 50, allLabels.get(i), WHITE, BLACK, BLACK, font, parent, convertToArrayList(uniques.get(i)), allDropdowns));
         }
         int j = 0;
         for (int i = this.colCount / 2; i < this.colCount; i++) {    
-            this.textboxes.add(new Textbox(50 + j * 205, 250, 200, 50, allLabels.get(i),WHITE, BLACK, BLACK, font, parent, convertToArrayList(uniques.get(i)), allDropdowns));
+            this.textboxes.add(new Textbox(50 + j * 205, BARHEIGHT + 150, 200, 50, allLabels.get(i),WHITE, BLACK, BLACK, font, parent, convertToArrayList(uniques.get(i)), allDropdowns));
             j++;
         }
         
         // buttons
-        Button sb = new Button(45, 300, 200, 50, "Search", color(230), BLACK, BLACK, font,() -> this.searchClick());
+        Button sb = new Button(50, 300, 200, 50, "Search", color(230), BLACK, BLACK, font,() -> this.searchClick());
         this.getWidgets().add(sb);
         allButtons.add(sb);
         Button prev = new Button(270, 300, 50, 50, "<", color(230), BLACK, BLACK, font,() -> this.prevClick());
@@ -278,8 +279,19 @@ class SearchScreen extends Screen {
                     textbox.dropdown.setOpen(false);
                     this.setSelectedTextbox( -1);
                 } else {
-                    textbox.dropdown.setOpen(true);
-                    this.setSelectedTextbox(i);
+                    if (this.getSelectedTextbox() == -1) {
+                        // temp fix
+                        textbox.dropdown.setOpen(true);
+                        this.setSelectedTextbox(i);
+                    } else {
+                        // if other textbox open but its empty, allow switch to new clicked box
+                        Textbox currentBox = textboxes.get(this.getSelectedTextbox());
+                        if (currentBox.getText().equals("")) {
+                            currentBox.dropdown.setOpen(false); // close current and open new
+                            textbox.dropdown.setOpen(true);
+                            this.setSelectedTextbox(i);
+                        }
+                    }
                 }
                 return;
             }
