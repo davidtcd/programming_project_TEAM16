@@ -5,11 +5,15 @@ void settings()
 
 void setup()
 {
-  loadResources();
+  datasetScreen = new DatasetScreen();
 }
 
 void draw()
 {
+  if (!datasetScreen.datasetSelected) {
+    datasetScreen.draw();
+    return;
+  }
   background(255);
   currentScreen.draw();
   bar.drawBar();
@@ -18,43 +22,63 @@ void draw()
 
 void mousePressed()
 {
-  for (int i = 0; i < allButtons.size(); i++)
-  {
-    allButtons.get(i).isClicked(mouseX, mouseY);
-  }
-  
-  for (int i = 0; i < allDropdowns.size(); i++)
-  {
-    Dropdown dropdown = allDropdowns.get(i);
-    dropdown.isClicked(mouseX, mouseY); 
-    dropdown.getScrollbar().getClicked(mouseX, mouseY);
-    for (int j = 0; j < dropdown.OPTION_VISIBLE_COUNT; j++) {
-        dropdown.optionIsClicked(j, mouseX, mouseY);
+  try {
+    for (int i = 0; i < allButtons.size(); i++)
+    {
+      allButtons.get(i).isClicked(mouseX, mouseY);
     }
+
+    for (int i = 0; i < allDropdowns.size(); i++)
+    {
+      Dropdown dropdown = allDropdowns.get(i);
+      dropdown.isClicked(mouseX, mouseY);
+      dropdown.getScrollbar().getClicked(mouseX, mouseY);
+      for (int j = 0; j < dropdown.OPTION_VISIBLE_COUNT; j++) {
+        dropdown.optionIsClicked(j, mouseX, mouseY);
+      }
+    }
+    searchScreen.isClicked(mouseX, mouseY);
   }
-  searchScreen.isClicked(mouseX, mouseY);
+  catch(Exception e) {
+  }
 }
 void mouseMoved() {
-  treeMapScreen.isHovering(mouseX, mouseY);
+  try {
+    treeMapScreen.isHovering(mouseX, mouseY);
+  }
+  catch(Exception e) {
+  }
 }
 
 void keyPressed() {
-  searchScreen.keyClick();
+  try {
+    searchScreen.keyClick();
+  }
+  catch(Exception e) {
+  }
 }
 
 
 void mouseReleased() {
-  for (int i = 0; i < allDropdowns.size(); i++)
-  {
-    Dropdown dropdown = allDropdowns.get(i);
-    dropdown.getScrollbar().getReleased();
+  try {
+    for (int i = 0; i < allDropdowns.size(); i++)
+    {
+      Dropdown dropdown = allDropdowns.get(i);
+      dropdown.getScrollbar().getReleased();
+    }
+  }
+  catch(Exception e) {
   }
 }
 
 void mouseDragged() {
-  for (int i = 0; i < allDropdowns.size(); i++)
-  {
-    Dropdown dropdown = allDropdowns.get(i);
-    dropdown.getScrollbar().getDragged(mouseY, pmouseY);
+  try {
+    for (int i = 0; i < allDropdowns.size(); i++)
+    {
+      Dropdown dropdown = allDropdowns.get(i);
+      dropdown.getScrollbar().getDragged(mouseY, pmouseY);
+    }
+  }
+  catch(Exception e) {
   }
 }
