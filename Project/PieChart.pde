@@ -51,7 +51,7 @@ class pieChart
 
    void draw()
    {
-     pieChart(800, getData(), getHeadings());
+     constructPieChart(800, getData(), getHeadings());
    }
 
    float[] cancelledFlights(Table bigTable)
@@ -82,7 +82,7 @@ class pieChart
     return anglesReturn;
   }
 
-  void pieChart(float diameter, float[] data, String[] headings) 
+  void constructPieChart(float diameter, float[] data, String[] headings) 
   {
     float[] angles = dataToAngles(data);
     float[] sortedAngles = reverse(sort(angles));
@@ -107,7 +107,7 @@ class pieChart
       float textPos = map(i+1,0, sortedAngles.length, BARHEIGHT, height-BARHEIGHT);
       textSize(32);
       text(sortedHeadings[i] + ": " +round(((sortedAngles[i]/360) * 100)*100)*0.01 + "%", width-diameter, textPos);
-      arc(diameter/2+100, height/2 + 75, diameter, diameter, lastAngle - radians(90), lastAngle+radians(sortedAngles[i]) - radians (90));
+      arc(SCREENWIDTH/20, SCREENHEIGHT/15 + 75, diameter, diameter, lastAngle - radians(90), lastAngle+radians(sortedAngles[i]) - radians (90));
       lastAngle += radians(sortedAngles[i]);
       textSize(14);
     }
