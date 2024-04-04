@@ -17,7 +17,7 @@ class Textbox extends Widget {
         this.height = height;
         this.options = set;
         
-        Dropdown dropdown = new Dropdown(x, y, width, height, "", color(235), BLACK, BLACK, font, new ArrayList<String>(), index -> this.dropdownOptionChange(index), false);
+        Dropdown dropdown = new Dropdown(x, y, width, height, "", color(235), BLACK, BLACK, font, new ArrayList<String>(), index -> this.dropdownOptionChange(index), false, 6);
         allDropdowns.add(dropdown);
         this.dropdown = dropdown;
     }

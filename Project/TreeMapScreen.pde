@@ -48,7 +48,7 @@ public class TreeMapScreen extends Screen {
             allLabels.add(data.table.getColumnTitle(i));
         }
         
-        this.dropdown = new Dropdown(this.tmW + this.tmX + 25, BARHEIGHT + 165, 250, 50, "", color(220), BLACK, BLACK, font, allLabels, index -> dropdownOptionChange(index), true);
+        this.dropdown = new Dropdown(this.tmW + this.tmX + 25, BARHEIGHT + 165, 250, 50, "", color(220), BLACK, BLACK, font, allLabels, index -> dropdownOptionChange(index), true, 6);
         this.addWidget(dropdown);
         allDropdowns.add(this.dropdown);
     }

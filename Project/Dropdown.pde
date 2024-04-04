@@ -29,14 +29,16 @@ class Dropdown extends Widget {
     private int scrollbarHeight;
     private int scrollbarX;
     private int scrollbarY;
+    private float dropdownLight;
     
-    Dropdown(int x, int y, int width, int height, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont, ArrayList<String> options, Consumer<Integer> optionClick, boolean isNormal) {
+    Dropdown(int x, int y, int width, int height, String label, color widgetColor, color borderColor, color labelColor, PFont widgetFont, ArrayList<String> options, Consumer<Integer> optionClick, boolean isNormal, float dropdownLight) {
         super(x, y, label, widgetColor, borderColor, labelColor, widgetFont);
         this.width = width; 
         this.height = height;
         this.open = false;
         this.selected = 0;
         this.offset = 0;
+        this.dropdownLight = dropdownLight;
         this.options = options;
         this.optionClick = optionClick;
         this.isNormal = isNormal;
@@ -415,7 +417,7 @@ class Dropdown extends Widget {
                 
                 // draw stroke if selected
                 if (this.getSelected() == i + this.getOffset()) {
-                    fill(getLighterColor(wc, 40));
+                    fill(getLighterColor(wc, this.dropdownLight));
                 } else {
                     fill(wc);
                 }
