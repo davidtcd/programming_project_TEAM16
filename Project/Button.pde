@@ -53,6 +53,19 @@ class Button extends Widget {
         }
     }
     
+    /**
+    * Checks if button has been hovered on
+    * 
+    * @param mX     mouse x position
+    * @param mY     mouse y position  
+    */
+    public boolean isHovering(int mX, int mY) {  
+        if (mX > this.getX() && mX < this.getX() + this.getWidth() && mY > this.getY() && mY < this.getY() + this.getHeight()) { 
+            return true;
+        }
+        return false;
+    }
+    
     void draw() {
         color wc = this.getWidgetColor();
         color lc = this.getLabelColor();
