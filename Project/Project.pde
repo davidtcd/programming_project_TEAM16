@@ -6,6 +6,7 @@ void settings()
 void setup()
 {
   datasetScreen = new DatasetScreen();
+  currentScreen = new TableScreen();
 }
 
 void draw()
@@ -81,4 +82,10 @@ void mouseDragged() {
   }
   catch(Exception e) {
   }
+}
+
+void mouseClicked() {
+    currentScreen.handleMouseClick = false;
+    currentScreen.mouseClicked();
+    currentScreen.handleMouseClick = true;
 }

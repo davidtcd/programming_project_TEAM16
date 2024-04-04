@@ -54,17 +54,6 @@ class pieChart
      constructPieChart(800, getData(), getHeadings());
    }
 
-   float[] cancelledFlights(Table bigTable)
-   {
-     float[]returnArray = {};
-     int totalLines = bigTable.getRowCount();
-     //int numberOfZeroes = getOccurrences("0", 15, bigTable);
-     //int numberOfOnes = getOccurrences("1", 15, bigTable);
-     returnArray = append(returnArray, 218);
-     returnArray = append(returnArray, 1782);
-     return returnArray;
-   }
-
   float[] dataToAngles(float[] data)
   {
     float[] anglesReturn = {};
