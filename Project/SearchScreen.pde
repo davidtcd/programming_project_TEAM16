@@ -18,10 +18,12 @@ class SearchScreen extends Screen {
     private int colCount;
     private int selectedTextbox;
     private ArrayList<String> results;
+    private ArrayList<String> allLabels;
     private int resultsCount;
     final int VISIBLE_ROWS = 10;
     private int startIndex;
     private int currentPage;
+    private ArrayList<ArrayList<String>> resultsCols; // each string[] is the column data
     
     SearchScreen(ArrayList<Dropdown> allDropdowns, ArrayList<Button> allButtons, PFont font, PApplet parent) {
         this.colCount = data.getNumberOfColumns();
@@ -29,6 +31,7 @@ class SearchScreen extends Screen {
         this.selectedTextbox = -1; // -1 = none selected
         this.uniques = new ArrayList<HashSet<String>>();
         this.results = new ArrayList<String>();
+        this.resultsCols = new ArrayList<ArrayList<String>>();
         this.startIndex = 0;
         this.currentPage = 1;
         this.resultsCount = 0;
@@ -39,6 +42,7 @@ class SearchScreen extends Screen {
         for (int i = 0; i < this.colCount; i++) {
             allLabels.add(data.table.getColumnTitle(i));
         }
+        this.allLabels = allLabels;
         
         // get unique values in each column
         this.buildUniques(this.colCount);
@@ -73,6 +77,23 @@ class SearchScreen extends Screen {
         return arr;
     }
     
+    void splitRow(String row, int rowIndex) {
+        ArrayList<ArrayList<String>> cols = this.getResultsCols();
+        String[] rowSplit = row.split(",");
+        
+        String[] values = new String[this.colCount];
+        for (int i = 0, j = 0; i < rowSplit.length;i++, j++) {
+            if (i == 4 || i == 9) {
+                String newVal = rowSplit[i].trim() + "," + rowSplit[i + 1];
+                values[j] = newVal;
+                i++;
+                continue;
+            }
+            
+            values[j] = rowSplit[i].trim();
+        }  
+    }
+    
     /**
     * Calls the buildTable function which returns a hashs set of all the indexes
     * that match the search query
@@ -86,8 +107,12 @@ class SearchScreen extends Screen {
         this.startIndex = 0;
         this.currentPage = 1;
         this.results = new ArrayList<String>();
+        this.resultsCols = new ArrayList<ArrayList<String>>();
         for (Integer index : indexes) {
-            this.results.add(data.getLine(index));  
+            String row = data.getLine(index);
+            this.results.add(row);
+            
+            //this.splitRow(row, index);
         }
         this.resultsCount = this.results.size();
         
@@ -251,6 +276,10 @@ class SearchScreen extends Screen {
         return this.textboxes;
     }
     
+    public ArrayList<ArrayList<String>> getResultsCols() {
+        return this.resultsCols;
+    }
+    
     public void setTextboxes(ArrayList<Textbox> textboxes) {
         this.textboxes = textboxes;
     }
@@ -315,7 +344,8 @@ class SearchScreen extends Screen {
         textSize(30);
         int j = 0;
         for (int i = startIndex; i < this.results.size(); i++) {
-            text(res.get(i), 50, 400 + j * 30);
+            String row = res.get(i);
+            text(row, 50, 400 + j * 30);
             j++;
             if (j >= this.VISIBLE_ROWS) break;
         }
