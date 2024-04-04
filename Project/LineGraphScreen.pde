@@ -3,20 +3,40 @@ class LineGraphScreen extends Screen
 {
   String[] dates; // List to store dates for sorting
   int[] values;
-  int currentCategory = 1;
+  int currentCategory = 0;
   ArrayList<Button> buttons;
-  
-    LineGraphScreen()
+  Dataset data;
+  String heading;
+  String[] headings;
+    LineGraphScreen(int currentCategory, Dataset data)
   {
     super();
+    this.data = data;
+    this.currentCategory = currentCategory;
+    heading = data.getLine(1);
+}
+  String[] arrayHeadings(String words) // function that takes in the line and splits by 1
+  {
+     words = data.getLine(1);
+    String[] headings = words.split("\\s*, \\s*");
+    return headings;
+  }
+  String getHeading(String[] headings,int currentCategory)
+  {
+    String title = headings[currentCategory];
+    return title;
+  }
+
+  void updateGraph()
+  {
     buttons = new ArrayList<Button>();
     dates = data.getUniqueValues(currentCategory);
     values = new int[dates.length];
     for(int i = 0; i < dates.length; i++ )
     {
-      values[i] = data.getOccurrences(i, currentCategory).getRowCount();
+      values[i] = data.getOccurrenceAmount(i, currentCategory);
     }  
-}
+  }
   void drawTitle()
   {
     stroke(BLACK);
@@ -85,13 +105,16 @@ class LineGraphScreen extends Screen
     {
       buttons.get(i).draw();
     }
+    text("Flights", 1000, 100);
   }
   void addButton(Button button)
   {
     buttons.add(button);
   }
-  void changeGraph()
+  void changeGraph(int currentCategory)
   {
+   this.currentCategory = currentCategory;
+    updateGraph();
  //   newLineGraph = newLineGraph;
   }
 }
