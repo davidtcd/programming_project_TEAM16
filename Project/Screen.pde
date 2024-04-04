@@ -4,16 +4,10 @@
 //can access columns separately allowing different queries. 
 import java.util.Arrays;
  class Screen { //declaration of screen class
-
-
-
-
      
-
-
      ArrayList<Widget> widgets;
 
-
+    boolean handleMouseClick = true;
     Screen() { //constructor for screen 
         widgets = new ArrayList<Widget>(); //add widgets 
     }
@@ -32,12 +26,13 @@ import java.util.Arrays;
         // Code to draw the screen (e.g., drawing widgets)
     }
 
-    public void mouseClicked() {
-        if (currentScreen != null) {
+    void mouseClicked() {
+        if (handleMouseClick) {
+            if (currentScreen != null) {
             currentScreen.mouseClicked();
         }
-
-}
+        }
+    }
 
 
 }
@@ -107,7 +102,6 @@ class TableScreen extends Screen {
       // Draw dropdown button label
       fill(0); // Set text color to black
 
-      textSize(HEADER_SIZE); // Slightly larger text for headers
 
       textSize(HEADERSIZE); // Slightly larger text for headers
 
@@ -153,8 +147,6 @@ class TableScreen extends Screen {
   
       // Draw dropdown button label
       fill(0); // Set text color to black
-
-      textSize(HEADER_SIZE); // Slightly larger text for headers
 
       textSize(HEADERSIZE); // Slightly larger text for headers
 
@@ -202,8 +194,6 @@ class TableScreen extends Screen {
       // Draw dropdown button label
       fill(0); // Set text color to black
 
-      textSize(HEADER_SIZE); // Slightly larger text for headers
-
       textSize(HEADERSIZE); // Slightly larger text for headers
 
       textAlign(LEFT, CENTER);
@@ -217,8 +207,6 @@ class TableScreen extends Screen {
   
               // Draw menu item label
               fill(0); // Set text color to black
-
-              textSize(TEXT_SIZE); // Slightly larger text for headers
 
               textSize(TEXTSIZE); // Slightly larger text for headers
 
@@ -248,8 +236,6 @@ class TableScreen extends Screen {
     
         // Draw dropdown button label
         fill(0); // Set text color to black
-  
-        textSize(HEADER_SIZE); // Slightly larger text for headers
   
         textSize(HEADERSIZE); // Slightly larger text for headers
   
@@ -468,7 +454,6 @@ void displayTable2() {
     // Style for headers
     textFont(font);
 
-    textSize(HEADER_SIZE); // Slightly larger text for headers
 
     textSize(HEADERSIZE); // Slightly larger text for headers
 
@@ -479,8 +464,6 @@ void displayTable2() {
 
     // Style for data text
     textFont(font);
-
-    textSize(TEXT_SIZE); // Slightly smaller text for data
 
     textSize(TEXTSIZE); // Slightly smaller text for data
 
@@ -540,8 +523,6 @@ void displayTable2() {
 
     // Style for data text
     textFont(font);
-
-    textSize(TEXT_SIZE); // Slightly smaller text for data
 
     textSize(TEXTSIZE); // Slightly smaller text for data
 
@@ -606,7 +587,7 @@ void displayTable2() {
     // Style for data text
     textFont(font);
 
-    textSize(TEXT_SIZE); // Slightly smaller text for data
+    textSize(TEXTSIZE); // Slightly smaller text for data
 
     fill(TEXT_COLOUR); // black
 
@@ -664,9 +645,7 @@ void displayTable2() {
         text(data.table.getColumnTitle(i), columnStartXPositions[i], startY - rowHeight);
     }
     
-
-
-    textSize(TEXT_SIZE); // Slightly smaller text for data
+    textSize(TEXTSIZE); // Slightly smaller text for data
     
     displayTable3Content(columnStartXPositions);
     
@@ -711,9 +690,7 @@ void displayTable2() {
         text(data.table.getColumnTitle(i), columnStartXPositions[i], startY - rowHeight);
     }
     
-
-
-    textSize(TEXT_SIZE); // Slightly smaller text for data
+    textSize(TEXTSIZE); // Slightly smaller text for data
     
     displayTable4Content(columnStartXPositions);
     
