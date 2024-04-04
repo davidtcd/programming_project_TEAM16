@@ -121,7 +121,15 @@ class BarChartScreen extends Screen
     String[] categories = data.getUniqueValues(columnNumber);
     allCategories.add(categories);
     totalCategories = categories.length;
-    int numOfPages = ceil(categories.length / maxBars);
+    int numOfPages = 0;
+    if(categories.length % maxBars != 0)
+    {
+      numOfPages = ceil(categories.length / maxBars);
+    }
+    else
+    {
+      numOfPages = 0;
+    }
     if(maxBars > categories.length)
     {
       maxBars = categories.length;
@@ -383,7 +391,11 @@ class BarChartScreen extends Screen
       currentValues.remove(index);
       currentC.remove(index);
     }
-        int numOfPages = ceil(sortedC.length / maxBars);
+    int numOfPages = 0;
+    if(sortedC.length % maxBars != 0)
+    {
+     numOfPages = ceil(sortedC.length / maxBars);
+    }
     for(int i = 0; i <= numOfPages; i++)
     {
       if(i < numOfPages)
@@ -485,7 +497,11 @@ class BarChartScreen extends Screen
       currentValues.remove(index);
       currentC.remove(index);
     }
-        int numOfPages = ceil(sortedC.length / maxBars);
+    int numOfPages = 0;
+    if(sortedC.length % maxBars != 0)
+    {
+     numOfPages = ceil(sortedC.length / maxBars);
+    }
     for(int i = 0; i <= numOfPages; i++)
     {
       if(i < numOfPages)
