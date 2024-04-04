@@ -83,7 +83,7 @@ class Textbox extends Widget {
     ArrayList<String> getMatches(String substring, ArrayList<String> set) {
         ArrayList<String> matches = new ArrayList<String>();
         for (String str : set) {
-            if (str.contains(substring)) {
+            if (str.toLowerCase().contains(substring.toLowerCase())) {
                 matches.add(str);
             }
         }
