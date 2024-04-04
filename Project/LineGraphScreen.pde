@@ -1,39 +1,36 @@
 
 class LineGraphScreen extends Screen
 {
-  String[] dates; // List to store dates for sorting
+  String[] uniques ; // List to store dates for sorting
   int[] values;
-  int currentCategory = 0;
+  int currentCategory;
   ArrayList<Button> buttons;
-  Dataset data;
+
   String heading;
-  String[] headings;
-  LineGraphScreen(int currentCategory, Dataset data)
+  String[] headings = new String[]{"Flight Dates", "IATA CODE MARKETING AIRLINE", "FLIGHT NUMBER MARKETING AIRLINE", "ORIGIN", "ORIGIN CITY NAME", "ORIGIN AIPORT STATE", "ORIGIN AIRPORT WAC",
+    "DESTINATION", "DESTINATION CITY NAME", "DESTINATION AIRPORT STATE", "DESTINATION ARIPORT WAC", "SCHEDULED DEPARTURE TIME", "ACTUAL DEPARTURE TIME", "SCHEDULED ARRIVAL TIME", "ACTUAL ARRIVAL TIME",
+    "CANCELLED FLIGHT INDICATOR", "DISTANCE"};
+
+  LineGraphScreen()
   {
     super();
-    this.data = data;
-    this.currentCategory = currentCategory;
-     buttons = new ArrayList<Button>();
-    heading = data.getLine(1);
-  }
-  String[] arrayHeadings(String words) // function that takes in the line and splits by 1
-  {
-    words = data.getLine(1);
-    String[] headings = words.split("\\s*, \\s*");
-    return headings;
-  }
-  String getHeading(String[] headings, int currentCategory)
-  {
-    String title = headings[currentCategory];
-    return title;
+
+    this.currentCategory = 0;
+    buttons = new ArrayList<Button>();
+    Button next = new Button(width -(BUTTON2_GAP - 150), 500, BUTTONWIDTH, BUTTONHEIGHT, "NEXT", BLUE, BLACK, WHITE, font, () -> nextGraph());
+    getWidgets().add(next);
+    allButtons.add(next);
+    Button previous = new Button(width - (BUTTON2_GAP -150), 500 + (BUTTONHEIGHT*2), BUTTONWIDTH, BUTTONHEIGHT, "PREVIOUS", BLUE, BLACK, WHITE, font, () -> previousGraph());
+    getWidgets().add(previous);
+    allButtons.add(previous);
   }
 
   void updateGraph()
   {
-   
-    dates = data.getUniqueValues(currentCategory);
-    values = new int[dates.length];
-    for (int i = 0; i < dates.length; i++ )
+
+    uniques = data.getUniqueValues(currentCategory);
+    values = new int[uniques.length];
+    for (int i = 0; i < uniques.length; i++ )
     {
       values[i] = data.getOccurrenceAmount(i, currentCategory);
     }
@@ -68,7 +65,7 @@ class LineGraphScreen extends Screen
     int graphHeight = height - 400;
 
     // Calculate the width of each bar
-    float xStep = (float)graphWidth / (dates.length - 1);
+    float xStep = (float)graphWidth / (uniques.length - 1);
     float yStep = (float)graphHeight / maxFlights;
 
     // Draw x-axis and y-axis
@@ -76,7 +73,7 @@ class LineGraphScreen extends Screen
     line(50, height-50, 50, 50); // y-axis
 
     // Draw data points and connect with lines
-    for (int i = 0; i < dates.length; i++) {
+    for (int i = 0; i < uniques.length; i++) {
       float x = 50 + i * xStep;
       float y = height - 50 - values[i]* yStep;
 
@@ -93,11 +90,13 @@ class LineGraphScreen extends Screen
 
       // Display date below x-axis
       textAlign(CENTER);
-      text(dates[i], x, height - 30);
-    }
-        text("Flights", 1000, 100);
+      //if statement and bottom else if
+      if((uniques.length > 100) && (i % 10 == 0)) text(uniques[i], x, height - 30);
+     else if( uniques.length < 100) text(uniques[i], x, height - 30);
 
-
+       
+   } 
+     text(headings[currentCategory], 1000, 100);
     // Label y-axis
     textAlign(RIGHT);
     for (int j = 0; j <= maxFlights; j += maxFlights / 5) {
@@ -106,18 +105,29 @@ class LineGraphScreen extends Screen
       line(45, y, 50, y); // Draw tick marks on y-axis
     }
     //lineGraph.drawLineGraph();
-    for (int i = 0; i < buttons.size(); i++)
-    {
-      buttons.get(i).draw();
-    }  }
+
+    for (int i = 0; i < this.getWidgets().size(); i++) {
+      this.getWidgets().get(i).draw();
+    }
+  }
   void addButton(Button button)
   {
     buttons.add(button);
   }
-  void changeGraph(int currentCategory)
+  void nextGraph()
   {
-    this.currentCategory = currentCategory;
-    updateGraph();
-    //   newLineGraph = newLineGraph;
+    if (++currentCategory == headings.length)
+    {
+      currentCategory = headings.length - 1 ;
+      return;
+    }
+  }
+  void previousGraph()
+  {
+    if (--currentCategory == headings.length)
+    {
+      currentCategory = 0 ;
+      return;
+    }
   }
 }

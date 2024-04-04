@@ -93,14 +93,12 @@ void loadResources()
   currentPieScreen = new pieScreen(cancelledChart);
   treeMapScreen = new TreeMapScreen(allButtons, allDropdowns);
   searchScreen = new SearchScreen(allDropdowns, allButtons, font, parent);
-  lineGraphScreen = new LineGraphScreen(0, data);
+  lineGraphScreen = new LineGraphScreen();
   mainTab = new Button(0, 0, TABWIDTH, TABHEIGHT, "Main", BLUE, BLACK, WHITE, font,() -> bar.changeScreen(mainscreen));
   barChartTab = new Button(0 + TABWIDTH + 1, 0, TABWIDTH, TABHEIGHT, "BarCharts", BLUE, BLACK, WHITE, font,() -> bar.changeScreen(barChartScreen));
   pieTab = new Button(0 + TABWIDTH * 2 + 2, 0, TABWIDTH, TABHEIGHT, "Pie Chart", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(currentPieScreen));
   treemapTab = new Button(0 + TABWIDTH * 3 + 3, 0, TABWIDTH, TABHEIGHT, "Treemap", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(treeMapScreen));
   lineGraphTab = new Button(0 + TABWIDTH * 4 + 4, 0, TABWIDTH, TABHEIGHT, "Line graph", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(lineGraphScreen)); 
-  flights = new Button(width -(BUTTON2_GAP - 150), 500, BUTTONWIDTH, BUTTONHEIGHT, "FLIGHTS", BLUE, BLACK, WHITE, font, () -> lineGraphScreen.changeGraph(0));
-  carrier = new Button(width - (BUTTON2_GAP -150), 140 + (BUTTONHEIGHT*2), BUTTONWIDTH, BUTTONHEIGHT, "CARRIER", BLUE, BLACK, WHITE, font, () -> lineGraphScreen.changeGraph(6));
   searchTab = new Button(0 + TABWIDTH * 5 + 5, 0, TABWIDTH, TABHEIGHT, "Search", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(searchScreen)); 
   cancelledButton = new Button(width - (BUTTON2_GAP - 150), 140, BUTTONWIDTH, BUTTONHEIGHT, "Cancelled Flights", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(cancelledChart));
   dateButton = new Button(width - (BUTTON2_GAP -150), 140 + (BUTTONHEIGHT*4), BUTTONWIDTH, BUTTONHEIGHT, "Flight Dates", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(dateChart));
