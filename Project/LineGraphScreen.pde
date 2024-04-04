@@ -8,20 +8,21 @@ class LineGraphScreen extends Screen
   Dataset data;
   String heading;
   String[] headings;
-    LineGraphScreen(int currentCategory, Dataset data)
+  LineGraphScreen(int currentCategory, Dataset data)
   {
     super();
     this.data = data;
     this.currentCategory = currentCategory;
+     buttons = new ArrayList<Button>();
     heading = data.getLine(1);
-}
+  }
   String[] arrayHeadings(String words) // function that takes in the line and splits by 1
   {
-     words = data.getLine(1);
+    words = data.getLine(1);
     String[] headings = words.split("\\s*, \\s*");
     return headings;
   }
-  String getHeading(String[] headings,int currentCategory)
+  String getHeading(String[] headings, int currentCategory)
   {
     String title = headings[currentCategory];
     return title;
@@ -29,37 +30,39 @@ class LineGraphScreen extends Screen
 
   void updateGraph()
   {
-    buttons = new ArrayList<Button>();
+   
     dates = data.getUniqueValues(currentCategory);
     values = new int[dates.length];
-    for(int i = 0; i < dates.length; i++ )
+    for (int i = 0; i < dates.length; i++ )
     {
       values[i] = data.getOccurrenceAmount(i, currentCategory);
-    }  
+    }
   }
   void drawTitle()
   {
+    updateGraph();
     stroke(BLACK);
     rect(1450, 500, 400, 400);
     fill(BLACK);
-   
+
     textAlign(CENTER);
-  //  text("Number of Flights per date" + mean, 1650, 600);
+    //  text("Number of Flights per date" + mean, 1650, 600);
   }
   void draw()
   {
-      stroke(0);
-      int maxFlights = data.getNumberOfRows() / 2;
-    
+    updateGraph();
+    stroke(0);
+    int maxFlights = data.getNumberOfRows() / 2;
+
     // CheckList
     /* scale the graph, make it look cute , add variables to easily change it
-      keep in the class/file
-      find highest value in the array, check if there is function for that, else loop through each function 
-      once you find the highest value, use that to set up the steps
-      have an x - offset, wherever you use an x, you use an x offset 
-      check the width, rename dates to categories
-      check the amount of categories and add it by a certain amount of space
-    */
+     keep in the class/file
+     find highest value in the array, check if there is function for that, else loop through each function
+     once you find the highest value, use that to set up the steps
+     have an x - offset, wherever you use an x, you use an x offset
+     check the width, rename dates to categories
+     check the amount of categories and add it by a certain amount of space
+     */
     // Set up graph dimensions
     int graphWidth = width - 400;
     int graphHeight = height - 400;
@@ -92,6 +95,8 @@ class LineGraphScreen extends Screen
       textAlign(CENTER);
       text(dates[i], x, height - 30);
     }
+        text("Flights", 1000, 100);
+
 
     // Label y-axis
     textAlign(RIGHT);
@@ -100,21 +105,19 @@ class LineGraphScreen extends Screen
       text(j, 40, y);
       line(45, y, 50, y); // Draw tick marks on y-axis
     }
-   //lineGraph.drawLineGraph();
-    for(int i = 0; i < buttons.size(); i++)
+    //lineGraph.drawLineGraph();
+    for (int i = 0; i < buttons.size(); i++)
     {
       buttons.get(i).draw();
-    }
-    text("Flights", 1000, 100);
-  }
+    }  }
   void addButton(Button button)
   {
     buttons.add(button);
   }
   void changeGraph(int currentCategory)
   {
-   this.currentCategory = currentCategory;
+    this.currentCategory = currentCategory;
     updateGraph();
- //   newLineGraph = newLineGraph;
+    //   newLineGraph = newLineGraph;
   }
 }
