@@ -12,6 +12,8 @@ The Project:
 
 
  How to set application up:
+
+ 
  Once you clone the repositorty onto your own machine you must download a list of libraries. There are two ways of doing this.
  
    1:
