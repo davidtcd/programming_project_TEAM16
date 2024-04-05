@@ -40,6 +40,7 @@ class LineGraphScreen extends Screen
   {
     updateGraph();
     stroke(0);
+ 
     int maxFlights = data.getNumberOfRows() / 2;
 
     // Set up graph dimensions
@@ -78,7 +79,7 @@ class LineGraphScreen extends Screen
      else if( uniques.length < 100) text(uniques[i], x, height - 30);
   
    } 
-     text(headings[currentCategory], 1000, 100);
+     
      
     // Label y-axis
     textAlign(RIGHT);
@@ -88,10 +89,12 @@ class LineGraphScreen extends Screen
       line(45, y, 50, y); // Draw tick marks on y-axis
     }
     //lineGraph.drawLineGraph();
-
+    textSize(40);
+    text(headings[currentCategory], 1000, 100);
     for (int i = 0; i < this.getWidgets().size(); i++) {
       this.getWidgets().get(i).draw();
     }
+    
   }
   void addButton(Button button)
   {
