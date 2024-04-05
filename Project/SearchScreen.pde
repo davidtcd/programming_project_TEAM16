@@ -3,6 +3,7 @@ import java.util.*;
 class SearchScreen extends Screen {
     // Lukas Maselsky, Created class, constructor, getters and setters, and a few methods 5pm 30/03/2024
     // Lukas Maselsky, Updated to use dropdowns on text inputs 4pm 03/04/2024
+    // Lukas Maselsky, Created better table view 2pm 05/04/2024
     
     /**
     * Creates a screen with a text box for each column in the dataset
@@ -23,7 +24,8 @@ class SearchScreen extends Screen {
     final int VISIBLE_ROWS = 10;
     private int startIndex;
     private int currentPage;
-    private ArrayList<ArrayList<String>> resultsCols; // each string[] is the column data
+    private ArrayList<ArrayList<String>> resultsCols; // each arraylist is the column data
+    private Float[] colWidths;
     
     SearchScreen(ArrayList<Dropdown> allDropdowns, ArrayList<Button> allButtons, PFont font, PApplet parent) {
         this.colCount = data.getNumberOfColumns();
@@ -32,6 +34,12 @@ class SearchScreen extends Screen {
         this.uniques = new ArrayList<HashSet<String>>();
         this.results = new ArrayList<String>();
         this.resultsCols = new ArrayList<ArrayList<String>>();
+        this.colWidths = new Float[this.colCount];
+        for (int i = 0; i < this.colCount; i++) {
+            this.resultsCols.add(new ArrayList<String>());
+            this.colWidths[i] = 0.0;
+        }
+        
         this.startIndex = 0;
         this.currentPage = 1;
         this.resultsCount = 0;
@@ -77,21 +85,37 @@ class SearchScreen extends Screen {
         return arr;
     }
     
-    void splitRow(String row, int rowIndex) {
+    
+    /**
+    * Splits row of data and adds to arraylist of arraylists, also
+    * calculating column widths for table display
+    *
+    * @param row    row of data as comma separated string
+    */
+    void splitRow(String row) {
         ArrayList<ArrayList<String>> cols = this.getResultsCols();
         String[] rowSplit = row.split(",");
         
-        String[] values = new String[this.colCount];
         for (int i = 0, j = 0; i < rowSplit.length;i++, j++) {
-            if (i == 4 || i == 9) {
-                String newVal = rowSplit[i].trim() + "," + rowSplit[i + 1];
-                values[j] = newVal;
+            String newVal;
+            if (i == 4 || i == 9) { //<>//
+                newVal = rowSplit[i].trim() + "," + rowSplit[i + 1];
+                cols.get(j).add(newVal);
                 i++;
-                continue;
+            } else {
+                newVal = rowSplit[i].trim();
+                cols.get(j).add(newVal);
             }
             
-            values[j] = rowSplit[i].trim();
+            Float oldWidth = this.getColWidths()[j];
+            textSize(20);
+            Float newWidth = textWidth(newVal);
+            
+            if (newWidth > oldWidth) {
+                this.setColWidth(newWidth, j);
+            }
         }  
+        
     }
     
     /**
@@ -108,11 +132,16 @@ class SearchScreen extends Screen {
         this.currentPage = 1;
         this.results = new ArrayList<String>();
         this.resultsCols = new ArrayList<ArrayList<String>>();
+        for (int i = 0; i < this.colCount; i++) {
+            this.resultsCols.add(new ArrayList<String>());
+        }
         for (Integer index : indexes) {
             String row = data.getLine(index);
             this.results.add(row);
             
-            //this.splitRow(row, index);
+            this.splitRow(row);
+            
+            
         }
         this.resultsCount = this.results.size();
         
@@ -208,7 +237,7 @@ class SearchScreen extends Screen {
     HashSet<Integer> buildTable() {
         HashSet<Integer> rowIndexes = new HashSet<Integer>();
         for (int i = 0; i < this.colCount; i++) {
-            String textinput = this.getTextboxes().get(i).getText(); //<>// //<>//
+            String textinput = this.getTextboxes().get(i).getText(); //<>//
             if (textinput.equals("")) {
                 // if input string is empty
                 if (i == 0) {
@@ -280,6 +309,14 @@ class SearchScreen extends Screen {
         return this.resultsCols;
     }
     
+    public Float[] getColWidths() {
+        return this.colWidths;  
+    }
+    
+    public void setColWidth(Float colWidth, int index) {
+        this.colWidths[index] = colWidth;
+    }
+    
     public void setTextboxes(ArrayList<Textbox> textboxes) {
         this.textboxes = textboxes;
     }
@@ -337,18 +374,40 @@ class SearchScreen extends Screen {
         textAlign(LEFT);
         int totalPages = Math.round((float) this.resultsCount / (float) this.VISIBLE_ROWS);
         text("Page " + this.currentPage + (totalPages > 0 ? "/" + totalPages : ""), 400, 330);
-        text("Returned " + this.resultsCount + " rows", 500, 330);
+        text("Returned " + this.resultsCount + " rows", 600, 330);
         textSize(12);
         
+        
+        textSize(20);
+        ArrayList<String> res = this.results;
+        ArrayList<ArrayList<String>> resCols = this.getResultsCols();
+        // print col by col instead of row by row to make them align
+       
+        Float colWidthTracker = 0.0;
+        Float[] colWidths = this.getColWidths();
+        for (int i = 0; i < resCols.size(); i++) {
+            int j = 0;
+            for (int k = startIndex; k < res.size(); k++) {
+                if (resCols.get(i).size() > 0) {
+                    text(resCols.get(i).get(k), 50 + colWidthTracker, 400 + j * 30);
+                    j++;
+                    if (j >= this.VISIBLE_ROWS) break;
+                }
+            }
+            colWidthTracker += colWidths[i] + 15; // 15 pixel gap between columns
+        }
+        /*
         ArrayList<String> res = this.results;
         textSize(30);
-        int j = 0;
-        for (int i = startIndex; i < this.results.size(); i++) {
-            String row = res.get(i);
+        for (int i = startIndex; i < res.size(); i++) {
+             String row = res.get(i);
             text(row, 50, 400 + j * 30);
+            
+            
             j++;
             if (j >= this.VISIBLE_ROWS) break;
         }
+        */
         textAlign(CENTER, CENTER);
         
         textSize(12);
