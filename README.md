@@ -23,8 +23,10 @@ The Project:
  
    Windows:
    C:\Users\YourUsername\Documents\Processing\libraries
+   
    Mac OS:
    /Users/YourUsername/Documents/Processing/libraries
+   
    Linux:
    /home/YourUsername/sketchbook/libraries
 
