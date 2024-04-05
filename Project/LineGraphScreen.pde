@@ -35,31 +35,14 @@ class LineGraphScreen extends Screen
       values[i] = data.getOccurrenceAmount(i, currentCategory);
     }
   }
-  void drawTitle()
-  {
-    updateGraph();
-    stroke(BLACK);
-    rect(1450, 500, 400, 400);
-    fill(BLACK);
-
-    textAlign(CENTER);
-    //  text("Number of Flights per date" + mean, 1650, 600);
-  }
+ 
   void draw()
   {
     updateGraph();
     stroke(0);
+ 
     int maxFlights = data.getNumberOfRows() / 2;
 
-    // CheckList
-    /* scale the graph, make it look cute , add variables to easily change it
-     keep in the class/file
-     find highest value in the array, check if there is function for that, else loop through each function
-     once you find the highest value, use that to set up the steps
-     have an x - offset, wherever you use an x, you use an x offset
-     check the width, rename dates to categories
-     check the amount of categories and add it by a certain amount of space
-     */
     // Set up graph dimensions
     int graphWidth = width - 400;
     int graphHeight = height - 400;
@@ -91,12 +74,13 @@ class LineGraphScreen extends Screen
       // Display date below x-axis
       textAlign(CENTER);
       //if statement and bottom else if
-      if((uniques.length > 100) && (i % 10 == 0)) text(uniques[i], x, height - 30);
+      if((uniques.length > 1000)  && (i % 900 == 0)) text(uniques[i], x, height - 30);
+     else if((uniques.length > 100) && (i % 10 == 0)) text(uniques[i], x, height - 30);
      else if( uniques.length < 100) text(uniques[i], x, height - 30);
-
-       
+  
    } 
-     text(headings[currentCategory], 1000, 100);
+     
+     
     // Label y-axis
     textAlign(RIGHT);
     for (int j = 0; j <= maxFlights; j += maxFlights / 5) {
@@ -105,10 +89,12 @@ class LineGraphScreen extends Screen
       line(45, y, 50, y); // Draw tick marks on y-axis
     }
     //lineGraph.drawLineGraph();
-
+    textSize(40);
+    text(headings[currentCategory], 1000, 100);
     for (int i = 0; i < this.getWidgets().size(); i++) {
       this.getWidgets().get(i).draw();
     }
+    
   }
   void addButton(Button button)
   {
