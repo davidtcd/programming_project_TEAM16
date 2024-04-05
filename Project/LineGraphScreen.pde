@@ -1,20 +1,21 @@
-
+// Created and written by Esosa Johnny
 class LineGraphScreen extends Screen
 {
-  String[] uniques ; // List to store dates for sorting
+  // Implemented a line graph which includes methods and functions
+  String[] uniques ; // List to store types of data for sorting
   int[] values;
   int currentCategory;
   ArrayList<Button> buttons;
-
-  String heading;
   String[] headings = new String[]{"Flight Dates", "IATA CODE MARKETING AIRLINE", "FLIGHT NUMBER MARKETING AIRLINE", "ORIGIN", "ORIGIN CITY NAME", "ORIGIN AIPORT STATE", "ORIGIN AIRPORT WAC",
     "DESTINATION", "DESTINATION CITY NAME", "DESTINATION AIRPORT STATE", "DESTINATION ARIPORT WAC", "SCHEDULED DEPARTURE TIME", "ACTUAL DEPARTURE TIME", "SCHEDULED ARRIVAL TIME", "ACTUAL ARRIVAL TIME",
     "CANCELLED FLIGHT INDICATOR", "DISTANCE"};
 
+  //Initializes the currentCategory variable to 0.
+  //Creates a new ArrayList buttons to store Button objects.
+  //Creates "NEXT" and "PREVIOUS" buttons and adds them to the buttons ArrayList
   LineGraphScreen()
   {
     super();
-
     this.currentCategory = 0;
     buttons = new ArrayList<Button>();
     Button next = new Button(width -(BUTTON2_GAP - 150), 500, BUTTONWIDTH, BUTTONHEIGHT, "NEXT", BLUE, BLACK, WHITE, font, () -> nextGraph());
@@ -24,10 +25,14 @@ class LineGraphScreen extends Screen
     getWidgets().add(previous);
     allButtons.add(previous);
   }
-
+  
+  /* Updates the graph retrieving unique values and their corresponding occurences,from the Data class, through a for-loop
+   *  Method returns the number of occurences of the unique value at index 'i' in the current category
+   *  These values are stored in the 'values' array at corresponding indices
+   */
   void updateGraph()
   {
-
+    println("Updated!");
     uniques = data.getUniqueValues(currentCategory);
     values = new int[uniques.length];
     for (int i = 0; i < uniques.length; i++ )
@@ -35,13 +40,25 @@ class LineGraphScreen extends Screen
       values[i] = data.getOccurrenceAmount(i, currentCategory);
     }
   }
- 
+  
+  /* Method 'updateGraph()' is called to ensure the data displayed on the graph is up-to-date
+   *  Graph dimensions are set up by calculating maximum number of occurrences and sets up dimensions of graph
+   *  Step sizes for the x - axis and y -axis are calculated to scale data points within graph
+   *  X - axis and y - axis drawn using 'line()' function
+   *  Data points and lines are drawn with the use of a for - loop which iterates each uniqye value and corresponing value in data
+   *  Calculate x and y position for each data point within the graph based on the step sizes calculated earlier
+   *  Red data point at each positon usin ellipse function and connected by 'line()' function
+   *  X-axis labels are displayed below x-axis with use ('textAlign(CENTER)')
+   *  Y-axis labels displayed with use ('textAlign(RIGHT)'), iterates over maximum number of categories and labels y-axis with values at appropriate intervals
+   *  Category Heading displayed according to the current category displayed
+   *  Buttons are drawn on the screen through the Button object
+   */
   void draw()
   {
     updateGraph();
     stroke(0);
- 
-    int maxFlights = data.getNumberOfRows() / 2;
+
+    int maxOccurences = data.getNumberOfRows() / 2;
 
     // Set up graph dimensions
     int graphWidth = width - 400;
@@ -49,7 +66,7 @@ class LineGraphScreen extends Screen
 
     // Calculate the width of each bar
     float xStep = (float)graphWidth / (uniques.length - 1);
-    float yStep = (float)graphHeight / maxFlights;
+    float yStep = (float)graphHeight / maxOccurences;
 
     // Draw x-axis and y-axis
     line(50, height-50, width-50, height-50); // x-axis
@@ -73,33 +90,32 @@ class LineGraphScreen extends Screen
 
       // Display date below x-axis
       textAlign(CENTER);
-      //if statement and bottom else if
-      if((uniques.length > 1000)  && (i % 900 == 0)) text(uniques[i], x, height - 30);
-     else if((uniques.length > 100) && (i % 10 == 0)) text(uniques[i], x, height - 30);
-     else if( uniques.length < 100) text(uniques[i], x, height - 30);
-  
-   } 
-     
-     
+      if ((uniques.length > 1000)  && (i % 900 == 0)) text(uniques[i], x, height - 30);
+      else if ((uniques.length > 100) && (i % 10 == 0)) text(uniques[i], x, height - 30);
+      else if ( uniques.length < 100) text(uniques[i], x, height - 30);
+    }
     // Label y-axis
     textAlign(RIGHT);
-    for (int j = 0; j <= maxFlights; j += maxFlights / 5) {
+    for (int j = 0; j <= maxOccurences; j += maxOccurences / 5) {
       float y = height - 50 - j * yStep;
       text(j, 40, y);
       line(45, y, 50, y); // Draw tick marks on y-axis
     }
-    //lineGraph.drawLineGraph();
+
     textSize(40);
-    text(headings[currentCategory], 1000, 100);
+    text(headings[currentCategory], 1050, 100);
     for (int i = 0; i < this.getWidgets().size(); i++) {
       this.getWidgets().get(i).draw();
     }
-    
   }
+  // Adds a Button object to the 'buttons' ArrayList
   void addButton(Button button)
   {
     buttons.add(button);
   }
+
+  //Increments the 'currentCategory' index to display the next category of data
+  //Prevents 'currentCategory' from exceeding the length of 'headings'
   void nextGraph()
   {
     if (++currentCategory == headings.length)
@@ -108,6 +124,8 @@ class LineGraphScreen extends Screen
       return;
     }
   }
+  //Decrements the 'currentCategory' index to display the previous category
+  //Resets 'currentCategory' to 0 if it goes below 0.
   void previousGraph()
   {
     if (--currentCategory == headings.length)
