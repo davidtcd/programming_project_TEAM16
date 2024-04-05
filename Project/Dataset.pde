@@ -310,7 +310,7 @@ class DatasetScreen extends Screen {
     }
 
     //Draw button appearance
-    textSize(50); //<>//
+    textSize(50);
     fill(255);
     rect(760, 310, 480, 80);
     rect(760, 460, 480, 80);
