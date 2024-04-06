@@ -125,7 +125,5 @@ void loadResources()
   allButtons.add(cancelledButton);
   allButtons.add(carrierButton);
   allButtons.add(dateButton);
-  allButtons.add(carrier);
-  allButtons.add(flights);
   currentScreen = mainscreen;
 }
