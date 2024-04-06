@@ -29,4 +29,13 @@ class FlightsMapScreen extends Screen{
     shape(usaMap);
     popMatrix();
   }
+  
+  //Override
+  public void onFocusChanged(boolean isInFocus){
+    if(isInFocus) cam.setActive(true);
+    else {
+      cam.setActive(false);
+      cam.reset(0);
+    }
+  }
 }

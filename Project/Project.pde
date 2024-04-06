@@ -17,7 +17,9 @@ void draw()
   }
   background(255);
   currentScreen.draw();
+  cam.beginHUD();
   bar.drawBar();
+  cam.endHUD();
   barChartScreen.changeBarColor();
 }
 
