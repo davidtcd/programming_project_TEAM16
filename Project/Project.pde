@@ -17,9 +17,9 @@ void draw()
   }
   background(255);
   currentScreen.draw();
-  cam.beginHUD();
+  flightsMapScreen.cam.beginHUD();
   bar.drawBar();
-  cam.endHUD();
+  flightsMapScreen.cam.endHUD();
   barChartScreen.changeBarColor();
 }
 

@@ -1,6 +1,4 @@
 //Resources with file paths
-PeasyCam cam;
-PShape usaMap;
 PFont font;
 Dataset data;
 DatasetScreen datasetScreen;
@@ -68,7 +66,6 @@ final int ITEM_HEIGHT = 30;
 void loadResources()
 {
   println("Loading resources...");
-  usaMap = loadShape("usamap.obj");
   font = loadFont("Verdana-Bold-48.vlw");
   font = loadFont("Georgia-14.vlw");
   String[] dateHeadings = data.getUniqueValues(0);
