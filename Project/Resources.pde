@@ -1,4 +1,5 @@
 //Resources with file paths
+PeasyCam cam;
 PShape usaMap;
 PFont font;
 Dataset data;
