@@ -56,6 +56,7 @@ void mouseMoved() {
 void keyPressed() {
   try {
     searchScreen.keyClick();
+    flightsMapScreen.keyClick();
   }
   catch(Exception e) {
   }

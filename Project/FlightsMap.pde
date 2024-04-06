@@ -1,14 +1,18 @@
 import peasy.*;
 
-class FlightsMapScreen extends Screen{
+class FlightsMapScreen extends Screen {
   PeasyCam cam;
   PShape usaMap;
   HashMap<String, Vector2D> airports;
   String selectedAirport;
-  
-  FlightsMapScreen(){
+
+  Textbox originAirport;
+  ArrayList<String> options;
+
+  FlightsMapScreen() {
     usaMap = loadShape("usamap.obj");
-    
+    usaMap.setFill(color(#35934F));
+
     //Camera setup for "Flights Map"
     cam = new PeasyCam(parent, width/2, height/2, 0, 865);
     cam.setActive(false);
@@ -17,7 +21,7 @@ class FlightsMapScreen extends Screen{
     cam.setCenterDragHandler(null);
     cam.setRightDragHandler(null);
     cam.setWheelHandler(null);
-    
+
     //Setup Airport-Point pairs
     airports = new HashMap<String, Vector2D>();
     airports.put("AL", new Vector2D(125, 245));
@@ -70,51 +74,77 @@ class FlightsMapScreen extends Screen{
     airports.put("WI", new Vector2D(70, 75));
     airports.put("WV", new Vector2D(180, 140));
     airports.put("WY", new Vector2D(-120, 75));
-    
+
     selectedAirport = "KS";
+
+    options = new ArrayList<String>();
+    for (String airport : airports.keySet()) {
+      options.add(airport);
+    }
+    Collections.sort(options);
+    originAirport = new Textbox(50, TABHEIGHT+50, 200, 50, "Origin Airport", WHITE, BLACK, BLACK, font, parent, options, allDropdowns);
   }
-  
+
   //Override
-  public void draw(){
-    background(50);
-  
+  public void draw() {
+    background(color(#73C5F7));
+
     lightFalloff(1, 0, 0);
     lightSpecular(0, 0, 0);
     ambientLight(128, 128, 128);
     directionalLight(128, 128, 128, 0, 0, -1);
-    
+
     pushMatrix();
     translate(width/2, height/2);
     rotateX(PI/3);
-    
+
     stroke(0);
     noFill();
     Vector2D ov = ((Vector2D)airports.get(selectedAirport));
     for (Map.Entry airport : airports.entrySet()) {
-      if(airport.getKey().equals(selectedAirport)) continue;
+      if (airport.getKey().equals(selectedAirport)) continue;
       Vector2D dv = ((Vector2D)airport.getValue());
       curve(ov.x, ov.y, -500, ov.x, ov.y, 0, dv.x, dv.y, 0, dv.x, dv.y, -500);
     }
-    
+
     scale(100);
     shape(usaMap);
     popMatrix();
+
+    cam.beginHUD();
+    originAirport.draw(false);
+    cam.endHUD();
   }
-  
+
   //Override
-  public void onFocusChanged(boolean isInFocus){
-    if(isInFocus) cam.setActive(true);
+  public void onFocusChanged(boolean isInFocus) {
+    if (isInFocus) cam.setActive(true);
     else {
       cam.setActive(false);
       cam.reset(0);
     }
   }
+
+  public void keyClick() {
+    originAirport.keyClicked();
+    if (originAirport.getText().length() == 0) {
+      // hide options
+      originAirport.hideOptions();
+    } else if (originAirport.getText().length() == 1) {
+      // show options
+      originAirport.showOptions();
+    } else {
+      // update options
+      originAirport.updateOptions();
+    }
+    if (airports.containsKey(originAirport.getText().toUpperCase())) selectedAirport = originAirport.getText().toUpperCase();
+  }
 }
 
-class Vector2D{
+class Vector2D {
   float x;
   float y;
-  Vector2D(float x, float y){
+  Vector2D(float x, float y) {
     this.x = x;
     this.y = y;
   }
