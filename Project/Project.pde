@@ -40,7 +40,7 @@ void mousePressed()
         dropdown.optionIsClicked(j, mouseX, mouseY);
       }
     }
-    if(currentScreen==searchScreen) searchScreen.isClicked(mouseX, mouseY);
+    searchScreen.isClicked(mouseX, mouseY);
   }
   catch(Exception e) {
   }
@@ -55,8 +55,8 @@ void mouseMoved() {
 
 void keyPressed() {
   try {
-    if(currentScreen==searchScreen) searchScreen.keyClick();
-    if(currentScreen==flightsMapScreen) flightsMapScreen.keyClick();
+    searchScreen.keyClick();
+    flightsMapScreen.keyClick();
   }
   catch(Exception e) {
   }

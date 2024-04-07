@@ -1,4 +1,4 @@
-//Designed and written by Mark Varghese //<>//
+//Designed and written by Mark Varghese
 import java.io.*;
 
 enum DataType
@@ -102,31 +102,20 @@ class Dataset
   }
 
   Table getOccurrences(int value, int column) {
-    return getOccurrences(value, column, table);
-  }
+    try {
+      Table occurrences = new Table();
+      int min = sortedKeys[column].getInt(value, 1);
+      int max = sortedKeys[column].getInt(value+1, 1);
 
-  Table getOccurrences(int value, int column, Table table) {
-    if (value<0) return null;
-    Table occurrences = new Table();
-    int min = sortedKeys[column].getInt(value, 1);
-    int max = sortedKeys[column].getInt(value+1, 1);
-
-    for (int i=min; i<max; i++) {
-      occurrences.addRow(table.getRow(sortedKeys[column].getInt(i, 0)));
+      for (int i=min; i<max; i++) {
+        occurrences.addRow(table.getRow(sortedKeys[column].getInt(i, 0)));
+      }
+      return occurrences;
     }
-    return occurrences;
-  }
-
-  ArrayList<String> getOccurrencesList(int value, int column) {
-    if (value<0) return null;
-    ArrayList<String> occurrences = new ArrayList<String>();
-    int min = sortedKeys[column].getInt(value, 1);
-    int max = sortedKeys[column].getInt(value+1, 1);
-
-    for (int i=min; i<max; i++) {
-      occurrences.add(getLine(sortedKeys[column].getInt(i, 0)));
+    catch(Exception e) {
+      println(e);
+      return null;
     }
-    return occurrences;
   }
 
   //This is pretty slow for the full data set, I'm working on a better solution
