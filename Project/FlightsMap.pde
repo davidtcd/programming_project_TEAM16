@@ -4,10 +4,12 @@ class FlightsMapScreen extends Screen {
   PeasyCam cam;
   PShape usaMap;
   HashMap<String, Vector2D> airports;
-  String selectedAirport;
-
   Textbox originAirport;
   ArrayList<String> options;
+  IntDict destAirports;
+  String selectedAirport;
+  String[] availableAirports;
+  int totalDest;
 
   FlightsMapScreen() {
     usaMap = loadShape("usamap.obj");
@@ -75,14 +77,15 @@ class FlightsMapScreen extends Screen {
     airports.put("WV", new Vector2D(180, 140));
     airports.put("WY", new Vector2D(-120, 75));
 
-    selectedAirport = "KS";
-
+    availableAirports = data.getUniqueValues(5);
     options = new ArrayList<String>();
     for (String airport : airports.keySet()) {
       options.add(airport);
     }
     Collections.sort(options);
-    originAirport = new Textbox(50, TABHEIGHT+50, 200, 50, "Origin Airport", WHITE, BLACK, BLACK, font, parent, options, allDropdowns);
+    destAirports = new IntDict();
+    setSelectedAirport("AL");
+    originAirport = new Textbox(width-500, TABHEIGHT+135, 200, 50, "Origin Airport", WHITE, BLACK, BLACK, font, parent, options, allDropdowns);
   }
 
   //Override
@@ -98,12 +101,15 @@ class FlightsMapScreen extends Screen {
     translate(width/2, height/2);
     rotateX(PI/3);
 
-    stroke(0);
+    colorMode(RGB);
     noFill();
     Vector2D ov = ((Vector2D)airports.get(selectedAirport));
     for (Map.Entry airport : airports.entrySet()) {
+      float frac = (float)destAirports.get((String)airport.getKey())/totalDest;
+      if (destAirports.get((String)airport.getKey()) == 0) continue;
       if (airport.getKey().equals(selectedAirport)) continue;
       Vector2D dv = ((Vector2D)airport.getValue());
+      stroke(lerpColor(GREEN, RED, frac));
       curve(ov.x, ov.y, -500, ov.x, ov.y, 0, dv.x, dv.y, 0, dv.x, dv.y, -500);
     }
 
@@ -113,6 +119,27 @@ class FlightsMapScreen extends Screen {
 
     cam.beginHUD();
     originAirport.draw(false);
+    text("Destination Airports", width-150, 185);
+    int i=0, j=0;
+    for (String airport : destAirports.keys()) {
+      float frac = (float)destAirports.get(airport)/totalDest;
+      stroke(0);
+      if (i<destAirports.size()/2) {
+        if (frac!=0) fill(lerpColor(GREEN, RED, frac));
+        else fill(100);
+        rect(width-250, 200+(i*25), 100, 25);
+        fill(0);
+        text(airport+" : "+destAirports.get(airport), width-200, 215+(i*25));
+        i++;
+      } else {
+        if (frac!=0) fill(lerpColor(GREEN, RED, frac));
+        else fill(100);
+        rect(width-150, 200+(j*25), 100, 25);
+        fill(0);
+        text(airport+" : "+destAirports.get(airport), width-100, 215+(j*25));
+        j++;
+      }
+    }
     cam.endHUD();
   }
 
@@ -137,7 +164,27 @@ class FlightsMapScreen extends Screen {
       // update options
       originAirport.updateOptions();
     }
-    if (airports.containsKey(originAirport.getText().toUpperCase())) selectedAirport = originAirport.getText().toUpperCase();
+    if (airports.containsKey(originAirport.getText().toUpperCase())) setSelectedAirport(originAirport.getText().toUpperCase());
+  }
+
+  void setSelectedAirport(String airport) {
+    selectedAirport = airport;
+    ArrayList<String> originOccurrence = data.getOccurrencesList(Arrays.binarySearch(availableAirports, airport), 5);
+    totalDest = originOccurrence==null ? 1 : originOccurrence.size();
+    for (String option : options) {
+      if (option.equals(airport)) {
+        destAirports.set(option, 0);
+        continue;
+      }
+      if (originOccurrence==null) destAirports.set(option, 0);
+      else {
+        int optionFreq = 0;
+        for (String line : originOccurrence) {
+          if (line.contains(option)) optionFreq++;
+        }
+        destAirports.set(option, optionFreq);
+      }
+    }
   }
 }
 
