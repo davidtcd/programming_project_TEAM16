@@ -85,7 +85,7 @@ class FlightsMapScreen extends Screen {
     Collections.sort(options);
     destAirports = new IntDict();
     setSelectedAirport("AL");
-    originAirport = new Textbox(width-500, TABHEIGHT+135, 200, 50, "Origin State", WHITE, BLACK, BLACK, font, parent, options, allDropdowns);
+    originAirport = new Textbox(width-500, TABHEIGHT+135, 200, 50, "Origin Airport", WHITE, BLACK, BLACK, font, parent, options, allDropdowns);
   }
 
   //Override
@@ -110,8 +110,7 @@ class FlightsMapScreen extends Screen {
       if (airport.getKey().equals(selectedAirport)) continue;
       Vector2D dv = ((Vector2D)airport.getValue());
       stroke(lerpColor(GREEN, RED, frac));
-      int dist = (int)sqrt(pow(dv.x-ov.x, 2) + pow(dv.y-ov.y, 2));
-      curve(ov.x, ov.y, -1000+dist, ov.x, ov.y, 0, dv.x, dv.y, 0, dv.x, dv.y, -1000+dist);
+      curve(ov.x, ov.y, -500, ov.x, ov.y, 0, dv.x, dv.y, 0, dv.x, dv.y, -500);
     }
 
     scale(100);
@@ -120,7 +119,7 @@ class FlightsMapScreen extends Screen {
 
     cam.beginHUD();
     originAirport.draw(false);
-    text("Destination States", width-150, 185);
+    text("Destination Airports", width-150, 185);
     int i=0, j=0;
     for (String airport : destAirports.keys()) {
       float frac = (float)destAirports.get(airport)/totalDest;

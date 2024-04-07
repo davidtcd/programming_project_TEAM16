@@ -1,4 +1,4 @@
-//Designed and written by Mark Varghese //<>// //<>//
+//Designed and written by Mark Varghese //<>//
 import java.io.*;
 
 enum DataType
@@ -256,7 +256,7 @@ class DatasetScreen extends Screen {
   boolean datasetSelected = false;
   boolean isLoading = false;
   ArrayList<Button> allButtons;
-  
+
   float theta = 0;
   float sinOffset = 0;
   float sinAngle = 0;
@@ -294,13 +294,13 @@ class DatasetScreen extends Screen {
       theta += 0.04;
       sinAngle = theta;
       sinOffset = constrain(sin(sinAngle)*amplitude, 0, Float.MAX_VALUE);
-      circle(1375, 495-sinOffset, 30);
+      circle(1375, 480-sinOffset, 30);
       sinAngle+=dx;
       sinOffset = constrain(sin(sinAngle)*amplitude, 0, Float.MAX_VALUE);
-      circle(1325, 495-sinOffset, 30);
+      circle(1325, 480-sinOffset, 30);
       sinAngle+=dx;
       sinOffset = constrain(sin(sinAngle)*amplitude, 0, Float.MAX_VALUE);
-      circle(1275, 495-sinOffset, 30);
+      circle(1275, 480-sinOffset, 30);
       if (theta>=period) theta = 0;
 
       return;
@@ -314,21 +314,24 @@ class DatasetScreen extends Screen {
     for (int i = 0; i < this.getWidgets().size(); i++) {
       this.getWidgets().get(i).draw();
     }
-    for (int i = 0; i < allButtons.size(); i++) {
-      if (mousePressed) allButtons.get(i).isClicked(mouseX, mouseY);
+    if (mousePressed) {
+      for (int i = 0; i < allButtons.size(); i++) {
+        allButtons.get(i).isClicked(mouseX, mouseY);
+      }
     }
 
     //Draw button appearance
     textSize(50);
-    for(int i=0; i<allButtons.size(); i++){
-      fill(allButtons.get(i).isHovering(mouseX, mouseY) ? 200 : 255);
-      rect(760, 310+(i*150), 480, 80);
-    }
+    fill(255);
+    rect(760, 310, 480, 80);
+    rect(760, 460, 480, 80);
+    rect(760, 610, 480, 80);
+    rect(760, 760, 480, 80);
     fill(0);
-    text("Flights 2K", 1000, 340);
-    text("Flights 10K", 1000, 490);
-    text("Flights 100K", 1000, 640);
-    text("Flights Full", 1000, 790);
+    text("Flights 2K", 1000, 350);
+    text("Flights 10K", 1000, 500);
+    text("Flights 100K", 1000, 650);
+    text("Flights Full", 1000, 800);
   }
 
   void loadData(String dataPath) {
