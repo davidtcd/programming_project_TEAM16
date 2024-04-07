@@ -1,6 +1,6 @@
 void settings()
 {
-  size(SCREENWIDTH, SCREENHEIGHT, P3D); //Esosa did this
+  size(SCREENWIDTH, SCREENHEIGHT); //Esosa did this
 }
 
 void setup()
