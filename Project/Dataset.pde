@@ -1,4 +1,4 @@
-//Designed and written by Mark Varghese //<>// //<>//
+//Designed and written by Mark Varghese
 import java.io.*;
 
 enum DataType
@@ -101,22 +101,6 @@ class Dataset
     }
   }
 
-  Table getOccurrences(int value, int column) {
-    return getOccurrences(value, column, table);
-  }
-
-  Table getOccurrences(int value, int column, Table table) {
-    if (value<0) return null;
-    Table occurrences = new Table();
-    int min = sortedKeys[column].getInt(value, 1);
-    int max = sortedKeys[column].getInt(value+1, 1);
-
-    for (int i=min; i<max; i++) {
-      occurrences.addRow(table.getRow(sortedKeys[column].getInt(i, 0)));
-    }
-    return occurrences;
-  }
-
   ArrayList<String> getOccurrencesList(int value, int column) {
     if (value<0) return null;
     ArrayList<String> occurrences = new ArrayList<String>();
@@ -127,22 +111,6 @@ class Dataset
       occurrences.add(getLine(sortedKeys[column].getInt(i, 0)));
     }
     return occurrences;
-  }
-
-  //This is pretty slow for the full data set, I'm working on a better solution
-  Table getOccurrences(String value, int column, Table _table) {
-    try {
-      Table occurrences = new Table();
-      Iterable<TableRow> rows = _table.findRows(value, column);
-      for (TableRow row : rows) {
-        occurrences.addRow(row);
-      }
-      return occurrences;
-    }
-    catch(Exception e) {
-      println(e);
-      return null;
-    }
   }
 }
 
@@ -219,18 +187,18 @@ class DataMainThread extends Thread {
 }
 
 class DataSortThread extends Thread {
-  int i;
+  int threadIndex;
   Dataset data;
   Table sortedTable;
   DataSortThread(int i, Dataset data, Table sortedTable) {
-    this.i = i;
+    this.threadIndex = i;
     this.data = data;
     this.sortedTable = sortedTable.copy();
     println("Thread created: "+i);
   }
 
   public void run() {
-    sortedTable.sort(i);
+    sortedTable.sort(threadIndex);
     Table savedTable = new Table();
     savedTable.addColumn("INDEX");
     savedTable.addColumn("UNIQUE_INDEX");
@@ -239,16 +207,16 @@ class DataSortThread extends Thread {
     for (int j=0; j<data.rowCount; j++) {
       int indexValue = sortedTable.getInt(j, "INDEX");
       savedTable.setInt(j, 0, indexValue);
-      String value = data.table.getString(indexValue, i);
+      String value = data.table.getString(indexValue, threadIndex);
       if (!prevValue.equals(value)) {
         savedTable.setInt(k++, 1, j);
         prevValue = value;
       }
     }
     savedTable.setInt(k, 1, data.rowCount-1);
-    saveTable(savedTable, data.sortedPath+"/"+data.table.getColumnTitle(i)+".csv");
-    data.sortedKeys[i] = savedTable;
-    println("Column: "+i+" sorted.");
+    saveTable(savedTable, data.sortedPath+"/"+data.table.getColumnTitle(threadIndex)+".csv");
+    data.sortedKeys[threadIndex] = savedTable;
+    println("Column: "+threadIndex+" sorted.");
   }
 }
 
@@ -256,7 +224,7 @@ class DatasetScreen extends Screen {
   boolean datasetSelected = false;
   boolean isLoading = false;
   ArrayList<Button> allButtons;
-  
+
   float theta = 0;
   float sinOffset = 0;
   float sinAngle = 0;
@@ -320,7 +288,7 @@ class DatasetScreen extends Screen {
 
     //Draw button appearance
     textSize(50);
-    for(int i=0; i<allButtons.size(); i++){
+    for (int i=0; i<allButtons.size(); i++) {
       fill(allButtons.get(i).isHovering(mouseX, mouseY) ? 200 : 255);
       rect(760, 310+(i*150), 480, 80);
     }
