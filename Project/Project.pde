@@ -1,6 +1,6 @@
 void settings()
 {
-  size(SCREENWIDTH, SCREENHEIGHT); //Esosa did this
+  size(SCREENWIDTH, SCREENHEIGHT, P3D); //Esosa did this
 }
 
 void setup()
@@ -17,7 +17,9 @@ void draw()
   }
   background(255);
   currentScreen.draw();
+  flightsMapScreen.cam.beginHUD();
   bar.drawBar();
+  flightsMapScreen.cam.endHUD();
   barChartScreen.changeBarColor();
 }
 
@@ -38,7 +40,7 @@ void mousePressed()
         dropdown.optionIsClicked(j, mouseX, mouseY);
       }
     }
-    searchScreen.isClicked(mouseX, mouseY);
+    if(currentScreen==searchScreen) searchScreen.isClicked(mouseX, mouseY);
   }
   catch(Exception e) {
   }
@@ -53,7 +55,8 @@ void mouseMoved() {
 
 void keyPressed() {
   try {
-    searchScreen.keyClick();
+    if(currentScreen==searchScreen) searchScreen.keyClick();
+    if(currentScreen==flightsMapScreen) flightsMapScreen.keyClick();
   }
   catch(Exception e) {
   }

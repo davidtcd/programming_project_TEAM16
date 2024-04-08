@@ -101,37 +101,16 @@ class Dataset
     }
   }
 
-  Table getOccurrences(int value, int column) {
-    try {
-      Table occurrences = new Table();
-      int min = sortedKeys[column].getInt(value, 1);
-      int max = sortedKeys[column].getInt(value+1, 1);
+  ArrayList<String> getOccurrencesList(int value, int column) {
+    if (value<0) return null;
+    ArrayList<String> occurrences = new ArrayList<String>();
+    int min = sortedKeys[column].getInt(value, 1);
+    int max = sortedKeys[column].getInt(value+1, 1);
 
-      for (int i=min; i<max; i++) {
-        occurrences.addRow(table.getRow(sortedKeys[column].getInt(i, 0)));
-      }
-      return occurrences;
+    for (int i=min; i<max; i++) {
+      occurrences.add(getLine(sortedKeys[column].getInt(i, 0)));
     }
-    catch(Exception e) {
-      println(e);
-      return null;
-    }
-  }
-
-  //This is pretty slow for the full data set, I'm working on a better solution
-  Table getOccurrences(String value, int column, Table _table) {
-    try {
-      Table occurrences = new Table();
-      Iterable<TableRow> rows = _table.findRows(value, column);
-      for (TableRow row : rows) {
-        occurrences.addRow(row);
-      }
-      return occurrences;
-    }
-    catch(Exception e) {
-      println(e);
-      return null;
-    }
+    return occurrences;
   }
 }
 
@@ -208,18 +187,18 @@ class DataMainThread extends Thread {
 }
 
 class DataSortThread extends Thread {
-  int i;
+  int threadIndex;
   Dataset data;
   Table sortedTable;
   DataSortThread(int i, Dataset data, Table sortedTable) {
-    this.i = i;
+    this.threadIndex = i;
     this.data = data;
     this.sortedTable = sortedTable.copy();
     println("Thread created: "+i);
   }
 
   public void run() {
-    sortedTable.sort(i);
+    sortedTable.sort(threadIndex);
     Table savedTable = new Table();
     savedTable.addColumn("INDEX");
     savedTable.addColumn("UNIQUE_INDEX");
@@ -228,16 +207,16 @@ class DataSortThread extends Thread {
     for (int j=0; j<data.rowCount; j++) {
       int indexValue = sortedTable.getInt(j, "INDEX");
       savedTable.setInt(j, 0, indexValue);
-      String value = data.table.getString(indexValue, i);
+      String value = data.table.getString(indexValue, threadIndex);
       if (!prevValue.equals(value)) {
         savedTable.setInt(k++, 1, j);
         prevValue = value;
       }
     }
     savedTable.setInt(k, 1, data.rowCount-1);
-    saveTable(savedTable, data.sortedPath+"/"+data.table.getColumnTitle(i)+".csv");
-    data.sortedKeys[i] = savedTable;
-    println("Column: "+i+" sorted.");
+    saveTable(savedTable, data.sortedPath+"/"+data.table.getColumnTitle(threadIndex)+".csv");
+    data.sortedKeys[threadIndex] = savedTable;
+    println("Column: "+threadIndex+" sorted.");
   }
 }
 
@@ -283,13 +262,13 @@ class DatasetScreen extends Screen {
       theta += 0.04;
       sinAngle = theta;
       sinOffset = constrain(sin(sinAngle)*amplitude, 0, Float.MAX_VALUE);
-      circle(1375, 480-sinOffset, 30);
+      circle(1375, 495-sinOffset, 30);
       sinAngle+=dx;
       sinOffset = constrain(sin(sinAngle)*amplitude, 0, Float.MAX_VALUE);
-      circle(1325, 480-sinOffset, 30);
+      circle(1325, 495-sinOffset, 30);
       sinAngle+=dx;
       sinOffset = constrain(sin(sinAngle)*amplitude, 0, Float.MAX_VALUE);
-      circle(1275, 480-sinOffset, 30);
+      circle(1275, 495-sinOffset, 30);
       if (theta>=period) theta = 0;
 
       return;
@@ -303,24 +282,21 @@ class DatasetScreen extends Screen {
     for (int i = 0; i < this.getWidgets().size(); i++) {
       this.getWidgets().get(i).draw();
     }
-    if (mousePressed) {
-      for (int i = 0; i < allButtons.size(); i++) {
-        allButtons.get(i).isClicked(mouseX, mouseY);
-      }
+    for (int i = 0; i < allButtons.size(); i++) {
+      if (mousePressed) allButtons.get(i).isClicked(mouseX, mouseY);
     }
 
     //Draw button appearance
     textSize(50);
-    fill(255);
-    rect(760, 310, 480, 80);
-    rect(760, 460, 480, 80);
-    rect(760, 610, 480, 80);
-    rect(760, 760, 480, 80);
+    for (int i=0; i<allButtons.size(); i++) {
+      fill(allButtons.get(i).isHovering(mouseX, mouseY) ? 200 : 255);
+      rect(760, 310+(i*150), 480, 80);
+    }
     fill(0);
-    text("Flights 2K", 1000, 350);
-    text("Flights 10K", 1000, 500);
-    text("Flights 100K", 1000, 650);
-    text("Flights Full", 1000, 800);
+    text("Flights 2K", 1000, 340);
+    text("Flights 10K", 1000, 490);
+    text("Flights 100K", 1000, 640);
+    text("Flights Full", 1000, 790);
   }
 
   void loadData(String dataPath) {

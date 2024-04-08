@@ -31,6 +31,8 @@ class NavigationBar
   }
   void changeScreen(Screen screen)
   {
+    currentScreen.onFocusChanged(false);
     currentScreen = screen;
+    currentScreen.onFocusChanged(true);
   }
 }

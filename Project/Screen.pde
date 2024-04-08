@@ -34,7 +34,8 @@ import java.util.Arrays;
         }
     }
 
-
+    public void onFocusChanged(boolean isInFocus){
+    }
 }
 
 
