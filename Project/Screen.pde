@@ -83,6 +83,7 @@ class TableScreen extends Screen {
     
     // Method to display the dropdown menu and handle its interaction
   void displayDropdownMenu() {
+      hint(DISABLE_OPTIMIZED_STROKE);
       fill(240); // Light grey background for the dropdown menu button
       stroke(0); // Black border
       rect(20, 130, MENU_WIDTH, MENU_HEIGHT); // Rectangle for the dropdown button
