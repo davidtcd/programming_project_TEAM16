@@ -1,7 +1,7 @@
 //Resources with file paths
 PFont font;
-Dataset data;
-DatasetScreen datasetScreen;
+volatile Dataset data;
+volatile DatasetScreen datasetScreen;
 NavigationBar bar;
 TableScreen mainscreen;
 ArrayList<Button> allButtons;

@@ -1,4 +1,5 @@
-//Designed and written by Mark Varghese
+//A robust dataset system that can handle any form of csv data.
+//Designed and written by Mark Varghese.
 import java.io.*;
 
 enum DataType
@@ -15,7 +16,8 @@ class Dataset
   private String sortedPath;
 
   Dataset(String path, DataType dataType) {
-    Thread mainDataThread = new DataMainThread(this, path, dataType, datasetScreen);
+    //Move loading of data to sperate thread to stop animation thread from freezing
+    Thread mainDataThread = new DataMainThread(path, dataType);
     mainDataThread.start();
   }
 
@@ -27,80 +29,85 @@ class Dataset
     return columnCount;
   }
 
+  /**
+   * Finds the value at a specific row and column in the dataset.
+   *
+   * @param  index     Row of the dataset the value is in.
+   * @param  column    Column of the datset the value is in.
+   * @param  isSorted  Wether the dataset should be sorted by the column.
+   * @return           value as a string at a specific row and column in the dataset.
+   */
   String getValue(int index, int column, boolean isSorted) {
-    try {
-      if (isSorted) return table.getString(sortedKeys[column].getInt(index, 0), column);
-      return table.getString(index, column);
-    }
-    catch (Exception e) {
-      println(e);
-      return null;
-    }
+    if (isSorted) return table.getString(sortedKeys[column].getInt(index, 0), column);
+    return table.getString(index, column);
   }
 
+  /**
+   * Finds all the unique values present in a column of the dataset.
+   * Note that the index of values in the returned array is the int id of the value in a column.
+   * i.e the first value of the first column is the 0th value of getUniqueValues(0);
+   *
+   * @param  column    Column of the dataset to be searched.
+   * @returns          String array of unique values present in a column of the dataset.
+   */
   String[] getUniqueValues(int column) {
-    try {
-      ArrayList<String> values = new ArrayList<String>();
-      String value = table.getString(sortedKeys[column].getInt(sortedKeys[column].getInt(0, 1), 0), column);
-      int uniqueIndex = sortedKeys[column].getInt(0, 1);
+    ArrayList<String> values = new ArrayList<String>();
+    String value = table.getString(sortedKeys[column].getInt(sortedKeys[column].getInt(0, 1), 0), column);
+    int uniqueIndex = sortedKeys[column].getInt(0, 1);
+    values.add(value);
+    uniqueIndex = sortedKeys[column].getInt(1, 1);
+    int i=1;
+    while (uniqueIndex != 0) {
+      value = table.getString(sortedKeys[column].getInt(uniqueIndex, 0), column);
       values.add(value);
-      uniqueIndex = sortedKeys[column].getInt(1, 1);
-      int i=1;
-      while (uniqueIndex != 0) {
-        value = table.getString(sortedKeys[column].getInt(uniqueIndex, 0), column);
-        values.add(value);
-        i++;
-        uniqueIndex = sortedKeys[column].getInt(i, 1);
-      }
-      values.remove(values.size()-1);
-      return values.toArray(new String[0]);
+      i++;
+      uniqueIndex = sortedKeys[column].getInt(i, 1);
     }
-    catch (Exception e) {
-      println(e);
-      return null;
-    }
+    values.remove(values.size()-1);
+    return values.toArray(new String[0]);
   }
 
+  /**
+   * Gets the specified row of the dataset.
+   *
+   * @param  index     Row of the dataset to be joined.
+   * @returns          The specified row as a string.
+   */
   String getLine(int index) {
     return join(table.getStringRow(index), ", ");
   }
 
+  /**
+   * Gets the specified row of the dataset sorted by the column.
+   *
+   * @param  index     Row of the dataset to be joined.
+   * @param  column    Column of the dataset should be sorted by.
+   * @returns          The specified row as a string.
+   */
   String getLineSorted(int index, int column) {
-    try {
-      return join(table.getStringRow(sortedKeys[column].getInt(index, 0)), ", ");
-    }
-    catch (Exception e) {
-      println(e);
-      return null;
-    }
+    return join(table.getStringRow(sortedKeys[column].getInt(index, 0)), ", ");
   }
 
-  String[] getAllLines(Table _table) {
-    try {
-      String[] rows = new String[_table.getRowCount()];
-      for (int i=0; i<rows.length; i++) {
-        rows[i] = join(_table.getStringRow(i), ", ");
-      }
-      return rows;
-    }
-    catch (Exception e) {
-      println(e);
-      return null;
-    }
-  }
-
+  /**
+   * Gets amount of times a value appears in a column in the dataset.
+   *
+   * @param  value     The value id to be counted.
+   * @param  column    Column of the dataset the value is present it.
+   * @returns          The amount of times a value appears in a column in the dataset.
+   */
   int getOccurrenceAmount(int value, int column) {
-    try {
-      int min = sortedKeys[column].getInt(value, 1);
-      int max = sortedKeys[column].getInt(value+1, 1);
-      return max-min;
-    }
-    catch(Exception e) {
-      println(e);
-      return 0;
-    }
+    int min = sortedKeys[column].getInt(value, 1);
+    int max = sortedKeys[column].getInt(value+1, 1);
+    return max-min;
   }
 
+  /**
+   * Gets the rows that contain the value in a cloumn of the dataset.
+   *
+   * @param  value     The value id to be searched.
+   * @param  column    Column of the dataset the value is present it.
+   * @returns          An arraylist of rows as strings which contain the value given.
+   */
   ArrayList<String> getOccurrencesList(int value, int column) {
     if (value<0) return null;
     ArrayList<String> occurrences = new ArrayList<String>();
@@ -115,18 +122,15 @@ class Dataset
 }
 
 class DataMainThread extends Thread {
-  Dataset data;
   String path;
   DataType dataType;
-  DatasetScreen screen;
 
-  DataMainThread(Dataset data, String path, DataType dataType, DatasetScreen screen) {
-    this.data = data;
+  DataMainThread(String path, DataType dataType) {
     this.path = path;
     this.dataType = dataType;
-    this.screen = screen;
   }
 
+  //Load or sort data
   void run() {
     data.table = loadTable(path+".csv", "header");
     data.sortedKeys = new Table[data.table.getColumnCount()];
@@ -134,6 +138,7 @@ class DataMainThread extends Thread {
     data.columnCount = data.table.getColumnCount();
     data.sortedPath = dataPath(path+"_Sorted");
 
+    //Setup column types for specific datasets
     switch (dataType) {
     case flights:
       data.table.setColumnType(0, "string");
@@ -157,6 +162,7 @@ class DataMainThread extends Thread {
       break;
     }
 
+    //Try create folder for sorted data, if already exists load data else sort
     File f = new File(data.sortedPath);
     if (!f.mkdir()) {
       println("Loading data...");
@@ -164,41 +170,49 @@ class DataMainThread extends Thread {
         data.sortedKeys[i] = loadTable(data.sortedPath+"/"+data.table.getColumnTitle(i)+".csv", "header");
       }
       loadResources();
-      screen.datasetSelected = true;
+      datasetScreen.datasetSelected = true;
       println("Data loaded!");
       return;
     }
+
     println("Sorting data...");
-    Table sortedTable = data.table.copy();
-    sortedTable.addColumn("INDEX");
-    for (int j=0; j<sortedTable.getRowCount(); j++) {
-      sortedTable.setInt(j, "INDEX", j);
-    }
+
+
+    //Divide sorting of columns between threads
     ThreadGroup dataTG = new ThreadGroup("dtg");
     for (int i=0; i<data.getNumberOfColumns(); i++) {
-      new Thread(dataTG, new DataSortThread(i, data, sortedTable), ""+i).start();
+      new Thread(dataTG, new DataSortThread(i), ""+i).start();
     }
     while (dataTG.activeCount() != 0) {
+      //Wait for sorting to finish
     }
+
     loadResources();
-    screen.datasetSelected = true;
+    datasetScreen.datasetSelected = true;
     println("Data sorted!");
   }
 }
 
-class DataSortThread extends Thread {
+final class DataSortThread extends Thread {
   int threadIndex;
-  Dataset data;
   Table sortedTable;
-  DataSortThread(int i, Dataset data, Table sortedTable) {
+
+  DataSortThread(int i) {
     this.threadIndex = i;
-    this.data = data;
-    this.sortedTable = sortedTable.copy();
+
+    sortedTable = data.table.copy();
+    sortedTable.addColumn("INDEX");
+    for (int j=0; j<data.getNumberOfRows(); j++) {
+      sortedTable.setInt(j, "INDEX", j);
+    }
+
     println("Thread created: "+i);
   }
 
+  //Sort column
   public void run() {
     sortedTable.sort(threadIndex);
+
     Table savedTable = new Table();
     savedTable.addColumn("INDEX");
     savedTable.addColumn("UNIQUE_INDEX");
@@ -213,6 +227,7 @@ class DataSortThread extends Thread {
         prevValue = value;
       }
     }
+
     savedTable.setInt(k, 1, data.rowCount-1);
     saveTable(savedTable, data.sortedPath+"/"+data.table.getColumnTitle(threadIndex)+".csv");
     data.sortedKeys[threadIndex] = savedTable;
@@ -220,7 +235,7 @@ class DataSortThread extends Thread {
   }
 }
 
-class DatasetScreen extends Screen {
+final class DatasetScreen extends Screen {
   boolean datasetSelected = false;
   boolean isLoading = false;
   ArrayList<Button> allButtons;
@@ -235,6 +250,7 @@ class DatasetScreen extends Screen {
   DatasetScreen() {
     allButtons = new ArrayList<Button>();
 
+    //Buttons for datasets
     Button slot1 = new Button(750, 300, 500, 100, "", color(0), BLACK, BLACK, font, () -> this.loadData("flights2k"));
     getWidgets().add(slot1);
     allButtons.add(slot1);
@@ -249,8 +265,9 @@ class DatasetScreen extends Screen {
     allButtons.add(slot4);
   }
 
-  //Override
-  public void draw() {
+  @Override
+    public void draw() {
+    //Draw loading screen
     if (isLoading) {
       background(50);
       textSize(150);
@@ -273,6 +290,8 @@ class DatasetScreen extends Screen {
 
       return;
     }
+
+    //Draw data select screen
     background(50);
     textSize(150);
     textAlign(CENTER, CENTER);
@@ -286,7 +305,7 @@ class DatasetScreen extends Screen {
       if (mousePressed) allButtons.get(i).isClicked(mouseX, mouseY);
     }
 
-    //Draw button appearance
+    //Draw slot graphics
     textSize(50);
     for (int i=0; i<allButtons.size(); i++) {
       fill(allButtons.get(i).isHovering(mouseX, mouseY) ? 200 : 255);
@@ -299,7 +318,12 @@ class DatasetScreen extends Screen {
     text("Flights Full", 1000, 790);
   }
 
-  void loadData(String dataPath) {
+  /**
+   * Load the data in a csv file in the data folder of the project.
+   *
+   * @param  dataPath  Name of csv file.
+   */
+  private void loadData(String dataPath) {
     isLoading = true;
     data = new Dataset(dataPath, DataType.flights);
   }
