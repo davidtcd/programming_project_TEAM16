@@ -32,7 +32,6 @@ class LineGraphScreen extends Screen
    */
   void updateGraph()
   {
-    println("Updated!");
     uniques = data.getUniqueValues(currentCategory);
     values = new int[uniques.length];
     for (int i = 0; i < uniques.length; i++ )
@@ -58,11 +57,11 @@ class LineGraphScreen extends Screen
     updateGraph();
     stroke(0);
 
-    int maxOccurences = data.getNumberOfRows() / 2;
+    int maxOccurences = data.getNumberOfRows();
 
     // Set up graph dimensions
-    int graphWidth = width - 400;
-    int graphHeight = height - 400;
+    int graphWidth = width - 150;
+    int graphHeight = height - 150;
 
     // Calculate the width of each bar
     float xStep = (float)graphWidth / (uniques.length - 1);
@@ -78,8 +77,10 @@ class LineGraphScreen extends Screen
       float y = height - 50 - values[i]* yStep;
 
       // Draw data points
-      fill(255, 0, 0); // Red color for data points
+      fill(0); // Black color for data points
+      ellipseMode(CENTER);
       ellipse(x, y, 5, 5);
+      fill(255, 0, 0);
 
       // Connect data points with lines
       if (i > 0) {
@@ -90,20 +91,22 @@ class LineGraphScreen extends Screen
 
       // Display date below x-axis
       textAlign(CENTER);
-      if ((uniques.length > 1000)  && (i % 900 == 0)) text(uniques[i], x, height - 30);
-      else if ((uniques.length > 100) && (i % 10 == 0)) text(uniques[i], x, height - 30);
+      if ((uniques.length >= 1000)  && (i % 250 == 0)) text(uniques[i], x, height - 30);
+      else if ((uniques.length >= 500 && uniques.length < 1000) && (i % 50 == 0)) text(uniques[i], x, height - 30);
+      else if ((uniques.length >= 100 && uniques.length < 500) && (i % 10 == 0)) text(uniques[i], x, height - 30);
       else if ( uniques.length < 100) text(uniques[i], x, height - 30);
     }
     // Label y-axis
-    textAlign(RIGHT);
-    for (int j = 0; j <= maxOccurences; j += maxOccurences / 5) {
+    textAlign(RIGHT, CENTER);
+    for (int j = 0; j <= maxOccurences; j += maxOccurences / 20) {
       float y = height - 50 - j * yStep;
-      text(j, 40, y);
+      text(j, 45, y);
       line(45, y, 50, y); // Draw tick marks on y-axis
     }
 
-    textSize(40);
-    text(headings[currentCategory], 1050, 100);
+    textAlign(CENTER);
+    textSize(30);
+    text(headings[currentCategory], width/2, 100);
     for (int i = 0; i < this.getWidgets().size(); i++) {
       this.getWidgets().get(i).draw();
     }
@@ -128,7 +131,7 @@ class LineGraphScreen extends Screen
   //Resets 'currentCategory' to 0 if it goes below 0.
   void previousGraph()
   {
-    if (--currentCategory == headings.length)
+    if (--currentCategory < 0)
     {
       currentCategory = 0 ;
       return;

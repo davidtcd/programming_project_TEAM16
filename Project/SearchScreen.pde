@@ -57,11 +57,11 @@ class SearchScreen extends Screen {
         
         // textboxes
         for (int i = 0; i < this.colCount / 2; i++) {
-            this.textboxes.add(new Textbox(50 + i * 205, BARHEIGHT + 50, 200, 50, allLabels.get(i), WHITE, BLACK, BLACK, font, parent, convertToArrayList(uniques.get(i)), allDropdowns));
+            this.textboxes.add(new Textbox(50 + i * 205, NAVBAR_HEIGHT + 50, 200, 50, allLabels.get(i), WHITE, BLACK, BLACK, font, parent, convertToArrayList(uniques.get(i)), allDropdowns));
         }
         int j = 0;
         for (int i = this.colCount / 2; i < this.colCount; i++) {    
-            this.textboxes.add(new Textbox(50 + j * 205, BARHEIGHT + 150, 200, 50, allLabels.get(i),WHITE, BLACK, BLACK, font, parent, convertToArrayList(uniques.get(i)), allDropdowns));
+            this.textboxes.add(new Textbox(50 + j * 205, NAVBAR_HEIGHT + 150, 200, 50, allLabels.get(i),WHITE, BLACK, BLACK, font, parent, convertToArrayList(uniques.get(i)), allDropdowns));
             j++;
         }
         
@@ -90,22 +90,16 @@ class SearchScreen extends Screen {
     * Splits row of data and adds to arraylist of arraylists, also
     * calculating column widths for table display
     *
-    * @param row    row of data as comma separated string
+    * @param row    row of data as a string from dataset
     */
     void splitRow(String row) {
         ArrayList<ArrayList<String>> cols = this.getResultsCols();
-        String[] rowSplit = row.split(",");
+        String[] rowSplit = row.split(data.DELIMITER);
         
         for (int i = 0, j = 0; i < rowSplit.length;i++, j++) {
             String newVal;
-            if (i == 4 || i == 9) { //<>//
-                newVal = rowSplit[i].trim() + "," + rowSplit[i + 1];
-                cols.get(j).add(newVal);
-                i++;
-            } else {
-                newVal = rowSplit[i].trim();
-                cols.get(j).add(newVal);
-            }
+            newVal = rowSplit[i].trim();
+            cols.get(j).add(newVal); //<>//
             
             Float oldWidth = this.getColWidths()[j];
             textSize(20);

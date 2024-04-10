@@ -5,6 +5,10 @@ import org.gicentre.utils.stat.*;
 // can interact with the BarChart and change the data that is being displayed.
 class BarChartScreen extends Screen
 {
+  final int BARCHARTWIDTH = 1200;
+  final int BARCHARTHEIGHT = 800;
+  final int CHARTGAP = 150;
+  
   PFont title = createFont("Arial", 20);
   Dropdown sortBy;
   color barColor;
@@ -51,6 +55,32 @@ class BarChartScreen extends Screen
     options.add("low->high"); options.add("high->low"); options.add("default");
     sortBy = new Dropdown(0, TABHEIGHT, BUTTONWIDTH, BUTTONHEIGHT, "Sort By", color(220), BLACK, BLACK, font, options, index -> changeDropdownOption(index), true, 40);
     allDropdowns.add(sortBy);
+    
+    Button nextChart, prevChart;
+    Button nextPage, prevPage;
+    Button nextColor, prevColor;
+    Button flipAxes;
+    nextChart = new Button(width - BUTTON1_GAP, 200, BUTTONWIDTH, BUTTONHEIGHT, "Next Chart", BLUE, BLACK, WHITE, font,() -> nextChart());
+    prevChart = new Button(width - BUTTON2_GAP, 200, BUTTONWIDTH, BUTTONHEIGHT, "Previous Chart", BLUE, BLACK, WHITE, font,() -> prevChart());
+    nextPage = new Button(width - BUTTON1_GAP, 300, BUTTONWIDTH, BUTTONHEIGHT, "Next Page", BLUE, BLACK, WHITE, font,() -> pageInc());
+    prevPage = new Button(width - BUTTON2_GAP, 300, BUTTONWIDTH, BUTTONHEIGHT, "Previous Page", BLUE, BLACK, WHITE, font,() -> pageDec());
+    nextColor = new Button(width - BUTTON1_GAP,400, BUTTONWIDTH, BUTTONHEIGHT, "Next Colour", BLUE, BLACK, WHITE, font,() -> nextColor());
+    prevColor = new Button(width - BUTTON2_GAP, 400, BUTTONWIDTH, BUTTONHEIGHT, "Previous Colour", BLUE, BLACK, WHITE, font,() -> prevColor());
+    flipAxes = new Button(width - (BUTTON2_GAP - 150), 140, BUTTONWIDTH, BUTTONHEIGHT, "Flip Chart", BLUE, BLACK, WHITE, font,() -> flipChart());
+    addButton(nextChart);
+    addButton(prevChart);
+    addButton(nextPage);
+    addButton(prevPage);
+    addButton(nextColor);
+    addButton(prevColor);
+    addButton(flipAxes);
+    allButtons.add(nextChart);
+    allButtons.add(prevChart);
+    allButtons.add(nextPage);
+    allButtons.add(prevPage);
+    allButtons.add(nextColor);
+    allButtons.add(prevColor);
+    allButtons.add(flipAxes);
   }
   // drawTitle() draws the title, mean, mode, median and page number for a BarChartScreen object
   void drawTitle()

@@ -9,9 +9,9 @@ class NavigationBar
   {
     this.x = 0;
     this.y = 0;
-    this.barHeight = BARHEIGHT;
-    this.barWidth = BARWIDTH;
-    this.barColor = BARCOLOR;
+    this.barHeight = NAVBAR_HEIGHT;
+    this.barWidth = NAVBAR_WIDTH;
+    this.barColor = NAVBAR_COLOR;
     tabs = new ArrayList<Button>();
   }
   void drawBar()
@@ -20,6 +20,7 @@ class NavigationBar
     rect(x, y, barWidth, barHeight);
     for(int i = 0; i < tabs.size(); i++)
     {
+      textFont(font);
       textSize(20);
       tabs.get(i).draw();
       textSize(12);

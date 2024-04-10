@@ -1,40 +1,34 @@
 //Resources with file paths
 PFont font;
+PFont tableFont;
 volatile Dataset data;
-volatile DatasetScreen datasetScreen;
-NavigationBar bar;
-TableScreen mainscreen;
+
+//UI
 ArrayList<Button> allButtons;
 ArrayList<Dropdown> allDropdowns;
-pieChart cancelledChart;
-pieChart carrierChart;
-pieChart dateChart;
-Button cancelledButton;
-Button carrierButton;
-Button dateButton;
-Button carrier; //lg
-Button flights;//lg
+
+//Nav bar
+NavigationBar navBar;
+Button tableTab, barChartTab, pieTab, treemapTab, lineGraphTab, searchTab, flightsMapTab;
+
+//Screens
 Screen currentScreen;
+volatile DatasetScreen datasetScreen;
+TableScreen tableScreen;
 BarChartScreen barChartScreen;
-Button nextChart, prevChart;
-Button nextPage, prevPage;
-Button nextColor, prevColor;
-Button flipAxes;
 Screen graphScreen;
-pieScreen currentPieScreen;
-Button mainTab, barChartTab, pieTab, treemapTab, lineGraphTab, searchTab, flightsMapTab;
+PieScreen pieScreen;
 TreeMapScreen treeMapScreen;
 SearchScreen searchScreen;
 LineGraphScreen lineGraphScreen;
 FlightsMapScreen flightsMapScreen;
+
 PApplet parent = this;
-Table carrierTable;
 
 //Variable constants
 final int SCREENWIDTH = 2000;
 final int SCREENHEIGHT = 1000;
-final int BARHEIGHT = SCREENHEIGHT / 15;
-final int BARWIDTH = SCREENWIDTH;
+
 final color WHITE =  color(255);
 final color BLACK = color(0);
 final color RED = color(255, 0, 0);
@@ -44,90 +38,61 @@ final color YELLOW = color(255,255,0);
 final color PURPLE = color(255, 0, 255);
 final color CYAN = color(0, 255, 255);
 final color ORANGE = color(255, 165, 0);
-final color BARCOLOR = WHITE;
-final int BARCHARTWIDTH = 1200;
-final int BARCHARTHEIGHT = 800;
-final int CHARTGAP = 150;
+
+final int NAVBAR_HEIGHT = SCREENHEIGHT / 15;
+final int NAVBAR_WIDTH = SCREENWIDTH;
+final color NAVBAR_COLOR = WHITE;
 final int NUMOFTABS = 7;
-final int TABWIDTH = (int)(BARWIDTH / NUMOFTABS) - NUMOFTABS;
-final int TABHEIGHT = BARHEIGHT;
+final int TABWIDTH = (int)(NAVBAR_WIDTH / NUMOFTABS);
+final int TABHEIGHT = NAVBAR_HEIGHT;
 final int TABGAP = 200;
-final int BUTTON1_GAP = 300;
-final int BUTTON2_GAP = 600;
+
 final int BUTTONWIDTH = 200;
 final int BUTTONHEIGHT = 50;
-final int TEXT_COLOUR = color(0, 0, 0);
-final int HEADER_SIZE = 16;
-final int TEXT_SIZE = 14;
-final int MENU_WIDTH = 150;
-final int MENU_HEIGHT = 30;
-final int ITEM_HEIGHT = 30;
+final int BUTTON1_GAP = 300;
+final int BUTTON2_GAP = 600;
 
 void loadResources()
 {
   println("Loading resources...");
   font = loadFont("Verdana-Bold-48.vlw");
-  font = loadFont("Georgia-14.vlw");
-  String[] dateHeadings = data.getUniqueValues(0);
-  float[] dateData = new float[dateHeadings.length];
-  for (int i = 0; i < dateHeadings.length; i++)
-  {
-    dateData[i] = data.getOccurrenceAmount(i,0);
-  }
-  String[] carrierHeadings = data.getUniqueValues(1);
-  float[] carrierData = new float[carrierHeadings.length];
-  for (int i = 0; i < carrierHeadings.length; i++)
-  {
-    carrierData[i] = data.getOccurrenceAmount(i,1);
-  }
-  float[] cancelledData = {data.getOccurrenceAmount(1,15),data.getOccurrenceAmount(0,15)};
-  String[] cancelledHeadings = {"cancelled", "not cancelled"};
-  cancelledChart = new pieChart(cancelledData, cancelledHeadings); 
-  carrierChart = new pieChart(carrierData, carrierHeadings);
-  dateChart = new pieChart(dateData, dateHeadings);
+  tableFont = loadFont("Georgia-14.vlw");
+  
   allButtons = new ArrayList<Button>();
   allDropdowns = new ArrayList<Dropdown>();
-  bar = new NavigationBar();
-  mainscreen = new TableScreen();
-  currentScreen = mainscreen;
+  
+  tableScreen = new TableScreen();
   barChartScreen = new BarChartScreen(parent);
-  currentPieScreen = new pieScreen(cancelledChart);
+  pieScreen = new PieScreen();
   treeMapScreen = new TreeMapScreen(allButtons, allDropdowns);
   searchScreen = new SearchScreen(allDropdowns, allButtons, font, parent);
   lineGraphScreen = new LineGraphScreen();
   flightsMapScreen = new FlightsMapScreen();
-  mainTab = new Button(0, 0, TABWIDTH, TABHEIGHT, "Main", BLUE, BLACK, WHITE, font,() -> bar.changeScreen(mainscreen));
-  barChartTab = new Button(0 + TABWIDTH + 1, 0, TABWIDTH, TABHEIGHT, "BarCharts", BLUE, BLACK, WHITE, font,() -> bar.changeScreen(barChartScreen));
-  pieTab = new Button(0 + TABWIDTH * 2 + 2, 0, TABWIDTH, TABHEIGHT, "Pie Chart", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(currentPieScreen));
-  treemapTab = new Button(0 + TABWIDTH * 3 + 3, 0, TABWIDTH, TABHEIGHT, "Treemap", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(treeMapScreen));
-  lineGraphTab = new Button(0 + TABWIDTH * 4 + 4, 0, TABWIDTH, TABHEIGHT, "Line graph", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(lineGraphScreen)); 
-  searchTab = new Button(0 + TABWIDTH * 5 + 5, 0, TABWIDTH, TABHEIGHT, "Search", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(searchScreen));
-  flightsMapTab = new Button(0 + TABWIDTH * 6 + 6, 0, TABWIDTH, TABHEIGHT, "Flights Map", color(0,0,255), color(0), color(255), font,() -> bar.changeScreen(flightsMapScreen));
-  cancelledButton = new Button(width - (BUTTON2_GAP - 150), 140, BUTTONWIDTH, BUTTONHEIGHT, "Cancelled Flights", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(cancelledChart));
-  dateButton = new Button(width - (BUTTON2_GAP -150), 140 + (BUTTONHEIGHT*4), BUTTONWIDTH, BUTTONHEIGHT, "Flight Dates", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(dateChart));
-  carrierButton = new Button(width - (BUTTON2_GAP -150), 140 + (BUTTONHEIGHT*2), BUTTONWIDTH, BUTTONHEIGHT, "Airline Carriers", BLUE, BLACK, WHITE, font, () ->currentPieScreen.changeChart(carrierChart));
-  flipAxes = new Button(width - (BUTTON2_GAP - 150), 140, BUTTONWIDTH, BUTTONHEIGHT, "Flip Chart", BLUE, BLACK, WHITE, font,() -> barChartScreen.flipChart());
-  nextChart = new Button(width - BUTTON1_GAP, 200, BUTTONWIDTH, BUTTONHEIGHT, "Next Chart", BLUE, BLACK, WHITE, font,() -> barChartScreen.nextChart());
-  prevChart = new Button(width - BUTTON2_GAP, 200, BUTTONWIDTH, BUTTONHEIGHT, "Previous Chart", BLUE, BLACK, WHITE, font,() -> barChartScreen.prevChart());
-  nextPage = new Button(width - BUTTON1_GAP, 300, BUTTONWIDTH, BUTTONHEIGHT, "Next Page", BLUE, BLACK, WHITE, font,() -> barChartScreen.pageInc());
-  prevPage = new Button(width - BUTTON2_GAP, 300, BUTTONWIDTH, BUTTONHEIGHT, "Previous Page", BLUE, BLACK, WHITE, font,() -> barChartScreen.pageDec());
-  nextColor = new Button(width - BUTTON1_GAP,400, BUTTONWIDTH, BUTTONHEIGHT, "Next Colour", BLUE, BLACK, WHITE, font,() -> barChartScreen.nextColor());
-  prevColor = new Button(width - BUTTON2_GAP, 400, BUTTONWIDTH, BUTTONHEIGHT, "Previous Colour", BLUE, BLACK, WHITE, font,() -> barChartScreen.prevColor());
-  barChartScreen.addButton(nextChart); barChartScreen.addButton(prevChart); barChartScreen.addButton(nextPage); barChartScreen.addButton(prevPage); barChartScreen.addButton(nextColor); barChartScreen.addButton(prevColor); barChartScreen.addButton(flipAxes);
-  bar.addTab(mainTab);  bar.addTab(barChartTab); bar.addTab(pieTab);bar.addTab(treemapTab); bar.addTab(lineGraphTab); bar.addTab(searchTab); bar.addTab(flightsMapTab);
-  currentPieScreen.addButton(cancelledButton);
-  currentPieScreen.addButton(carrierButton);
-  currentPieScreen.addButton(dateButton);
-  lineGraphScreen.addButton(carrier);
-  lineGraphScreen.addButton(flights);
-  allButtons.add(mainTab); allButtons.add(barChartTab); allButtons.add(nextChart); allButtons.add(prevChart); allButtons.add(nextPage); allButtons.add(prevPage); allButtons.add(nextColor); allButtons.add(prevColor); allButtons.add(flipAxes);
+  currentScreen = tableScreen;
+  
+  navBar = new NavigationBar();
+  tableTab = new Button(0, 0, TABWIDTH, TABHEIGHT, "Main", BLUE, BLACK, WHITE, font,() -> navBar.changeScreen(tableScreen));
+  barChartTab = new Button(0 + TABWIDTH + 1, 0, TABWIDTH, TABHEIGHT, "BarCharts", BLUE, BLACK, WHITE, font,() -> navBar.changeScreen(barChartScreen));
+  pieTab = new Button(0 + TABWIDTH * 2 + 2, 0, TABWIDTH, TABHEIGHT, "Pie Chart", color(0,0,255), color(0), color(255), font,() -> navBar.changeScreen(pieScreen));
+  treemapTab = new Button(0 + TABWIDTH * 3 + 3, 0, TABWIDTH, TABHEIGHT, "Treemap", color(0,0,255), color(0), color(255), font,() -> navBar.changeScreen(treeMapScreen));
+  lineGraphTab = new Button(0 + TABWIDTH * 4 + 4, 0, TABWIDTH, TABHEIGHT, "Line graph", color(0,0,255), color(0), color(255), font,() -> navBar.changeScreen(lineGraphScreen));
+  searchTab = new Button(0 + TABWIDTH * 5 + 5, 0, TABWIDTH, TABHEIGHT, "Search", color(0,0,255), color(0), color(255), font,() -> navBar.changeScreen(searchScreen));
+  flightsMapTab = new Button(0 + TABWIDTH * 6 + 6, 0, TABWIDTH, TABHEIGHT, "Flights Map", color(0,0,255), color(0), color(255), font,() -> navBar.changeScreen(flightsMapScreen));
+  
+  navBar.addTab(tableTab);
+  navBar.addTab(barChartTab);
+  navBar.addTab(pieTab);
+  navBar.addTab(treemapTab);
+  navBar.addTab(lineGraphTab);
+  navBar.addTab(searchTab);
+  navBar.addTab(flightsMapTab);
+  
+  allButtons.add(tableTab);
+  allButtons.add(barChartTab);
   allButtons.add(pieTab);
-  allButtons.add(searchTab);
-  allButtons.add(lineGraphTab);
-  allButtons.add(flightsMapTab);
   allButtons.add(treemapTab);
-  allButtons.add(cancelledButton);
-  allButtons.add(carrierButton);
-  allButtons.add(dateButton);
-  currentScreen = mainscreen;
+  allButtons.add(lineGraphTab);
+  allButtons.add(searchTab);
+  allButtons.add(flightsMapTab);
+  println("Resources loaded!");
 }

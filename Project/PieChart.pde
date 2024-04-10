@@ -93,9 +93,10 @@ class pieChart
       color myColor = color(getRed()[i],getGreen()[i],getBlue()[i]);
       fill(myColor);
       
-      float textPos = map(i+1,0, sortedAngles.length, BARHEIGHT, height-BARHEIGHT);
+      float textPos = map(i+1,0, sortedAngles.length, NAVBAR_HEIGHT, height-NAVBAR_HEIGHT);
       textSize(32);
       text(sortedHeadings[i] + ": " +round(((sortedAngles[i]/360) * 100)*100)*0.01 + "%", width-diameter, textPos);
+      ellipseMode(BOTTOM);
       arc(SCREENWIDTH/20, SCREENHEIGHT/15 + 75, diameter, diameter, lastAngle - radians(90), lastAngle+radians(sortedAngles[i]) - radians (90));
       lastAngle += radians(sortedAngles[i]);
       textSize(14);

@@ -9,11 +9,14 @@ enum DataType
 
 class Dataset
 {
-  private Table table;
-  private Table[] sortedKeys;
-  private int rowCount;
-  private int columnCount;
-  private String sortedPath;
+  Table table;
+  Table[] sortedKeys;
+  int rowCount;
+  int columnCount;
+  String sortedPath;
+  
+  //Set an arbitrary delimiter which minimizes possible conflicts
+  final String DELIMITER = "CUSTOM_DELIMITER";
 
   Dataset(String path, DataType dataType) {
     //Move loading of data to sperate thread to stop animation thread from freezing
@@ -74,7 +77,7 @@ class Dataset
    * @returns          The specified row as a string.
    */
   String getLine(int index) {
-    return join(table.getStringRow(index), ", ");
+    return join(table.getStringRow(index), DELIMITER);
   }
 
   /**
@@ -85,7 +88,7 @@ class Dataset
    * @returns          The specified row as a string.
    */
   String getLineSorted(int index, int column) {
-    return join(table.getStringRow(sortedKeys[column].getInt(index, 0)), ", ");
+    return join(table.getStringRow(sortedKeys[column].getInt(index, 0)), DELIMITER);
   }
 
   /**
@@ -115,13 +118,13 @@ class Dataset
     int max = sortedKeys[column].getInt(value+1, 1);
 
     for (int i=min; i<max; i++) {
-      occurrences.add(getLine(sortedKeys[column].getInt(i, 0)));
+      occurrences.add(getLine(sortedKeys[column].getInt(i, 0)).replaceAll(DELIMITER, " "));
     }
     return occurrences;
   }
 }
 
-class DataMainThread extends Thread {
+final class DataMainThread extends Thread {
   String path;
   DataType dataType;
 
@@ -232,99 +235,5 @@ final class DataSortThread extends Thread {
     saveTable(savedTable, data.sortedPath+"/"+data.table.getColumnTitle(threadIndex)+".csv");
     data.sortedKeys[threadIndex] = savedTable;
     println("Column: "+threadIndex+" sorted.");
-  }
-}
-
-final class DatasetScreen extends Screen {
-  boolean datasetSelected = false;
-  boolean isLoading = false;
-  ArrayList<Button> allButtons;
-
-  float theta = 0;
-  float sinOffset = 0;
-  float sinAngle = 0;
-  int amplitude = 25;
-  int period = 200;
-  float dx = (TWO_PI / period) * 20;
-
-  DatasetScreen() {
-    allButtons = new ArrayList<Button>();
-
-    //Buttons for datasets
-    Button slot1 = new Button(750, 300, 500, 100, "", color(0), BLACK, BLACK, font, () -> this.loadData("flights2k"));
-    getWidgets().add(slot1);
-    allButtons.add(slot1);
-    Button slot2 = new Button(750, 450, 500, 100, "", color(0), BLACK, BLACK, font, () -> this.loadData("flights10k"));
-    getWidgets().add(slot2);
-    allButtons.add(slot2);
-    Button slot3 = new Button(750, 600, 500, 100, "", color(0), BLACK, BLACK, font, () -> this.loadData("flights100k"));
-    getWidgets().add(slot3);
-    allButtons.add(slot3);
-    Button slot4 = new Button(750, 750, 500, 100, "", color(0), BLACK, BLACK, font, () -> this.loadData("flights_full"));
-    getWidgets().add(slot4);
-    allButtons.add(slot4);
-  }
-
-  @Override
-    public void draw() {
-    //Draw loading screen
-    if (isLoading) {
-      background(50);
-      textSize(150);
-      textAlign(CENTER, CENTER);
-      fill(255);
-      text("Loading", 1000, 450);
-
-      ellipseMode(BOTTOM);
-      theta += 0.04;
-      sinAngle = theta;
-      sinOffset = constrain(sin(sinAngle)*amplitude, 0, Float.MAX_VALUE);
-      circle(1375, 495-sinOffset, 30);
-      sinAngle+=dx;
-      sinOffset = constrain(sin(sinAngle)*amplitude, 0, Float.MAX_VALUE);
-      circle(1325, 495-sinOffset, 30);
-      sinAngle+=dx;
-      sinOffset = constrain(sin(sinAngle)*amplitude, 0, Float.MAX_VALUE);
-      circle(1275, 495-sinOffset, 30);
-      if (theta>=period) theta = 0;
-
-      return;
-    }
-
-    //Draw data select screen
-    background(50);
-    textSize(150);
-    textAlign(CENTER, CENTER);
-    fill(255);
-    text("Select Dataset", 1000, 150);
-
-    for (int i = 0; i < this.getWidgets().size(); i++) {
-      this.getWidgets().get(i).draw();
-    }
-    for (int i = 0; i < allButtons.size(); i++) {
-      if (mousePressed) allButtons.get(i).isClicked(mouseX, mouseY);
-    }
-
-    //Draw slot graphics
-    textSize(50);
-    for (int i=0; i<allButtons.size(); i++) {
-      fill(allButtons.get(i).isHovering(mouseX, mouseY) ? 200 : 255);
-      rect(760, 310+(i*150), 480, 80);
-    }
-    fill(0);
-    text("Flights 2K", 1000, 340);
-    text("Flights 10K", 1000, 490);
-    text("Flights 100K", 1000, 640);
-    text("Flights Full", 1000, 790);
-  }
-
-  /**
-   * Load the data in a csv file in the data folder of the project.
-   *
-   * @param  dataPath  Name of csv file.
-   */
-  private void loadData(String dataPath) {
-    isLoading = true;
-    data = new Dataset(dataPath, DataType.flights);
   }
 }

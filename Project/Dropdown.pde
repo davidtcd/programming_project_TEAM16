@@ -198,11 +198,14 @@ class Dropdown extends Widget {
     * @param mX     mouse x position
     * @param mY     mouse y position  
     */
-    public void optionIsClicked(int index, int mX, int mY) {
+    public void optionIsClicked(int index, int mX, int mY) {  
         // prevent clicking scrollbar from being registered as selecting option
         if (this.getOpen()) {
             int margin = this.getOptions().size() > OPTION_VISIBLE_COUNT ? this.getScrollbar().getWidth() : 0;
             
+            // prevent clicking on invisible options
+            if(index>=this.getVisibleOptions().length) return;
+        
             if (mX > this.getX() && mX < this.getX() + this.getWidth() - margin && mY > (this.getY() + (index + 1) * this.getHeight()) && mY < this.getY() + ((index + 2) * this.getHeight())) {
                 this.setSelected(index + this.getOffset());
                 // update label

@@ -28,13 +28,13 @@ public class TreeMapScreen extends Screen {
         this.tmW = (int)(SCREENWIDTH * (0.75));
         this.tmH = (int)(SCREENHEIGHT * (0.75));
         this.tmX = (int)(SCREENWIDTH * 0.01);
-        this.tmY = BARHEIGHT + 25;
+        this.tmY = NAVBAR_HEIGHT + 25;
         
         this.currentColumn = 0;
         this.colCount = data.getNumberOfColumns();
         createTreeMap(this.currentColumn);
-        Button nextButton = new Button(this.tmW + this.tmX + 25, BARHEIGHT + 25, 150, 50, "Next", BLACK, BLACK, WHITE, font,() -> nextClick());
-        Button prevButton = new Button(this.tmW + this.tmX + 25, BARHEIGHT + 95, 150, 50, "Prev", BLACK, BLACK, WHITE, font,() -> prevClick());
+        Button nextButton = new Button(this.tmW + this.tmX + 25, NAVBAR_HEIGHT + 25, 150, 50, "Next", BLACK, BLACK, WHITE, font,() -> nextClick());
+        Button prevButton = new Button(this.tmW + this.tmX + 25, NAVBAR_HEIGHT + 95, 150, 50, "Prev", BLACK, BLACK, WHITE, font,() -> prevClick());
         allButtons.add(nextButton);
         allButtons.add(prevButton);
         this.addWidget(nextButton);
@@ -48,7 +48,7 @@ public class TreeMapScreen extends Screen {
             allLabels.add(data.table.getColumnTitle(i));
         }
         
-        this.dropdown = new Dropdown(this.tmW + this.tmX + 25, BARHEIGHT + 165, 250, 50, "", color(220), BLACK, BLACK, font, allLabels, index -> dropdownOptionChange(index), true, 6);
+        this.dropdown = new Dropdown(this.tmW + this.tmX + 25, NAVBAR_HEIGHT + 165, 250, 50, "", color(220), BLACK, BLACK, font, allLabels, index -> dropdownOptionChange(index), true, 6);
         this.addWidget(dropdown);
         allDropdowns.add(this.dropdown);
     }
@@ -269,7 +269,7 @@ public class TreeMapScreen extends Screen {
         fill(BLACK);
         textAlign(LEFT);
         textSize(20);
-        text(this.getColName(), this.tmW + this.tmX + 25, BARHEIGHT + 250);
+        text(this.getColName(), this.tmW +NAVBAR_HEIGHT + 25, NAVBAR_HEIGHT + 250);
         textSize(12);
         textAlign(CENTER);
         
@@ -281,7 +281,7 @@ public class TreeMapScreen extends Screen {
         textSize(12);
         
         // draw treemap
-        stroke(0);
+        noStroke();
         
         
         if (!this.getIsCreating()) { // don't draw when recreating treemap
@@ -314,6 +314,7 @@ public class TreeMapScreen extends Screen {
             d.setX((int)(mouseX - (d.getWidth() / 2)));
             d.setY((int)(mouseY - d.getHeight()));
             d.setLabel("" + this.getLabels()[rect.getId()] + ": " + round(rect.getValue()));
+            stroke(0);
             d.draw();
         }
     }
