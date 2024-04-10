@@ -1,14 +1,20 @@
 // Joseph Reidy created the PieChart class and it's methods - which creates and labels a pie chart displaying an array of data from first principles
-// it converts a float array of data to a corresponding array of angles which are representative of that data
+// it converts a float array of data to a corresponding array of angles which are representative of that data.
 class pieChart
 {
+  
   private float[] data;
   private String[] headings;
   private float[] red;
   private float[] green;
   private float[] blue;
 
-  //constructor
+  //constructor.
+  // parameters: 
+  //float[] data = the data that we want to create the pie chart with.
+  //String[] headings = the headings that correspond with the data.
+  //
+  // this constructor generates three arrays red, green and blue with random values in each, so that each "slice" of the pie chart will have a different colour.
   pieChart(float[] data, String[] headings)
   {
     this.data = data;
@@ -24,10 +30,10 @@ class pieChart
       red[i] = random(55,200);
       green[i] =  random(55,200);
       blue[i] = random(55,200);
-    }
-  
-      
+    } 
   }
+  
+  // "getter" functions for various data points. 
   float[] getRed()
   {
     return this.red;
@@ -54,6 +60,8 @@ class pieChart
      constructPieChart(800, getData(), getHeadings());
    }
 
+  // method to convert an array of data to an array of corresponding angles 
+  // parameters:  float[]data - the data we want to convert to the appropriate angles to construct a pie chart with.
   float[] dataToAngles(float[] data)
   {
     float[] anglesReturn = {};
@@ -73,8 +81,12 @@ class pieChart
 
   void constructPieChart(float diameter, float[] data, String[] headings) 
   {
+    
     float[] angles = dataToAngles(data);
+    // sorts the angles, in reverse
     float[] sortedAngles = reverse(sort(angles));
+    
+    // creates an array of sorted headings, so that they correspond correctly with the sorted array of angles.
     String [] sortedHeadings = {};
     for (int j = 0; j < sortedAngles.length; j++)
     {
@@ -86,7 +98,7 @@ class pieChart
         }
       }
     }
-  
+    // for loop which generates "slices" of the pie chart corresponding with the size of the angle, as well as assigning a random colour to the "slice" and displaying the appropriate heading. 
     float lastAngle = 0;
     for (int i = 0; i < sortedAngles.length; i++) 
     {
@@ -94,10 +106,10 @@ class pieChart
       fill(myColor);
       
       float textPos = map(i+1,0, sortedAngles.length, NAVBAR_HEIGHT, height-NAVBAR_HEIGHT);
-      textSize(32);
+      textSize(20);
       text(sortedHeadings[i] + ": " +round(((sortedAngles[i]/360) * 100)*100)*0.01 + "%", width-diameter, textPos);
       ellipseMode(BOTTOM);
-      arc(SCREENWIDTH/20, SCREENHEIGHT/15 + 75, diameter, diameter, lastAngle - radians(90), lastAngle+radians(sortedAngles[i]) - radians (90));
+      arc(SCREENWIDTH/40, SCREENHEIGHT/15 + 75, diameter, diameter, lastAngle - radians(90), lastAngle+radians(sortedAngles[i]) - radians (90));
       lastAngle += radians(sortedAngles[i]);
       textSize(14);
     }

@@ -1,4 +1,6 @@
 // 21/03/2024 - pieScreen class created by Joseph Reidy as an extenstion of the Screen class
+// this screen displays one of the pie charts, while allowing users to select other pie charts to display. 
+// this screen is where the data used to generate the pie charts is processed. 
 
 class PieScreen extends Screen
 {
@@ -8,6 +10,7 @@ class PieScreen extends Screen
   public pieChart currentChart;
   ArrayList<Button> pieButtons;
 
+// constructor
   PieScreen()
   {
     String[] dateHeadings = data.getUniqueValues(0);
